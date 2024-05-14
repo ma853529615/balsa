@@ -64,14 +64,20 @@ from balsa.util import postgres
 
 import sim as sim_lib
 import pg_executor
-from pg_executor import dbmsx_executor
+# from pg_executor import dbmsx_executor
 import train_utils
 import experiments  # noqa # pylint: disable=unused-import
+
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "1" 
+os.environ["WORLD_SIZE"] = "1"
 
 FLAGS = flags.FLAGS
 flags.DEFINE_string('run', 'Balsa_JOBRandSplit', 'Experiment config to run.')
 flags.DEFINE_boolean('local', False,
                      'Whether to use local engine for query execution.')
+
+whole_start_time = time.time()
 
 
 def GetDevice():
@@ -159,15 +165,17 @@ def ExecuteSql(query_name,
         A ray.ObjectRef of the above.
     """
     # Unused args.
+    # curr_timeout_ms = curr_timeout_ms if curr_timeout_ms < 100000 else 100000
     del query_name, hinted_plan, query_node, predicted_latency, found_plans,\
         predicted_costs, silent, is_test, plan_physical
-
+    
+    geqo_off = True if hint_str is not None else False
     assert engine in ('postgres', 'dbmsx'), engine
     if engine == 'postgres':
         return postgres.ExplainAnalyzeSql(sql_str,
                                           comment=hint_str,
                                           verbose=False,
-                                          geqo_off=True,
+                                          geqo_off=geqo_off,
                                           timeout_ms=curr_timeout_ms,
                                           remote=not use_local_execution)
     else:
@@ -702,7 +710,7 @@ class BalsaAgent(object):
         self.prev_optimizer_state_dict = None
         # Ray.
         if p.use_local_execution:
-            ray.init(resources={'pg': 1})
+            ray.init(resources={'pg': 1}, num_cpus=1, num_gpus=1 )
         else:
             # Cluster access: make sure the cluster has been launched.
             import uuid
@@ -727,8 +735,7 @@ class BalsaAgent(object):
               [node.info['query_name'] for node in self.train_nodes])
         print(len(self.test_nodes), 'test queries:',
               [node.info['query_name'] for node in self.test_nodes])
-        if p.test_query_glob is None:
-            print('Consider all queries as training nodes.')
+
         # Rewrite ops if physical plan is not used.
         if not p.plan_physical:
             plans_lib.RewriteAsGenericJoinsScans(self.all_nodes)
@@ -772,12 +779,13 @@ class BalsaAgent(object):
             with open(p.init_experience, 'rb') as f:
                 workload = pickle.load(f)
             # Filter queries based on the current query_glob.
-            workload.FilterQueries(p.query_dir, p.query_glob, p.test_query_glob)
+            # workload.FilterQueries(p.query_dir, p.query_glob, p.test_query_glob)
         else:
-            wp = envs.JoinOrderBenchmark.Params()
-            wp.query_dir = p.query_dir
-            wp.query_glob = p.query_glob
-            wp.test_query_glob = None
+            wp = envs.JOB.Params()  # [JOBRS, TPCDS, STACK]
+            # wp.query_dir = p.query_dir
+            # wp.query_glob = p.query_glob
+            # wp.test_query_glob = None
+            wp.test_query_glob = p.query_glob
             workload = wp.cls(wp)
             # Requires baseline to run in this scenario.
             p.run_baseline = True
@@ -966,7 +974,7 @@ class BalsaAgent(object):
         if p.tree_conv:
             collate_fn = ds.InputBatch
         else:
-            collate_fn = lambda xs: ds.InputBatch(
+            def collate_fn(xs): return ds.InputBatch(
                 xs,
                 plan_pad_idx=self.exp.featurizer.pad(),
                 parent_pos_pad_idx=self.exp.pos_featurizer.pad())
@@ -1192,9 +1200,9 @@ class BalsaAgent(object):
             refs = tasks
         for i, node in enumerate(self.all_nodes):
             result_tup = ray.get(refs[i])
-            assert isinstance(
-                result_tup,
-                (pg_executor.Result, dbmsx_executor.Result)), result_tup
+            # assert isinstance(
+            #     result_tup,
+            #     (pg_executor.Result, dbmsx_executor.Result)), result_tup
             result, real_cost, _, message = ParseExecutionResult(
                 result_tup, **Args(node))
             # Save real cost (execution latency) to actual.
@@ -1206,11 +1214,13 @@ class BalsaAgent(object):
                 # on a different engine.
                 print(node)
             print(message)
+            print(i, 'th query')
             print('q{},{:.1f} (baseline)'.format(node.info['query_name'],
                                                  real_cost))
             print('Execution time: {}'.format(real_cost))
         # NOTE: if engine != pg, we're still saving PG plans but with target
         # engine's latencies.  This mainly affects debug strings.
+        print('Saving')
         Save(self.workload, './data/initial_policy_data.pkl')
         self.LogExpertExperience(self.train_nodes, self.test_nodes)
 
@@ -1349,7 +1359,7 @@ class BalsaAgent(object):
                     # Sort by (visit count, predicted latency).  Execute the
                     # smallest.
                     assert p.explore_visit_counts_sort or \
-                           p.explore_visit_counts_latency_sort
+                        p.explore_visit_counts_latency_sort
                     # Cast to int so the debug messages look nicer.
                     visit_counts = visit_counts.astype(np.int32, copy=False)
 
@@ -1374,7 +1384,7 @@ class BalsaAgent(object):
 
         return predicted_latency, found_plan
 
-    def PlanAndExecute(self, model, planner, is_test=False, max_retries=3):
+    def PlanAndExecute(self, model, planner, is_test=False, train_test=False, max_retries=3):
         p = self.params
         model.eval()
         to_execute = []
@@ -1382,7 +1392,7 @@ class BalsaAgent(object):
         if p.sim:
             sim = self.GetOrTrainSim()
         positions_of_min_predicted = []
-        nodes = self.test_nodes if is_test else self.train_nodes
+        nodes = self.test_nodes if is_test and not train_test else self.train_nodes
 
         # Plan the workload.
         kwargs = []
@@ -1415,6 +1425,8 @@ class BalsaAgent(object):
             planning_time, found_plan, predicted_latency, found_plans = tup
             predicted_latency, found_plan = self.SelectPlan(
                 found_plans, predicted_latency, found_plan, planner, node)
+            if node.info['query_name'] == '7b':
+                print('#')
             print('{}q{}, predicted time: {:.1f}'.format(
                 '[Test set] ' if is_test else '', node.info['query_name'],
                 predicted_latency))
@@ -1425,11 +1437,12 @@ class BalsaAgent(object):
                                               [tup[1] for tup in found_plans])
             # Model-predicted latency of the expert plan.  Allows us to track
             # what exactly the model thinks of the expert plan.
-            node.info['curr_predicted_latency'] = planner.infer(node, [node])[0]
+            node.info['curr_predicted_latency'] = planner.infer(node, [node])[
+                0]
             self.LogScalars([('predicted_latency_expert_plans/q{}'.format(
                 node.info['query_name']),
-                              node.info['curr_predicted_latency'] / 1e3,
-                              self.curr_value_iter)])
+                node.info['curr_predicted_latency'] / 1e3,
+                self.curr_value_iter)])
 
             hint_str = HintStr(found_plan,
                                with_physical_hints=p.plan_physical,
@@ -1447,14 +1460,27 @@ class BalsaAgent(object):
             print('q{},(predicted {:.1f}),{}'.format(node.info['query_name'],
                                                      predicted_latency,
                                                      hint_str))
+            # if node.info['query_name'] == '7b':
+            print('#')
             to_execute.append((node.info['sql_str'], hint_str, planning_time,
                                found_plan, predicted_latency, curr_timeout))
+            if node.info['query_name'] == '7b':
+                print('#')
             if p.use_cache:
                 exec_result = self.query_execution_cache.Get(
                     key=(node.info['query_name'], hint_str))
+                if node.info['query_name'] == '7b':
+                    print('#')
             else:
                 exec_result = None
+            if node.info['query_name'] == '7b':
+                print('#')
+
             exec_results.append(exec_result)
+
+            if node.info['query_name'] == '7b':
+                print('#')
+
             kwarg = {
                 'query_name': node.info['query_name'],
                 'sql_str': node.info['sql_str'],
@@ -1470,19 +1496,26 @@ class BalsaAgent(object):
                 'plan_physical': p.plan_physical,
                 'engine': p.engine,
             }
+            if node.info['query_name'] == '7b':
+                print('#')
 
             kwargs.append(kwarg)
             if exec_result is None:
                 # Lambdas are late-binding; use a default argument value to
                 # ensure that when invoked later, the correct kwarg is used.
-                fn = lambda task_index=i: ExecuteSql.options(resources={
+                def fn(task_index=i): return ExecuteSql.options(resources={
                     f'node:{ray.util.get_node_ip_address()}': 1,
                 }).remote(**kwargs[task_index])
             else:
                 # Cache hit.  See comment above for why the default arg val.
-                fn = lambda task_index=i: ray.put(exec_results[task_index])
+                def fn(task_index=i): return ray.put(exec_results[task_index])
+            if node.info['query_name'] == '7b':
+                print('#')
+
             task_lambdas.append(fn)
             tasks.append(fn())
+            if node.info['query_name'] == '7b':
+                print('#')
 
             # Logging: which terminal plan is the predicted cheapest?
             min_p_latency = 1e30
@@ -1492,7 +1525,8 @@ class BalsaAgent(object):
                     min_p_latency = p_latency
                     min_pos = pos
             positions_of_min_predicted.append(min_pos)
-
+            if node.info['query_name'] == '7b':
+                print('#')
         self.timer.Stop('plan_test_set' if is_test else 'plan')
         self.timer.Start('wait_for_executions_test_set'
                          if is_test else 'wait_for_executions')
@@ -1735,7 +1769,7 @@ class BalsaAgent(object):
     def LogTestExperience(self,
                           to_execute_test,
                           execution_results,
-                          tag='latency_test'):
+                          tag='latency_test', train=False):
         assert len(self.test_nodes) == len(execution_results)
         iter_total_latency = 0
         rows = []
@@ -1770,6 +1804,14 @@ class BalsaAgent(object):
             return
         # Log a table of latencies, sorted by descending latency.
         rows = list(sorted(rows, key=lambda r: r[1], reverse=True))
+        df = pd.DataFrame({'query_name': [r[0] for r in rows], 'latency': [
+                          r[1] for r in rows], 'iter': [r[2] for r in rows]})
+        dataset = 'JOB'
+        tr = 'train' if train else 'test'
+        outfile = f'./{dataset}_{(time.time()-whole_start_time)/3600}hours_{train}.csv'
+
+        df.to_csv(outfile, index=False)
+
         table = wandb.Table(columns=['query_name', tag, 'curr_value_iter'],
                             rows=rows)
         self.wandb_logger.experiment.log({'{}_table'.format(tag): table})
@@ -1881,7 +1923,8 @@ class BalsaAgent(object):
                     self.SwapMovingAverage(model, moving_average='ema')
                     # Clear the planner's label cache.
                     planner.SetModel(model)
-                    self.EvaluateTestSet(model, planner, tag='latency_test_ema')
+                    self.EvaluateTestSet(
+                        model, planner, tag='latency_test_ema')
                     self.SwapMovingAverage(model, moving_average='ema')
 
             # 2. SWA: Stochastic weight averaging.
@@ -1891,7 +1934,8 @@ class BalsaAgent(object):
                     self.SwapMovingAverage(model, moving_average='swa')
                     # Clear the planner's label cache.
                     planner.SetModel(model)
-                    self.EvaluateTestSet(model, planner, tag='latency_test_swa')
+                    self.EvaluateTestSet(
+                        model, planner, tag='latency_test_swa')
                     self.SwapMovingAverage(model, moving_average='swa')
 
         return has_timeouts
@@ -2007,7 +2051,8 @@ class BalsaAgent(object):
             for key, param in model.state_dict().items():
                 # Init from the first model iterate, w(0).
                 if key not in moving_average_state_dict:
-                    moving_average_state_dict[key] = param.data.clone().detach()
+                    moving_average_state_dict[key] = param.data.clone(
+                    ).detach()
                 avg_buffer = moving_average_state_dict[key]
                 # variable += new_val_weight * (value - variable)
                 diff = (param.data - avg_buffer) * new_val_weight
@@ -2030,10 +2075,7 @@ class BalsaAgent(object):
         # TODO: exclude running time for evaluating test set.
         p = self.params
         num_iters_done = self.curr_value_iter + 1
-        if p.test_query_glob is None or \
-           num_iters_done < p.test_after_n_iters or \
-           num_iters_done % p.test_every_n_iters != 0:
-            return
+
         if p.test_using_retrained_model:
             print(
                 '[Test set] training a new model just for test set reporting.')
@@ -2042,7 +2084,15 @@ class BalsaAgent(object):
             planner = self._MakePlanner(model, dataset)
         to_execute_test, execution_results_test = self.PlanAndExecute(
             model, planner, is_test=True)
-        self.LogTestExperience(to_execute_test, execution_results_test, tag=tag)
+            
+        self.LogTestExperience(
+            to_execute_test, execution_results_test, tag=tag)
+
+        to_execute_test, execution_results_test = self.PlanAndExecute(
+            model, planner, is_test=True, train_test=True)
+
+        self.LogTestExperience(
+            to_execute_test, execution_results_test, tag=tag)
 
     def LogTimings(self):
         """Logs timing statistics."""
@@ -2133,6 +2183,7 @@ class BalsaAgent(object):
 
 
 def Main(argv):
+    start_time = time.time()
     del argv  # Unused.
     name = FLAGS.run
     print('Looking up params by name:', name)
@@ -2149,6 +2200,7 @@ def Main(argv):
 
     agent = BalsaAgent(p)
     agent.Run()
+    print('whole trianning time:', (time.time() - start_time)/3600, 'h')
 
 
 if __name__ == '__main__':

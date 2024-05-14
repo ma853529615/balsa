@@ -26,7 +26,7 @@ import ray
 
 # JOB/IMDB.
 # LOCAL_DSN = "postgres://psycopg:psycopg@localhost/imdb"
-LOCAL_DSN = "host=/tmp dbname=imdbload"
+LOCAL_DSN = "host=/tmp dbname=imdb port=5061"
 REMOTE_DSN = "postgres://psycopg:psycopg@localhost/imdbload"
 
 # TPC-H.
@@ -119,6 +119,7 @@ def Execute(sql, verbose=False, geqo_off=False, timeout_ms=None, cursor=None):
     Returns:
       A pg_executor.Result.
     """
+    
     if verbose:
         print(sql)
 
@@ -140,7 +141,7 @@ def Execute(sql, verbose=False, geqo_off=False, timeout_ms=None, cursor=None):
             has_timeout = True
         elif isinstance(e, psycopg2.errors.InternalError_):
             print(
-                'psycopg2.errors.InternalError_, treating as a'\
+                'psycopg2.errors.InternalError_, treating as a'
                 ' timeout'
             )
             print(e)

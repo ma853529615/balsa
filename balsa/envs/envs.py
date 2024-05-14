@@ -47,7 +47,7 @@ class Workload(object):
         p.Define('query_dir', None, 'Directory to workload queries.')
         p.Define(
             'query_glob', '*.sql',
-            'If supplied, glob for this pattern.  Otherwise, use all queries.'\
+            'If supplied, glob for this pattern.  Otherwise, use all queries.'
             '  Example: 29*.sql.'
         )
         p.Define(
@@ -56,7 +56,7 @@ class Workload(object):
             'Desirable for evaluation.')
         p.Define(
             'test_query_glob', None,
-            'Similar usage as query_glob. If None, treating all queries'\
+            'Similar usage as query_glob. If None, treating all queries'
             ' as training nodes.'
         )
         p.Define('search_space_join_ops',
@@ -178,6 +178,170 @@ class JoinOrderBenchmark(Workload):
         p = self.params
         all_sql_set = self._get_sql_set(p.query_dir, p.query_glob)
         test_sql_set = self._get_sql_set(p.query_dir, p.test_query_glob)
+        assert test_sql_set.issubset(all_sql_set)
+        # sorted by query id for easy debugging
+        all_sql_list = sorted(all_sql_set)
+        all_nodes = [ParseSqlToNode(sqlfile) for sqlfile in all_sql_list]
+
+        train_nodes = [
+            n for n in all_nodes
+            if p.test_query_glob is None or n.info['path'] not in test_sql_set
+        ]
+        test_nodes = [n for n in all_nodes if n.info['path'] in test_sql_set]
+        assert len(train_nodes) > 0
+
+        return all_nodes, train_nodes, test_nodes
+
+
+class JOB(Workload):
+
+    @classmethod
+    def Params(cls):
+        p = super().Params()
+        # Needs to be an absolute path for rllib.
+        module_dir = os.path.abspath(os.path.dirname(balsa.__file__) + '/../')
+        p.query_dir = os.path.join(module_dir, 'queries/train')
+        # test_dir = os.path.join(module_dir, '')
+        return p
+
+    def __init__(self, params):
+        super().__init__(params)
+        p = params
+        self.query_nodes, self.train_nodes, self.test_nodes = \
+            self._LoadQueries()
+        self.workload_info = plans_lib.WorkloadInfo(self.query_nodes)
+        self.workload_info.SetPhysicalOps(p.search_space_join_ops,
+                                          p.search_space_scan_ops)
+
+    def _LoadQueries(self):
+        """Loads all queries into balsa.Node objects."""
+        p = self.params
+        all_sql_set = self._get_sql_set(p.query_dir, p.query_glob)
+        test_sql_set = self._get_sql_set('queries/test', p.query_glob)
+        all_sql_set = all_sql_set.union(test_sql_set)
+        assert test_sql_set.issubset(all_sql_set)
+        # sorted by query id for easy debugging
+        all_sql_list = sorted(all_sql_set)
+        all_nodes = [ParseSqlToNode(sqlfile) for sqlfile in all_sql_list]
+
+        train_nodes = [
+            n for n in all_nodes
+            if p.test_query_glob is None or n.info['path'] not in test_sql_set
+        ]
+        test_nodes = [n for n in all_nodes if n.info['path'] in test_sql_set]
+        assert len(train_nodes) > 0
+
+        return all_nodes, train_nodes, test_nodes
+
+
+class STACK(Workload):
+
+    @classmethod
+    def Params(cls):
+        p = super().Params()
+        # Needs to be an absolute path for rllib.
+        module_dir = os.path.abspath(os.path.dirname(balsa.__file__) + '/../')
+        p.query_dir = os.path.join(module_dir, 'queries/stack_train')
+        # test_dir = os.path.join(module_dir, '')
+        return p
+
+    def __init__(self, params):
+        super().__init__(params)
+        p = params
+        self.query_nodes, self.train_nodes, self.test_nodes = \
+            self._LoadQueries()
+        self.workload_info = plans_lib.WorkloadInfo(self.query_nodes)
+        self.workload_info.SetPhysicalOps(p.search_space_join_ops,
+                                          p.search_space_scan_ops)
+
+    def _LoadQueries(self):
+        """Loads all queries into balsa.Node objects."""
+        p = self.params
+        all_sql_set = self._get_sql_set(p.query_dir, p.query_glob)
+        test_sql_set = self._get_sql_set('queries/stack_test', p.query_glob)
+        all_sql_set = all_sql_set.union(test_sql_set)
+        assert test_sql_set.issubset(all_sql_set)
+        # sorted by query id for easy debugging
+        all_sql_list = sorted(all_sql_set)
+        all_nodes = [ParseSqlToNode(sqlfile) for sqlfile in all_sql_list]
+
+        train_nodes = [
+            n for n in all_nodes
+            if p.test_query_glob is None or n.info['path'] not in test_sql_set
+        ]
+        test_nodes = [n for n in all_nodes if n.info['path'] in test_sql_set]
+        assert len(train_nodes) > 0
+
+        return all_nodes, train_nodes, test_nodes
+
+
+class JOBRS(Workload):
+
+    @classmethod
+    def Params(cls):
+        p = super().Params()
+        # Needs to be an absolute path for rllib.
+        module_dir = os.path.abspath(os.path.dirname(balsa.__file__) + '/../')
+        p.query_dir = os.path.join(module_dir, 'queries/job_rs_train')
+        # test_dir = os.path.join(module_dir, '')
+        return p
+
+    def __init__(self, params):
+        super().__init__(params)
+        p = params
+        self.query_nodes, self.train_nodes, self.test_nodes = \
+            self._LoadQueries()
+        self.workload_info = plans_lib.WorkloadInfo(self.query_nodes)
+        self.workload_info.SetPhysicalOps(p.search_space_join_ops,
+                                          p.search_space_scan_ops)
+
+    def _LoadQueries(self):
+        """Loads all queries into balsa.Node objects."""
+        p = self.params
+        all_sql_set = self._get_sql_set(p.query_dir, p.query_glob)
+        test_sql_set = self._get_sql_set('queries/job_rs_test', p.query_glob)
+        all_sql_set = all_sql_set.union(test_sql_set)
+        assert test_sql_set.issubset(all_sql_set)
+        # sorted by query id for easy debugging
+        all_sql_list = sorted(all_sql_set)
+        all_nodes = [ParseSqlToNode(sqlfile) for sqlfile in all_sql_list]
+
+        train_nodes = [
+            n for n in all_nodes
+            if p.test_query_glob is None or n.info['path'] not in test_sql_set
+        ]
+        test_nodes = [n for n in all_nodes if n.info['path'] in test_sql_set]
+        assert len(train_nodes) > 0
+
+        return all_nodes, train_nodes, test_nodes
+
+
+class TPCDS(Workload):
+
+    @classmethod
+    def Params(cls):
+        p = super().Params()
+        # Needs to be an absolute path for rllib.
+        module_dir = os.path.abspath(os.path.dirname(balsa.__file__) + '/../')
+        p.query_dir = os.path.join(module_dir, 'queries/tpcds_train')
+        # test_dir = os.path.join(module_dir, '')
+        return p
+
+    def __init__(self, params):
+        super().__init__(params)
+        p = params
+        self.query_nodes, self.train_nodes, self.test_nodes = \
+            self._LoadQueries()
+        self.workload_info = plans_lib.WorkloadInfo(self.query_nodes)
+        self.workload_info.SetPhysicalOps(p.search_space_join_ops,
+                                          p.search_space_scan_ops)
+
+    def _LoadQueries(self):
+        """Loads all queries into balsa.Node objects."""
+        p = self.params
+        all_sql_set = self._get_sql_set(p.query_dir, p.query_glob)
+        test_sql_set = self._get_sql_set('queries/tpcds_test', p.query_glob)
+        all_sql_set = all_sql_set.union(test_sql_set)
         assert test_sql_set.issubset(all_sql_set)
         # sorted by query id for easy debugging
         all_sql_list = sorted(all_sql_set)

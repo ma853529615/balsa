@@ -1,0 +1,2142 @@
+Looking up params by name: Balsa_JOBRandSplit
+BalsaAgent params:
+{
+  adamw: None
+  agent_checkpoint: None
+  avoid_eq_filters: False
+  beam: 20
+  bs: 1024
+  bushy: True
+  check_hint: True
+  cls: <class 'experiments.Balsa_JOBRandSplit'>
+  cost_model: "mincardcost"
+  cross_entropy: False
+  db: "imdbload"
+  dedup_training_data: True
+  drop_cache: True
+  dropout: 0.0
+  early_stop_on_skip_fraction: None
+  ema_decay: 0.95
+  engine: "postgres"
+  engine_dialect_query_dir: None
+  epochs: 100
+  epsilon_greedy: 0
+  epsilon_greedy_random_plan: False
+  epsilon_greedy_random_transform: False
+  epsilon_greedy_within_beam_search: False
+  explore_soft_v: False
+  explore_visit_counts: False
+  explore_visit_counts_latency_sort: False
+  explore_visit_counts_sort: True
+  final_decay_rate: None
+  finetune_out_mlp_only: False
+  generic_ops_only_for_min_card_cost: False
+  gradient_clip_val: 0
+  increment_iter_despite_timeouts: True
+  inherit_optimizer_state: False
+  init_experience: "data/initial_policy_data.pkl"
+  initial_timeout_ms: None
+  l2_lambda: 0
+  label_transform_running_stats: False
+  label_transforms: ['log1p', 'standardize']
+  linear_decay_to_zero: False
+  loss_type: None
+  lr: 0.001
+  lr_decay_iters: None
+  lr_decay_rate: None
+  lr_piecewise: [(0, 0.001), (60, 0.0005), (110, 0.00025), (160, 0.000125), (210, 0.0001)]
+  on_policy: True
+  param_noise: 0.0
+  param_tau: 1.0
+  per_transition_sgd_steps: -1
+  perturb_query_features: None
+  physical_execution_hindsight: False
+  plan_physical: True
+  planner_config: None
+  pos_embs: True
+  prev_replay_buffers_glob: None
+  prev_replay_buffers_glob_val: None
+  prev_replay_keep_last_fraction: 1
+  query_dir: "queries/join-order-benchmark"
+  query_glob: ['*.sql']
+  real_use_plan_restrictions: True
+  reduce_lr_within_val_iter: False
+  relax_timeout_factor: None
+  relax_timeout_on_n_timeout_iters: None
+  replay_buffer_reset_at_iter: None
+  run_baseline: False
+  search_method: "beam_bk"
+  search_space_join_ops: ['Hash Join', 'Merge Join', 'Nested Loop']
+  search_space_scan_ops: ['Index Scan', 'Index Only Scan', 'Seq Scan']
+  search_until_n_complete_plans: 10
+  sim: True
+  sim_checkpoint: "checkpoints/sim-MinCardCost-rand52split-680secs.ckpt"
+  sim_data_collection_intermediate_goals: True
+  sim_query_featurizer: True
+  sim_use_plan_restrictions: True
+  skip_sim_init_iter_1p: False
+  skip_training_on_expert: True
+  skip_training_on_timeouts: False
+  special_timeout_label: True
+  test_after_n_iters: 0
+  test_dir: None
+  test_every_n_iters: 1
+  test_query_glob: ['8a.sql', '16a.sql', '2a.sql', '30c.sql', '17e.sql', '20a.sql', '26b.sql', '12b.sql', '15b.sql', '15d.sql', '10b.sql', '15a.sql', '4c.sql', '4b.sql', '22b.sql', '17c.sql', '24b.sql', '10a.sql', '22c.sql']
+  test_using_retrained_model: False
+  timeout_slack: 2
+  track_model_moving_averages: False
+  tree_conv: True
+  tree_conv_version: None
+  update_label_stats_every_iter: True
+  use_adaptive_lr: None
+  use_adaptive_lr_decay_to_zero: None
+  use_cache: True
+  use_ema_source: False
+  use_last_n_iters: -1
+  use_local_execution: True
+  use_new_data_only: False
+  use_timeout: True
+  v2: True
+  val_iters: 500
+  validate_early_stop_patience: 3
+  validate_every_n_epochs: 5
+  validate_fraction: 0.1
+}
+Connected to ray!  Resources: {'pg': 1.0, 'node:172.18.198.202': 1.0, 'memory': 152673275700.0, 'CPU': 1.0, 'object_store_memory': 69717118156.0, 'accelerator_type:A100': 1.0, 'GPU': 1.0}
+80 train queries: ['10b', '10c', '11b', '11c', '11d', '12b', '12c', '13b', '13c', '13d', '14b', '14c', '15b', '15c', '15d', '16b', '16c', '16d', '17b', '17c', '17d', '17e', '17f', '18b', '18c', '19b', '19c', '19d', '1b', '1c', '1d', '20b', '20c', '21b', '21c', '22b', '22c', '22d', '23b', '23c', '24b', '25b', '25c', '26b', '26c', '27b', '27c', '28b', '28c', '29b', '29c', '2b', '2c', '2d', '30b', '30c', '31b', '31c', '32b', '33b', '33c', '3b', '3c', '4b', '4c', '5b', '5c', '6b', '6c', '6d', '6e', '6f', '7b', '7c', '8b', '8c', '8d', '9b', '9c', '9d']
+33 test queries: ['10a', '11a', '12a', '13a', '14a', '15a', '16a', '17a', '18a', '19a', '1a', '20a', '21a', '22a', '23a', '24a', '25a', '26a', '27a', '28a', '29a', '2a', '30a', '31a', '32a', '33a', '3a', '4a', '5a', '6a', '7a', '8a', '9a']
+latency_expert/workload (seconds): 135.40 (80 queries)
+latency_expert_test/workload (seconds): 61.04 (33 queries)
+Number of joins [3, 16], avg 7.6
+plans_lib.FilterScansOrJoins()
+plans_lib.GatherUnaryFiltersInfo()
+postgres.EstimateFilterRows()
+198 unique filters
+{('aka_name AS an', "((an.name IS NOT NULL) AND (((an.name)::text ~~ '%a%'::text) OR ((an.name)::text ~~ 'A%'::text)))"): 637664,
+ ('aka_name AS an', "((an.name)::text ~~ '%a%'::text)"): 626557,
+ ('cast_info AS ci', "(((ci.note)::text ~~ '%(voice)%'::text) AND ((ci.note)::text ~~ '%(uncredited)%'::text))"): 23503,
+ ('cast_info AS ci', "((ci.note)::text = '(voice)'::text)"): 717638,
+ ('cast_info AS ci', "((ci.note)::text = '(voice: English version)'::text)"): 97860,
+ ('cast_info AS ci', '((ci.note)::text = ANY (\'{(producer),"(executive producer)"}\'::text[]))'): 2352258,
+ ('cast_info AS ci', '((ci.note)::text = ANY (\'{(voice),"(voice) (uncredited)","(voice: English version)"}\'::text[]))'): 846910,
+ ('cast_info AS ci', '((ci.note)::text = ANY (\'{(voice),"(voice: Japanese version)","(voice) (uncredited)","(voice: English version)"}\'::text[]))'): 872281,
+ ('cast_info AS ci', '((ci.note)::text = ANY (\'{(writer),"(head writer)","(written by)",(story),"(story editor)"}\'::text[]))'): 1245597,
+ ('cast_info AS ci', "((ci.note)::text ~~ '%(producer)%'::text)"): 1440597,
+ ('char_name AS chn', "(((chn.name)::text !~~ '%Sherlock%'::text) AND (((chn.name)::text ~~ '%Tony%Stark%'::text) OR ((chn.name)::text ~~ '%Iron%Man%'::text)))"): 628,
+ ('char_name AS chn', "((chn.name IS NOT NULL) AND (((chn.name)::text ~~ '%man%'::text) OR ((chn.name)::text ~~ '%Man%'::text)))"): 312079,
+ ('char_name AS chn', "((chn.name)::text = 'Queen'::text)"): 1,
+ ('comp_cast_type AS cct1', "((cct1.kind)::text = 'cast'::text)"): 1,
+ ('comp_cast_type AS cct1', "((cct1.kind)::text = 'complete+verified'::text)"): 1,
+ ('comp_cast_type AS cct1', "((cct1.kind)::text = 'crew'::text)"): 1,
+ ('comp_cast_type AS cct1', "((cct1.kind)::text = ANY ('{cast,crew}'::text[]))"): 2,
+ ('comp_cast_type AS cct2', "((cct2.kind)::text <> 'complete+verified'::text)"): 3,
+ ('comp_cast_type AS cct2', "((cct2.kind)::text = 'complete'::text)"): 1,
+ ('comp_cast_type AS cct2', "((cct2.kind)::text = 'complete+verified'::text)"): 1,
+ ('comp_cast_type AS cct2', "((cct2.kind)::text ~~ '%complete%'::text)"): 1,
+ ('comp_cast_type AS cct2', "((cct2.kind)::text ~~ 'complete%'::text)"): 1,
+ ('company_name AS cn', "(((cn.country_code)::text <> '[pl]'::text) AND (((cn.name)::text ~~ '%Film%'::text) OR ((cn.name)::text ~~ '%Warner%'::text)))"): 36113,
+ ('company_name AS cn', "(((cn.country_code)::text <> '[pl]'::text) AND (((cn.name)::text ~~ '20th Century Fox%'::text) OR ((cn.name)::text ~~ 'Twentieth Century Fox%'::text)))"): 77,
+ ('company_name AS cn', "(((cn.country_code)::text = '[us]'::text) AND ((cn.name)::text = 'DreamWorks Animation'::text))"): 1,
+ ('company_name AS cn', "(((cn.country_code)::text = '[us]'::text) AND ((cn.name)::text = 'YouTube'::text))"): 1,
+ ('company_name AS cn', "((cn.country_code)::text <> '[pl]'::text)"): 210463,
+ ('company_name AS cn', "((cn.country_code)::text <> '[us]'::text)"): 126303,
+ ('company_name AS cn', "((cn.country_code)::text = '[de]'::text)"): 9839,
+ ('company_name AS cn', "((cn.country_code)::text = '[jp]'::text)"): 6392,
+ ('company_name AS cn', "((cn.country_code)::text = '[nl]'::text)"): 2326,
+ ('company_name AS cn', "((cn.country_code)::text = '[ru]'::text)"): 1332,
+ ('company_name AS cn', "((cn.country_code)::text = '[sm]'::text)"): 20,
+ ('company_name AS cn', "((cn.country_code)::text = '[us]'::text)"): 85304,
+ ('company_name AS cn', "((cn.name)::text ~~ 'Lionsgate%'::text)"): 23,
+ ('company_name AS cn1', "((cn1.country_code)::text <> '[us]'::text)"): 126303,
+ ('company_name AS cn1', "((cn1.country_code)::text = '[nl]'::text)"): 2326,
+ ('company_name AS cn1', "((cn1.country_code)::text = '[us]'::text)"): 85304,
+ ('company_type AS ct', "((ct.kind IS NOT NULL) AND (((ct.kind)::text = 'production companies'::text) OR ((ct.kind)::text = 'distributors'::text)))"): 2,
+ ('company_type AS ct', "((ct.kind IS NOT NULL) AND ((ct.kind)::text <> 'production companies'::text))"): 3,
+ ('company_type AS ct', "((ct.kind)::text = 'production companies'::text)"): 1,
+ ('info_type AS it', "((it.info)::text = 'bottom 10 rank'::text)"): 1,
+ ('info_type AS it', "((it.info)::text = 'mini biography'::text)"): 1,
+ ('info_type AS it', "((it.info)::text = 'rating'::text)"): 1,
+ ('info_type AS it', "((it.info)::text = 'release dates'::text)"): 1,
+ ('info_type AS it', "((it.info)::text = 'top 250 rank'::text)"): 1,
+ ('info_type AS it1', "((it1.info)::text = 'budget'::text)"): 1,
+ ('info_type AS it1', "((it1.info)::text = 'countries'::text)"): 1,
+ ('info_type AS it1', "((it1.info)::text = 'genres'::text)"): 1,
+ ('info_type AS it1', "((it1.info)::text = 'rating'::text)"): 1,
+ ('info_type AS it1', "((it1.info)::text = 'release dates'::text)"): 1,
+ ('info_type AS it2', "((it2.info)::text = 'bottom 10 rank'::text)"): 1,
+ ('info_type AS it2', "((it2.info)::text = 'rating'::text)"): 1,
+ ('info_type AS it2', "((it2.info)::text = 'release dates'::text)"): 1,
+ ('info_type AS it2', "((it2.info)::text = 'votes'::text)"): 1,
+ ('info_type AS it3', "((it3.info)::text = 'height'::text)"): 1,
+ ('info_type AS it3', "((it3.info)::text = 'trivia'::text)"): 1,
+ ('keyword AS k', "((k.keyword IS NOT NULL) AND ((k.keyword)::text = ANY ('{murder,murder-in-title,blood,violence}'::text[])))"): 4,
+ ('keyword AS k', "((k.keyword)::text = '10,000-mile-club'::text)"): 1,
+ ('keyword AS k', "((k.keyword)::text = 'character-name-in-title'::text)"): 1,
+ ('keyword AS k', "((k.keyword)::text = 'computer-animation'::text)"): 1,
+ ('keyword AS k', "((k.keyword)::text = 'marvel-cinematic-universe'::text)"): 1,
+ ('keyword AS k', "((k.keyword)::text = 'sequel'::text)"): 1,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{hero,martial-arts,hand-to-hand-combat,computer-animated-movie}'::text[]))"): 4,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{hero,martial-arts,hand-to-hand-combat}'::text[]))"): 3,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{murder,blood,gore,death,female-nudity}'::text[]))"): 5,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{murder,murder-in-title,blood,violence}'::text[]))"): 4,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{murder,murder-in-title}'::text[]))"): 2,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{murder,violence,blood,gore,death,female-nudity,hospital}'::text[]))"): 7,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{nerd,loner,alienation,dignity}'::text[]))"): 4,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{sequel,revenge,based-on-novel}'::text[]))"): 3,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{superhero,marvel-comics,based-on-comic,fight}'::text[]))"): 4,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{superhero,marvel-comics,based-on-comic,tv-special,fight,violence,magnet,web,claw,laser}'::text[]))"): 10,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{superhero,sequel,second-part,marvel-comics,based-on-comic,tv-special,fight,violence}'::text[]))"): 8,
+ ('keyword AS k', "((k.keyword)::text ~~ '%sequel%'::text)"): 13,
+ ('kind_type AS kt', "((kt.kind)::text = 'movie'::text)"): 1,
+ ('kind_type AS kt', '((kt.kind)::text = ANY (\'{movie,"tv movie","video movie","video game"}\'::text[]))'): 4,
+ ('kind_type AS kt', "((kt.kind)::text = ANY ('{movie,episode}'::text[]))"): 2,
+ ('kind_type AS kt1', "((kt1.kind)::text = 'tv series'::text)"): 1,
+ ('kind_type AS kt1', '((kt1.kind)::text = ANY (\'{"tv series",episode}\'::text[]))'): 2,
+ ('kind_type AS kt2', "((kt2.kind)::text = 'tv series'::text)"): 1,
+ ('kind_type AS kt2', '((kt2.kind)::text = ANY (\'{"tv series",episode}\'::text[]))'): 2,
+ ('link_type AS lt', "((lt.link)::text = 'features'::text)"): 1,
+ ('link_type AS lt', '((lt.link)::text = ANY (\'{references,"referenced in",features,"featured in"}\'::text[]))'): 4,
+ ('link_type AS lt', '((lt.link)::text = ANY (\'{sequel,follows,"followed by"}\'::text[]))'): 3,
+ ('link_type AS lt', "((lt.link)::text ~~ '%follow%'::text)"): 1,
+ ('link_type AS lt', "((lt.link)::text ~~ '%follows%'::text)"): 1,
+ ('movie_companies AS mc', "(((mc.note)::text !~~ '%(TV)%'::text) AND ((mc.note)::text ~~ '%(USA)%'::text))"): 176049,
+ ('movie_companies AS mc', "(((mc.note)::text !~~ '%(USA)%'::text) AND ((mc.note)::text ~~ '%(200%)%'::text))"): 138700,
+ ('movie_companies AS mc', "(((mc.note)::text !~~ '%(as Metro-Goldwyn-Mayer Pictures)%'::text) AND (((mc.note)::text ~~ '%(co-production)%'::text) OR ((mc.note)::text ~~ '%(presents)%'::text)))"): 12077,
+ ('movie_companies AS mc', "(((mc.note)::text !~~ '%(as Metro-Goldwyn-Mayer Pictures)%'::text) AND ((mc.note)::text ~~ '%(co-production)%'::text))"): 8434,
+ ('movie_companies AS mc', "(((mc.note)::text ~~ '%(200%)%'::text) AND (((mc.note)::text ~~ '%(USA)%'::text) OR ((mc.note)::text ~~ '%(worldwide)%'::text)))"): 90021,
+ ('movie_companies AS mc', "(((mc.note)::text ~~ '%(200%)%'::text) AND ((mc.note)::text ~~ '%(worldwide)%'::text))"): 12904,
+ ('movie_companies AS mc', "(((mc.note)::text ~~ '%(Japan)%'::text) AND ((mc.note)::text !~~ '%(USA)%'::text) AND (((mc.note)::text ~~ '%(2006)%'::text) OR ((mc.note)::text ~~ '%(2007)%'::text)))"): 607,
+ ('movie_companies AS mc', "(((mc.note)::text ~~ '%(Japan)%'::text) AND ((mc.note)::text !~~ '%(USA)%'::text))"): 14291,
+ ('movie_companies AS mc', "(((mc.note)::text ~~ '%(VHS)%'::text) AND ((mc.note)::text ~~ '%(USA)%'::text) AND ((mc.note)::text ~~ '%(1994)%'::text))"): 32,
+ ('movie_companies AS mc', "(((mc.note)::text ~~ '%(theatrical)%'::text) AND ((mc.note)::text ~~ '%(France)%'::text))"): 1954,
+ ('movie_companies AS mc', "((mc.note IS NOT NULL) AND (((mc.note)::text ~~ '%(USA)%'::text) OR ((mc.note)::text ~~ '%(worldwide)%'::text)))"): 277382,
+ ('movie_companies AS mc', "((mc.note)::text !~~ '%(as Metro-Goldwyn-Mayer Pictures)%'::text)"): 1324389,
+ ('movie_companies AS mc', "((mc.note)::text ~~ '%(Blu-ray)%'::text)"): 9246,
+ ('movie_companies AS mc', '(mc.note IS NOT NULL)'): 1324481,
+ ('movie_companies AS mc', '(mc.note IS NULL)'): 1284648,
+ ('movie_info AS mi', "(((mi.note)::text ~~ '%internet%'::text) AND ((mi.info)::text ~~ 'USA:% 200%'::text))"): 165,
+ ('movie_info AS mi', "((mi.info IS NOT NULL) AND (((mi.info)::text ~~ 'Japan:%200%'::text) OR ((mi.info)::text ~~ 'USA:%200%'::text)))"): 309901,
+ ('movie_info AS mi', "((mi.info IS NOT NULL) AND (((mi.info)::text ~~ 'Japan:%2007%'::text) OR ((mi.info)::text ~~ 'USA:%2008%'::text)))"): 1540,
+ ('movie_info AS mi', "((mi.info IS NOT NULL) AND (((mi.info)::text ~~ 'Japan:%201%'::text) OR ((mi.info)::text ~~ 'USA:%201%'::text)))"): 464648,
+ ('movie_info AS mi', "((mi.info IS NOT NULL) AND ((mi.note)::text ~~ '%internet%'::text) AND (((mi.info)::text ~~ 'USA:% 199%'::text) OR ((mi.info)::text ~~ 'USA:% 200%'::text)))"): 165,
+ ('movie_info AS mi', "((mi.info)::text = 'Bulgaria'::text)"): 373,
+ ('movie_info AS mi', "((mi.info)::text = 'Horror'::text)"): 26693,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Drama,Horror,Western,Family}'::text[]))"): 294981,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Drama,Horror}'::text[]))"): 260501,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Germany,German,USA,American}'::text[]))"): 699325,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Germany,German}'::text[]))"): 106276,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Horror,Action,Sci-Fi,Thriller,Crime,War}'::text[]))"): 181411,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Horror,Thriller}'::text[]))"): 64260,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Sweden,Germany,Swedish,German}'::text[]))"): 107022,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Sweden,Norway,Germany,Denmark,Swedish,Danish,Norwegian,German,USA,American}'::text[]))"): 716512,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Sweden,Norway,Germany,Denmark,Swedish,Denish,Norwegian,German,English}'::text[]))"): 909908,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Sweden,Norway,Germany,Denmark,Swedish,Denish,Norwegian,German,USA,American}'::text[]))"): 716512,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Sweden,Norway,Germany,Denmark,Swedish,Denish,Norwegian,German}'::text[]))"): 123463,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{USA,America}'::text[]))"): 593049,
+ ('movie_info AS mi', "((mi.info)::text ~~ 'USA:%200%'::text)"): 233344,
+ ('movie_info AS mi', "((mi.note IS NULL) AND ((mi.info)::text = ANY ('{Horror,Thriller}'::text[])))"): 58258,
+ ('movie_info AS mi', "((mi.note)::text ~~ '%internet%'::text)"): 10460,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text < '7.0'::text)"): 1173667,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text < '8.5'::text)"): 1344240,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text > '2.0'::text)"): 858714,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text > '5.0'::text)"): 522177,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text > '6.0'::text)"): 375203,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text > '6.5'::text)"): 299602,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text > '7.0'::text)"): 191406,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text > '8.0'::text)"): 51638,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text > '9.0'::text)"): 6354,
+ ('movie_info_idx AS mi_idx2', "((mi_idx2.info)::text < '3.0'::text)"): 654405,
+ ('movie_info_idx AS mi_idx2', "((mi_idx2.info)::text < '3.5'::text)"): 702257,
+ ('name AS n', "(((n.name)::text ~~ '%An%'::text) AND ((n.gender)::text = 'f'::text))"): 29370,
+ ('name AS n', "(((n.name)::text ~~ '%Ang%'::text) AND ((n.gender)::text = 'f'::text))"): 9790,
+ ('name AS n', "(((n.name)::text ~~ '%Angel%'::text) AND ((n.gender)::text = 'f'::text))"): 9790,
+ ('name AS n', "(((n.name)::text ~~ '%Tim%'::text) AND ((n.gender)::text = 'm'::text))"): 174,
+ ('name AS n', "(((n.name)::text ~~ '%Yo%'::text) AND ((n.name)::text !~~ '%Yu%'::text))"): 42092,
+ ('name AS n', "(((n.name_pcode_cf)::text >= 'A'::text) AND ((n.name_pcode_cf)::text <= 'F'::text) AND (((n.gender)::text = 'm'::text) OR (((n.gender)::text = 'f'::text) AND ((n.name)::text ~~ 'A%'::text))))"): 470362,
+ ('name AS n', "(((n.name_pcode_cf)::text >= 'A'::text) AND ((n.name_pcode_cf)::text <= 'F'::text) AND (((n.gender)::text = 'm'::text) OR (((n.gender)::text = 'f'::text) AND ((n.name)::text ~~ 'B%'::text))))"): 479558,
+ ('name AS n', "(((n.name_pcode_cf)::text ~~ 'D%'::text) AND ((n.gender)::text = 'm'::text))"): 96902,
+ ('name AS n', "((n.gender IS NOT NULL) AND ((n.gender)::text = 'f'::text))"): 629896,
+ ('name AS n', "((n.gender)::text = 'f'::text)"): 969220,
+ ('name AS n', "((n.gender)::text = 'm'::text)"): 1739233,
+ ('name AS n', "((n.name)::text ~~ '%B%'::text)"): 420959,
+ ('name AS n', "((n.name)::text ~~ '%Bert%'::text)"): 417,
+ ('name AS n', "((n.name)::text ~~ '%Downey%Robert%'::text)"): 417,
+ ('name AS n', "((n.name)::text ~~ 'B%'::text)"): 336767,
+ ('name AS n', "((n.name)::text ~~ 'X%'::text)"): 417,
+ ('name AS n', "((n.name)::text ~~ 'Z%'::text)"): 417,
+ ('name AS n1', "(((n1.name)::text ~~ '%Yo%'::text) AND ((n1.name)::text !~~ '%Yu%'::text))"): 42092,
+ ('person_info AS pi', "((pi.note)::text = 'Volker Boehm'::text)"): 29,
+ ('person_info AS pi', '(pi.note IS NOT NULL)'): 82489,
+ ('role_type AS rt', "((rt.role)::text = 'actor'::text)"): 1,
+ ('role_type AS rt', "((rt.role)::text = 'actress'::text)"): 1,
+ ('role_type AS rt', "((rt.role)::text = 'costume designer'::text)"): 1,
+ ('role_type AS rt', "((rt.role)::text = 'writer'::text)"): 1,
+ ('title AS t', "(((t.title)::text <> ''::text) AND (((t.title)::text ~~ '%Champion%'::text) OR ((t.title)::text ~~ '%Loser%'::text)))"): 471,
+ ('title AS t', "(((t.title)::text <> ''::text) AND (((t.title)::text ~~ 'Champion%'::text) OR ((t.title)::text ~~ 'Loser%'::text)))"): 471,
+ ('title AS t', "(((t.title)::text ~~ '%Money%'::text) AND (t.production_year = 1998))"): 4,
+ ('title AS t', '((t.episode_nr >= 5) AND (t.episode_nr < 100))'): 699078,
+ ('title AS t', '((t.episode_nr >= 50) AND (t.episode_nr < 100))'): 67843,
+ ('title AS t', "((t.production_year > 2000) AND (((t.title)::text ~~ '%Freddy%'::text) OR ((t.title)::text ~~ '%Jason%'::text) OR ((t.title)::text ~~ 'Saw%'::text)))"): 382,
+ ('title AS t', "((t.production_year > 2000) AND (((t.title)::text ~~ 'Birdemic%'::text) OR ((t.title)::text ~~ '%Movie%'::text)))"): 255,
+ ('title AS t', "((t.production_year > 2010) AND (((t.title)::text ~~ '%murder%'::text) OR ((t.title)::text ~~ '%Murder%'::text) OR ((t.title)::text ~~ '%Mord%'::text)))"): 109,
+ ('title AS t', "((t.production_year > 2010) AND ((t.title)::text ~~ 'Kung Fu Panda%'::text))"): 36,
+ ('title AS t', "((t.production_year > 2010) AND ((t.title)::text ~~ 'Vampire%'::text))"): 36,
+ ('title AS t', '((t.production_year >= 1950) AND (t.production_year <= 2000))'): 925794,
+ ('title AS t', '((t.production_year >= 1950) AND (t.production_year <= 2010))'): 1900555,
+ ('title AS t', '((t.production_year >= 1980) AND (t.production_year <= 1984))'): 81215,
+ ('title AS t', '((t.production_year >= 1980) AND (t.production_year <= 1995))'): 348075,
+ ('title AS t', '((t.production_year >= 1980) AND (t.production_year <= 2010))'): 1548072,
+ ('title AS t', "((t.production_year >= 2000) AND (t.production_year <= 2005) AND ((t.title)::text = 'Shrek 2'::text))"): 3,
+ ('title AS t', "((t.production_year >= 2000) AND (t.production_year <= 2010) AND ((t.title)::text = 'Shrek 2'::text))"): 7,
+ ('title AS t', '((t.production_year >= 2000) AND (t.production_year <= 2010))'): 1030165,
+ ('title AS t', '((t.production_year >= 2005) AND (t.production_year <= 2008))'): 445939,
+ ('title AS t', '((t.production_year >= 2005) AND (t.production_year <= 2009))'): 567072,
+ ('title AS t', '((t.production_year >= 2005) AND (t.production_year <= 2010))'): 707588,
+ ('title AS t', '((t.production_year >= 2005) AND (t.production_year <= 2015))'): 1098327,
+ ('title AS t', "((t.production_year >= 2006) AND (t.production_year <= 2007) AND (((t.title)::text ~~ 'One Piece%'::text) OR ((t.title)::text ~~ 'Dragon Ball Z%'::text)))"): 44,
+ ('title AS t', "((t.production_year >= 2007) AND (t.production_year <= 2008) AND ((t.title)::text ~~ '%Kung%Fu%Panda%'::text))"): 23,
+ ('title AS t', '((t.production_year >= 2007) AND (t.production_year <= 2010))'): 503501,
+ ('title AS t', '((t.production_year >= 2008) AND (t.production_year <= 2014))'): 771328,
+ ('title AS t', '(t.episode_nr < 100)'): 952851,
+ ('title AS t', '(t.production_year = 1998)'): 45425,
+ ('title AS t', '(t.production_year > 1950)'): 2284282,
+ ('title AS t', '(t.production_year > 1990)'): 1735084,
+ ('title AS t', '(t.production_year > 2000)'): 1365517,
+ ('title AS t', '(t.production_year > 2005)'): 1001392,
+ ('title AS t', '(t.production_year > 2008)'): 652406,
+ ('title AS t', '(t.production_year > 2009)'): 531273,
+ ('title AS t', '(t.production_year > 2010)'): 390757,
+ ('title AS t', '(t.production_year > 2014)'): 26,
+ ('title AS t2', '((t2.production_year >= 2000) AND (t2.production_year <= 2010))'): 1030165,
+ ('title AS t2', '((t2.production_year >= 2005) AND (t2.production_year <= 2008))'): 445939,
+ ('title AS t2', '(t2.production_year = 2007)'): 122876}
+costs stats mean 16.05232524076991 std 1.1142839642805145
+Number of model parameters: 757025 (~= 2.9MB)
+SimModel(
+  (tree_conv): TreeConvolution(
+    (query_mlp): Sequential(
+      (0): Linear(in_features=40, out_features=128, bias=True)
+      (1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+      (2): LeakyReLU(negative_slope=0.01)
+      (3): Linear(in_features=128, out_features=64, bias=True)
+      (4): LayerNorm((64,), eps=1e-05, elementwise_affine=True)
+      (5): LeakyReLU(negative_slope=0.01)
+      (6): Linear(in_features=64, out_features=32, bias=True)
+    )
+    (conv): Sequential(
+      (0): TreeConv1d(
+        (weights): Conv1d(155, 512, kernel_size=(3,), stride=(3,))
+      )
+      (1): TreeStandardize()
+      (2): TreeAct(
+        (activation): LeakyReLU(negative_slope=0.01)
+      )
+      (3): TreeConv1d(
+        (weights): Conv1d(512, 256, kernel_size=(3,), stride=(3,))
+      )
+      (4): TreeStandardize()
+      (5): TreeAct(
+        (activation): LeakyReLU(negative_slope=0.01)
+      )
+      (6): TreeConv1d(
+        (weights): Conv1d(256, 128, kernel_size=(3,), stride=(3,))
+      )
+      (7): TreeStandardize()
+      (8): TreeAct(
+        (activation): LeakyReLU(negative_slope=0.01)
+      )
+      (9): TreeMaxPool()
+    )
+    (out_mlp): Sequential(
+      (0): Linear(in_features=128, out_features=64, bias=True)
+      (1): LayerNorm((64,), eps=1e-05, elementwise_affine=True)
+      (2): LeakyReLU(negative_slope=0.01)
+      (3): Linear(in_features=64, out_features=32, bias=True)
+      (4): LayerNorm((32,), eps=1e-05, elementwise_affine=True)
+      (5): LeakyReLU(negative_slope=0.01)
+      (6): Linear(in_features=32, out_features=1, bias=True)
+    )
+  )
+)
+No best checkpoint found (run validaiton yet?); model left unchanged.
+plans_lib.FilterScansOrJoins()
+plans_lib.GatherUnaryFiltersInfo()
+postgres.EstimateFilterRows()
+171 unique filters
+{('aka_name AS an', "((an.name IS NOT NULL) AND (((an.name)::text ~~ '%a%'::text) OR ((an.name)::text ~~ 'A%'::text)))"): 637664,
+ ('aka_name AS an', "((an.name)::text ~~ '%a%'::text)"): 626557,
+ ('cast_info AS ci', "((ci.note)::text = '(voice)'::text)"): 717638,
+ ('cast_info AS ci', "((ci.note)::text = '(voice: English version)'::text)"): 97860,
+ ('cast_info AS ci', '((ci.note)::text = ANY (\'{(voice),"(voice) (uncredited)","(voice: English version)"}\'::text[]))'): 846910,
+ ('cast_info AS ci', '((ci.note)::text = ANY (\'{(voice),"(voice: Japanese version)","(voice) (uncredited)","(voice: English version)"}\'::text[]))'): 872281,
+ ('cast_info AS ci', '((ci.note)::text = ANY (\'{(writer),"(head writer)","(written by)",(story),"(story editor)"}\'::text[]))'): 1245597,
+ ('cast_info AS ci', "((ci.note)::text ~~ '%(producer)%'::text)"): 1440597,
+ ('char_name AS chn', "(((chn.name)::text !~~ '%Sherlock%'::text) AND (((chn.name)::text ~~ '%Tony%Stark%'::text) OR ((chn.name)::text ~~ '%Iron%Man%'::text)))"): 628,
+ ('char_name AS chn', "((chn.name IS NOT NULL) AND (((chn.name)::text ~~ '%man%'::text) OR ((chn.name)::text ~~ '%Man%'::text)))"): 312079,
+ ('char_name AS chn', "((chn.name)::text = 'Queen'::text)"): 1,
+ ('comp_cast_type AS cct1', "((cct1.kind)::text = 'cast'::text)"): 1,
+ ('comp_cast_type AS cct1', "((cct1.kind)::text = 'complete+verified'::text)"): 1,
+ ('comp_cast_type AS cct1', "((cct1.kind)::text = 'crew'::text)"): 1,
+ ('comp_cast_type AS cct1', "((cct1.kind)::text = ANY ('{cast,crew}'::text[]))"): 2,
+ ('comp_cast_type AS cct2', "((cct2.kind)::text <> 'complete+verified'::text)"): 3,
+ ('comp_cast_type AS cct2', "((cct2.kind)::text = 'complete'::text)"): 1,
+ ('comp_cast_type AS cct2', "((cct2.kind)::text = 'complete+verified'::text)"): 1,
+ ('comp_cast_type AS cct2', "((cct2.kind)::text ~~ '%complete%'::text)"): 1,
+ ('comp_cast_type AS cct2', "((cct2.kind)::text ~~ 'complete%'::text)"): 1,
+ ('company_name AS cn', "(((cn.country_code)::text <> '[pl]'::text) AND (((cn.name)::text ~~ '%Film%'::text) OR ((cn.name)::text ~~ '%Warner%'::text)))"): 36113,
+ ('company_name AS cn', "(((cn.country_code)::text <> '[pl]'::text) AND (((cn.name)::text ~~ '20th Century Fox%'::text) OR ((cn.name)::text ~~ 'Twentieth Century Fox%'::text)))"): 77,
+ ('company_name AS cn', "(((cn.country_code)::text = '[us]'::text) AND ((cn.name)::text = 'DreamWorks Animation'::text))"): 1,
+ ('company_name AS cn', "(((cn.country_code)::text = '[us]'::text) AND ((cn.name)::text = 'YouTube'::text))"): 1,
+ ('company_name AS cn', "((cn.country_code)::text <> '[pl]'::text)"): 210463,
+ ('company_name AS cn', "((cn.country_code)::text <> '[us]'::text)"): 126303,
+ ('company_name AS cn', "((cn.country_code)::text = '[jp]'::text)"): 6392,
+ ('company_name AS cn', "((cn.country_code)::text = '[nl]'::text)"): 2326,
+ ('company_name AS cn', "((cn.country_code)::text = '[ru]'::text)"): 1332,
+ ('company_name AS cn', "((cn.country_code)::text = '[sm]'::text)"): 20,
+ ('company_name AS cn', "((cn.country_code)::text = '[us]'::text)"): 85304,
+ ('company_name AS cn', "((cn.name)::text ~~ 'Lionsgate%'::text)"): 23,
+ ('company_name AS cn1', "((cn1.country_code)::text <> '[us]'::text)"): 126303,
+ ('company_name AS cn1', "((cn1.country_code)::text = '[nl]'::text)"): 2326,
+ ('company_type AS ct', "((ct.kind IS NOT NULL) AND (((ct.kind)::text = 'production companies'::text) OR ((ct.kind)::text = 'distributors'::text)))"): 2,
+ ('company_type AS ct', "((ct.kind IS NOT NULL) AND ((ct.kind)::text <> 'production companies'::text))"): 3,
+ ('company_type AS ct', "((ct.kind)::text = 'production companies'::text)"): 1,
+ ('info_type AS it', "((it.info)::text = 'bottom 10 rank'::text)"): 1,
+ ('info_type AS it', "((it.info)::text = 'mini biography'::text)"): 1,
+ ('info_type AS it', "((it.info)::text = 'rating'::text)"): 1,
+ ('info_type AS it', "((it.info)::text = 'release dates'::text)"): 1,
+ ('info_type AS it', "((it.info)::text = 'top 250 rank'::text)"): 1,
+ ('info_type AS it1', "((it1.info)::text = 'budget'::text)"): 1,
+ ('info_type AS it1', "((it1.info)::text = 'countries'::text)"): 1,
+ ('info_type AS it1', "((it1.info)::text = 'genres'::text)"): 1,
+ ('info_type AS it1', "((it1.info)::text = 'rating'::text)"): 1,
+ ('info_type AS it1', "((it1.info)::text = 'release dates'::text)"): 1,
+ ('info_type AS it2', "((it2.info)::text = 'bottom 10 rank'::text)"): 1,
+ ('info_type AS it2', "((it2.info)::text = 'rating'::text)"): 1,
+ ('info_type AS it2', "((it2.info)::text = 'release dates'::text)"): 1,
+ ('info_type AS it2', "((it2.info)::text = 'votes'::text)"): 1,
+ ('info_type AS it3', "((it3.info)::text = 'height'::text)"): 1,
+ ('info_type AS it3', "((it3.info)::text = 'trivia'::text)"): 1,
+ ('keyword AS k', "((k.keyword IS NOT NULL) AND ((k.keyword)::text = ANY ('{murder,murder-in-title,blood,violence}'::text[])))"): 4,
+ ('keyword AS k', "((k.keyword)::text = 'character-name-in-title'::text)"): 1,
+ ('keyword AS k', "((k.keyword)::text = 'computer-animation'::text)"): 1,
+ ('keyword AS k', "((k.keyword)::text = 'marvel-cinematic-universe'::text)"): 1,
+ ('keyword AS k', "((k.keyword)::text = 'sequel'::text)"): 1,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{hero,martial-arts,hand-to-hand-combat,computer-animated-movie}'::text[]))"): 4,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{murder,blood,gore,death,female-nudity}'::text[]))"): 5,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{murder,murder-in-title,blood,violence}'::text[]))"): 4,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{murder,murder-in-title}'::text[]))"): 2,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{murder,violence,blood,gore,death,female-nudity,hospital}'::text[]))"): 7,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{nerd,loner,alienation,dignity}'::text[]))"): 4,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{sequel,revenge,based-on-novel}'::text[]))"): 3,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{superhero,marvel-comics,based-on-comic,fight}'::text[]))"): 4,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{superhero,marvel-comics,based-on-comic,tv-special,fight,violence,magnet,web,claw,laser}'::text[]))"): 10,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{superhero,sequel,second-part,marvel-comics,based-on-comic,tv-special,fight,violence}'::text[]))"): 8,
+ ('keyword AS k', "((k.keyword)::text ~~ '%sequel%'::text)"): 13,
+ ('kind_type AS kt', "((kt.kind)::text = 'movie'::text)"): 1,
+ ('kind_type AS kt', '((kt.kind)::text = ANY (\'{movie,"tv movie","video movie","video game"}\'::text[]))'): 4,
+ ('kind_type AS kt', "((kt.kind)::text = ANY ('{movie,episode}'::text[]))"): 2,
+ ('kind_type AS kt1', "((kt1.kind)::text = 'tv series'::text)"): 1,
+ ('kind_type AS kt1', '((kt1.kind)::text = ANY (\'{"tv series",episode}\'::text[]))'): 2,
+ ('kind_type AS kt2', "((kt2.kind)::text = 'tv series'::text)"): 1,
+ ('kind_type AS kt2', '((kt2.kind)::text = ANY (\'{"tv series",episode}\'::text[]))'): 2,
+ ('link_type AS lt', "((lt.link)::text = 'features'::text)"): 1,
+ ('link_type AS lt', '((lt.link)::text = ANY (\'{references,"referenced in",features,"featured in"}\'::text[]))'): 4,
+ ('link_type AS lt', '((lt.link)::text = ANY (\'{sequel,follows,"followed by"}\'::text[]))'): 3,
+ ('link_type AS lt', "((lt.link)::text ~~ '%follow%'::text)"): 1,
+ ('link_type AS lt', "((lt.link)::text ~~ '%follows%'::text)"): 1,
+ ('movie_companies AS mc', "(((mc.note)::text !~~ '%(TV)%'::text) AND ((mc.note)::text ~~ '%(USA)%'::text))"): 176049,
+ ('movie_companies AS mc', "(((mc.note)::text !~~ '%(USA)%'::text) AND ((mc.note)::text ~~ '%(200%)%'::text))"): 138700,
+ ('movie_companies AS mc', "(((mc.note)::text !~~ '%(as Metro-Goldwyn-Mayer Pictures)%'::text) AND ((mc.note)::text ~~ '%(co-production)%'::text))"): 8434,
+ ('movie_companies AS mc', "(((mc.note)::text ~~ '%(200%)%'::text) AND (((mc.note)::text ~~ '%(USA)%'::text) OR ((mc.note)::text ~~ '%(worldwide)%'::text)))"): 90021,
+ ('movie_companies AS mc', "(((mc.note)::text ~~ '%(200%)%'::text) AND ((mc.note)::text ~~ '%(worldwide)%'::text))"): 12904,
+ ('movie_companies AS mc', "(((mc.note)::text ~~ '%(Japan)%'::text) AND ((mc.note)::text !~~ '%(USA)%'::text) AND (((mc.note)::text ~~ '%(2006)%'::text) OR ((mc.note)::text ~~ '%(2007)%'::text)))"): 607,
+ ('movie_companies AS mc', "(((mc.note)::text ~~ '%(VHS)%'::text) AND ((mc.note)::text ~~ '%(USA)%'::text) AND ((mc.note)::text ~~ '%(1994)%'::text))"): 32,
+ ('movie_companies AS mc', "((mc.note)::text !~~ '%(as Metro-Goldwyn-Mayer Pictures)%'::text)"): 1324389,
+ ('movie_companies AS mc', "((mc.note)::text ~~ '%(Blu-ray)%'::text)"): 9246,
+ ('movie_companies AS mc', '(mc.note IS NOT NULL)'): 1324481,
+ ('movie_companies AS mc', '(mc.note IS NULL)'): 1284648,
+ ('movie_info AS mi', "(((mi.note)::text ~~ '%internet%'::text) AND ((mi.info)::text ~~ 'USA:% 200%'::text))"): 165,
+ ('movie_info AS mi', "((mi.info IS NOT NULL) AND (((mi.info)::text ~~ 'Japan:%200%'::text) OR ((mi.info)::text ~~ 'USA:%200%'::text)))"): 309901,
+ ('movie_info AS mi', "((mi.info IS NOT NULL) AND (((mi.info)::text ~~ 'Japan:%2007%'::text) OR ((mi.info)::text ~~ 'USA:%2008%'::text)))"): 1540,
+ ('movie_info AS mi', "((mi.info IS NOT NULL) AND (((mi.info)::text ~~ 'Japan:%201%'::text) OR ((mi.info)::text ~~ 'USA:%201%'::text)))"): 464648,
+ ('movie_info AS mi', "((mi.info IS NOT NULL) AND ((mi.note)::text ~~ '%internet%'::text) AND (((mi.info)::text ~~ 'USA:% 199%'::text) OR ((mi.info)::text ~~ 'USA:% 200%'::text)))"): 165,
+ ('movie_info AS mi', "((mi.info)::text = 'Bulgaria'::text)"): 373,
+ ('movie_info AS mi', "((mi.info)::text = 'Horror'::text)"): 26693,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Drama,Horror,Western,Family}'::text[]))"): 294981,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Germany,German,USA,American}'::text[]))"): 699325,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Germany,German}'::text[]))"): 106276,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Horror,Action,Sci-Fi,Thriller,Crime,War}'::text[]))"): 181411,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Horror,Thriller}'::text[]))"): 64260,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Sweden,Germany,Swedish,German}'::text[]))"): 107022,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Sweden,Norway,Germany,Denmark,Swedish,Danish,Norwegian,German,USA,American}'::text[]))"): 716512,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Sweden,Norway,Germany,Denmark,Swedish,Denish,Norwegian,German,English}'::text[]))"): 909908,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Sweden,Norway,Germany,Denmark,Swedish,Denish,Norwegian,German,USA,American}'::text[]))"): 716512,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{USA,America}'::text[]))"): 593049,
+ ('movie_info AS mi', "((mi.info)::text ~~ 'USA:%200%'::text)"): 233344,
+ ('movie_info AS mi', "((mi.note IS NULL) AND ((mi.info)::text = ANY ('{Horror,Thriller}'::text[])))"): 58258,
+ ('movie_info AS mi', "((mi.note)::text ~~ '%internet%'::text)"): 10460,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text < '7.0'::text)"): 1173667,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text < '8.5'::text)"): 1344240,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text > '2.0'::text)"): 858714,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text > '6.0'::text)"): 375203,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text > '6.5'::text)"): 299602,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text > '7.0'::text)"): 191406,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text > '8.0'::text)"): 51638,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text > '9.0'::text)"): 6354,
+ ('movie_info_idx AS mi_idx2', "((mi_idx2.info)::text < '3.0'::text)"): 654405,
+ ('movie_info_idx AS mi_idx2', "((mi_idx2.info)::text < '3.5'::text)"): 702257,
+ ('name AS n', "(((n.name)::text ~~ '%An%'::text) AND ((n.gender)::text = 'f'::text))"): 29370,
+ ('name AS n', "(((n.name)::text ~~ '%Angel%'::text) AND ((n.gender)::text = 'f'::text))"): 9790,
+ ('name AS n', "(((n.name)::text ~~ '%Yo%'::text) AND ((n.name)::text !~~ '%Yu%'::text))"): 42092,
+ ('name AS n', "(((n.name_pcode_cf)::text >= 'A'::text) AND ((n.name_pcode_cf)::text <= 'F'::text) AND (((n.gender)::text = 'm'::text) OR (((n.gender)::text = 'f'::text) AND ((n.name)::text ~~ 'A%'::text))))"): 470362,
+ ('name AS n', "(((n.name_pcode_cf)::text ~~ 'D%'::text) AND ((n.gender)::text = 'm'::text))"): 96902,
+ ('name AS n', "((n.gender IS NOT NULL) AND ((n.gender)::text = 'f'::text))"): 629896,
+ ('name AS n', "((n.gender)::text = 'f'::text)"): 969220,
+ ('name AS n', "((n.gender)::text = 'm'::text)"): 1739233,
+ ('name AS n', "((n.name)::text ~~ '%B%'::text)"): 420959,
+ ('name AS n', "((n.name)::text ~~ '%Bert%'::text)"): 417,
+ ('name AS n', "((n.name)::text ~~ '%Downey%Robert%'::text)"): 417,
+ ('name AS n', "((n.name)::text ~~ 'X%'::text)"): 417,
+ ('name AS n', "((n.name)::text ~~ 'Z%'::text)"): 417,
+ ('person_info AS pi', "((pi.note)::text = 'Volker Boehm'::text)"): 29,
+ ('person_info AS pi', '(pi.note IS NOT NULL)'): 82489,
+ ('role_type AS rt', "((rt.role)::text = 'actor'::text)"): 1,
+ ('role_type AS rt', "((rt.role)::text = 'actress'::text)"): 1,
+ ('role_type AS rt', "((rt.role)::text = 'costume designer'::text)"): 1,
+ ('role_type AS rt', "((rt.role)::text = 'writer'::text)"): 1,
+ ('title AS t', "(((t.title)::text <> ''::text) AND (((t.title)::text ~~ '%Champion%'::text) OR ((t.title)::text ~~ '%Loser%'::text)))"): 471,
+ ('title AS t', "(((t.title)::text <> ''::text) AND (((t.title)::text ~~ 'Champion%'::text) OR ((t.title)::text ~~ 'Loser%'::text)))"): 471,
+ ('title AS t', "(((t.title)::text ~~ '%Money%'::text) AND (t.production_year = 1998))"): 4,
+ ('title AS t', '((t.episode_nr >= 5) AND (t.episode_nr < 100))'): 699078,
+ ('title AS t', "((t.production_year > 2000) AND (((t.title)::text ~~ '%Freddy%'::text) OR ((t.title)::text ~~ '%Jason%'::text) OR ((t.title)::text ~~ 'Saw%'::text)))"): 382,
+ ('title AS t', "((t.production_year > 2000) AND (((t.title)::text ~~ 'Birdemic%'::text) OR ((t.title)::text ~~ '%Movie%'::text)))"): 255,
+ ('title AS t', "((t.production_year > 2010) AND (((t.title)::text ~~ '%murder%'::text) OR ((t.title)::text ~~ '%Murder%'::text) OR ((t.title)::text ~~ '%Mord%'::text)))"): 109,
+ ('title AS t', "((t.production_year > 2010) AND ((t.title)::text ~~ 'Kung Fu Panda%'::text))"): 36,
+ ('title AS t', "((t.production_year > 2010) AND ((t.title)::text ~~ 'Vampire%'::text))"): 36,
+ ('title AS t', '((t.production_year >= 1950) AND (t.production_year <= 2010))'): 1900555,
+ ('title AS t', '((t.production_year >= 1980) AND (t.production_year <= 1984))'): 81215,
+ ('title AS t', '((t.production_year >= 1980) AND (t.production_year <= 2010))'): 1548072,
+ ('title AS t', "((t.production_year >= 2000) AND (t.production_year <= 2005) AND ((t.title)::text = 'Shrek 2'::text))"): 3,
+ ('title AS t', '((t.production_year >= 2000) AND (t.production_year <= 2010))'): 1030165,
+ ('title AS t', '((t.production_year >= 2005) AND (t.production_year <= 2010))'): 707588,
+ ('title AS t', "((t.production_year >= 2006) AND (t.production_year <= 2007) AND (((t.title)::text ~~ 'One Piece%'::text) OR ((t.title)::text ~~ 'Dragon Ball Z%'::text)))"): 44,
+ ('title AS t', "((t.production_year >= 2007) AND (t.production_year <= 2008) AND ((t.title)::text ~~ '%Kung%Fu%Panda%'::text))"): 23,
+ ('title AS t', '((t.production_year >= 2007) AND (t.production_year <= 2010))'): 503501,
+ ('title AS t', '((t.production_year >= 2008) AND (t.production_year <= 2014))'): 771328,
+ ('title AS t', '(t.episode_nr < 100)'): 952851,
+ ('title AS t', '(t.production_year = 1998)'): 45425,
+ ('title AS t', '(t.production_year > 1950)'): 2284282,
+ ('title AS t', '(t.production_year > 1990)'): 1735084,
+ ('title AS t', '(t.production_year > 2000)'): 1365517,
+ ('title AS t', '(t.production_year > 2005)'): 1001392,
+ ('title AS t', '(t.production_year > 2009)'): 531273,
+ ('title AS t', '(t.production_year > 2010)'): 390757,
+ ('title AS t', '(t.production_year > 2014)'): 26,
+ ('title AS t2', '((t2.production_year >= 2000) AND (t2.production_year <= 2010))'): 1030165,
+ ('title AS t2', '(t2.production_year = 2007)'): 122876}
+21 rels: ['aka_name' 'aka_title' 'cast_info' 'char_name' 'comp_cast_type'
+ 'company_name' 'company_type' 'complete_cast' 'info_type' 'keyword'
+ 'kind_type' 'link_type' 'movie_companies' 'movie_info' 'movie_info_idx'
+ 'movie_keyword' 'movie_link' 'name' 'person_info' 'role_type' 'title']
+40 rel_ids: ['aka_name AS a1' 'aka_name AS an' 'aka_name AS an1' 'aka_title AS aka_t'
+ 'aka_title AS at' 'cast_info AS ci' 'char_name AS chn'
+ 'comp_cast_type AS cct1' 'comp_cast_type AS cct2' 'company_name AS cn'
+ 'company_name AS cn1' 'company_name AS cn2' 'company_type AS ct'
+ 'complete_cast AS cc' 'info_type AS it' 'info_type AS it1'
+ 'info_type AS it2' 'info_type AS it3' 'keyword AS k' 'kind_type AS kt'
+ 'kind_type AS kt1' 'kind_type AS kt2' 'link_type AS lt'
+ 'movie_companies AS mc' 'movie_companies AS mc1' 'movie_companies AS mc2'
+ 'movie_info AS mi' 'movie_info_idx AS mi_idx' 'movie_info_idx AS mi_idx1'
+ 'movie_info_idx AS mi_idx2' 'movie_info_idx AS miidx'
+ 'movie_keyword AS mk' 'movie_link AS ml' 'name AS n' 'name AS n1'
+ 'person_info AS pi' 'role_type AS rt' 'title AS t' 'title AS t1'
+ 'title AS t2']
+3 scans: ['Index Only Scan' 'Index Scan' 'Seq Scan']
+3 joins: ['Hash Join' 'Merge Join' 'Nested Loop']
+13 all ops: ['FinalizeAggregate' 'Gather' 'Gather Merge' 'Hash' 'Hash Join'
+ 'Index Only Scan' 'Index Scan' 'Merge Join' 'Nested Loop'
+ 'PartialAggregate' 'Seq Scan' 'SimpleAggregate' 'Sort']
+Calling make_and_featurize_trees()...
+took 0.0s
+num_total_subtrees=604 num_featurized_subtrees=604 num_new_datapoints=604
+head
+  query=3.283 feat=40.0 cost=562.418
+  query=3.283 feat=31.0 cost=562.418
+  query=3.283 feat=23.0 cost=562.418
+tail
+  query=4.703 feat=5.0 cost=1949.409
+  query=4.703 feat=10.0 cost=1949.409
+  query=4.703 feat=16.0 cost=1949.409
+costs stats mean 7.1748801050456175 std 0.8783512348636928
+num_train=543 num_validation=61
+MakeModel afresh
+InitializeModel curr_value_iter=0
+Initialized from SIM weights.
+iter 0 lr 0.001
+number of model parameters: 757025 (~= 2.9MB)
+BalsaModel(
+  (model): TreeConvolution(
+    (query_mlp): Sequential(
+      (0): Linear(in_features=40, out_features=128, bias=True)
+      (1): LayerNorm((128,), eps=1e-05, elementwise_affine=True)
+      (2): LeakyReLU(negative_slope=0.01)
+      (3): Linear(in_features=128, out_features=64, bias=True)
+      (4): LayerNorm((64,), eps=1e-05, elementwise_affine=True)
+      (5): LeakyReLU(negative_slope=0.01)
+      (6): Linear(in_features=64, out_features=32, bias=True)
+    )
+    (conv): Sequential(
+      (0): TreeConv1d(
+        (weights): Conv1d(155, 512, kernel_size=(3,), stride=(3,))
+      )
+      (1): TreeStandardize()
+      (2): TreeAct(
+        (activation): LeakyReLU(negative_slope=0.01)
+      )
+      (3): TreeConv1d(
+        (weights): Conv1d(512, 256, kernel_size=(3,), stride=(3,))
+      )
+      (4): TreeStandardize()
+      (5): TreeAct(
+        (activation): LeakyReLU(negative_slope=0.01)
+      )
+      (6): TreeConv1d(
+        (weights): Conv1d(256, 128, kernel_size=(3,), stride=(3,))
+      )
+      (7): TreeStandardize()
+      (8): TreeAct(
+        (activation): LeakyReLU(negative_slope=0.01)
+      )
+      (9): TreeMaxPool()
+    )
+    (out_mlp): Sequential(
+      (0): Linear(in_features=128, out_features=64, bias=True)
+      (1): LayerNorm((64,), eps=1e-05, elementwise_affine=True)
+      (2): LeakyReLU(negative_slope=0.01)
+      (3): Linear(in_features=64, out_features=32, bias=True)
+      (4): LayerNorm((32,), eps=1e-05, elementwise_affine=True)
+      (5): LeakyReLU(negative_slope=0.01)
+      (6): Linear(in_features=32, out_features=1, bias=True)
+    )
+  )
+)
+No best checkpoint found (run validaiton yet?); model left unchanged.
+---------------------------------------
+Planning took 1813.4ms
+q10b, predicted time: 1215.4
+q10b,(predicted 1215.4),/*+ HashJoin(chn ct t mc cn ci rt)
+ MergeJoin(ct t mc cn ci rt)
+ NestLoop(ct t mc cn ci)
+ MergeJoin(ct t mc cn)
+ HashJoin(t mc cn)
+ MergeJoin(mc cn)
+ IndexScan(chn)
+ IndexScan(ct)
+ SeqScan(t)
+ IndexScan(mc)
+ IndexScan(cn)
+ IndexScan(ci)
+ SeqScan(rt)
+ Leading((chn (((ct (t (mc cn))) ci) rt))) */
+#
+---------------------------------------
+Planning took 33.1ms
+q10c, predicted time: 1486.0
+q10c,(predicted 1486.0),/*+ HashJoin(chn ct cn t rt ci mc)
+ MergeJoin(ct cn t rt ci mc)
+ HashJoin(cn t rt ci mc)
+ HashJoin(t rt ci mc)
+ MergeJoin(t rt ci)
+ HashJoin(rt ci)
+ IndexScan(chn)
+ IndexScan(ct)
+ SeqScan(cn)
+ IndexScan(t)
+ IndexScan(rt)
+ IndexScan(ci)
+ IndexScan(mc)
+ Leading((chn (ct (cn ((t (rt ci)) mc))))) */
+#
+---------------------------------------
+Planning took 74.6ms
+q11b, predicted time: 776.7
+q11b,(predicted 776.7),/*+ MergeJoin(ct mk mc lt ml t cn k)
+ MergeJoin(ct mk mc lt ml t cn)
+ MergeJoin(mk mc lt ml t cn)
+ MergeJoin(mc lt ml t cn)
+ MergeJoin(mc lt ml t)
+ HashJoin(lt ml t)
+ MergeJoin(lt ml)
+ IndexScan(ct)
+ SeqScan(mk)
+ SeqScan(mc)
+ SeqScan(lt)
+ SeqScan(ml)
+ SeqScan(t)
+ IndexScan(cn)
+ IndexScan(k)
+ Leading(((ct (mk ((mc ((lt ml) t)) cn))) k)) */
+#
+---------------------------------------
+Planning took 82.5ms
+q11c, predicted time: 1099.1
+q11c,(predicted 1099.1),/*+ MergeJoin(k lt ml ct mc cn t mk)
+ MergeJoin(lt ml ct mc cn t mk)
+ MergeJoin(lt ml ct mc cn t)
+ HashJoin(ml ct mc cn t)
+ NestLoop(ct mc cn t)
+ MergeJoin(ct mc cn)
+ MergeJoin(mc cn)
+ IndexScan(k)
+ SeqScan(lt)
+ IndexScan(ml)
+ IndexScan(ct)
+ IndexScan(mc)
+ IndexScan(cn)
+ IndexScan(t)
+ SeqScan(mk)
+ Leading((k ((lt (ml ((ct (mc cn)) t))) mk))) */
+#
+---------------------------------------
+Planning took 57.9ms
+q11d, predicted time: 1104.3
+q11d,(predicted 1104.3),/*+ HashJoin(k mk ct mc t lt ml cn)
+ MergeJoin(mk ct mc t lt ml cn)
+ HashJoin(ct mc t lt ml cn)
+ HashJoin(mc t lt ml cn)
+ HashJoin(mc t lt ml)
+ HashJoin(t lt ml)
+ HashJoin(lt ml)
+ SeqScan(k)
+ IndexScan(mk)
+ IndexScan(ct)
+ SeqScan(mc)
+ SeqScan(t)
+ SeqScan(lt)
+ IndexScan(ml)
+ IndexScan(cn)
+ Leading((k (mk (ct ((mc (t (lt ml))) cn))))) */
+#
+---------------------------------------
+Planning took 49.5ms
+q12b, predicted time: 1936.0
+q12b,(predicted 1936.0),/*+ MergeJoin(mi it2 mi_idx t mc cn ct it1)
+ MergeJoin(mi it2 mi_idx t mc cn ct)
+ MergeJoin(mi it2 mi_idx t mc cn)
+ HashJoin(mi it2 mi_idx t mc)
+ MergeJoin(mi it2 mi_idx t)
+ MergeJoin(mi it2 mi_idx)
+ HashJoin(it2 mi_idx)
+ IndexScan(mi)
+ IndexScan(it2)
+ IndexScan(mi_idx)
+ IndexScan(t)
+ SeqScan(mc)
+ IndexScan(cn)
+ IndexScan(ct)
+ IndexScan(it1)
+ Leading(((((((mi (it2 mi_idx)) t) mc) cn) ct) it1)) */
+#
+---------------------------------------
+Planning took 148.8ms
+q12c, predicted time: 668.1
+q12c,(predicted 668.1),/*+ NestLoop(ct cn mc mi it2 mi_idx t it1)
+ MergeJoin(ct cn mc mi it2 mi_idx t)
+ MergeJoin(cn mc mi it2 mi_idx t)
+ HashJoin(mc mi it2 mi_idx t)
+ MergeJoin(mi it2 mi_idx t)
+ MergeJoin(it2 mi_idx t)
+ MergeJoin(it2 mi_idx)
+ SeqScan(ct)
+ SeqScan(cn)
+ IndexScan(mc)
+ SeqScan(mi)
+ IndexScan(it2)
+ IndexScan(mi_idx)
+ SeqScan(t)
+ IndexScan(it1)
+ Leading(((ct (cn (mc (mi ((it2 mi_idx) t))))) it1)) */
+#
+---------------------------------------
+Planning took 75.1ms
+q13b, predicted time: 1772.4
+q13b,(predicted 1772.4),/*+ MergeJoin(t kt mi it2 mc ct cn miidx it)
+ MergeJoin(t kt mi it2 mc ct cn miidx)
+ MergeJoin(t kt mi it2 mc ct cn)
+ MergeJoin(t kt mi it2 mc ct)
+ MergeJoin(t kt mi it2 mc)
+ MergeJoin(t kt mi it2)
+ MergeJoin(t kt mi)
+ MergeJoin(t kt)
+ IndexScan(t)
+ SeqScan(kt)
+ IndexScan(mi)
+ IndexScan(it2)
+ SeqScan(mc)
+ IndexScan(ct)
+ SeqScan(cn)
+ IndexScan(miidx)
+ SeqScan(it)
+ Leading(((((((((t kt) mi) it2) mc) ct) cn) miidx) it)) */
+#
+---------------------------------------
+Planning took 74.8ms
+q13c, predicted time: 1772.4
+q13c,(predicted 1772.4),/*+ MergeJoin(t kt mi it2 mc ct cn miidx it)
+ MergeJoin(t kt mi it2 mc ct cn miidx)
+ MergeJoin(t kt mi it2 mc ct cn)
+ MergeJoin(t kt mi it2 mc ct)
+ MergeJoin(t kt mi it2 mc)
+ MergeJoin(t kt mi it2)
+ MergeJoin(t kt mi)
+ MergeJoin(t kt)
+ IndexScan(t)
+ SeqScan(kt)
+ IndexScan(mi)
+ IndexScan(it2)
+ SeqScan(mc)
+ IndexScan(ct)
+ SeqScan(cn)
+ IndexScan(miidx)
+ SeqScan(it)
+ Leading(((((((((t kt) mi) it2) mc) ct) cn) miidx) it)) */
+#
+---------------------------------------
+Planning took 72.0ms
+q13d, predicted time: 2236.8
+q13d,(predicted 2236.8),/*+ MergeJoin(mi it2 t kt mc ct cn miidx it)
+ MergeJoin(mi it2 t kt mc ct cn miidx)
+ MergeJoin(mi it2 t kt mc ct cn)
+ MergeJoin(mi it2 t kt mc ct)
+ HashJoin(mi it2 t kt mc)
+ HashJoin(mi it2 t kt)
+ MergeJoin(mi it2 t)
+ MergeJoin(mi it2)
+ IndexScan(mi)
+ IndexScan(it2)
+ SeqScan(t)
+ IndexScan(kt)
+ SeqScan(mc)
+ IndexScan(ct)
+ SeqScan(cn)
+ IndexScan(miidx)
+ SeqScan(it)
+ Leading(((((((((mi it2) t) kt) mc) ct) cn) miidx) it)) */
+#
+---------------------------------------
+Planning took 143.4ms
+q14b, predicted time: 805.3
+q14b,(predicted 805.3),/*+ NestLoop(it2 kt t mi_idx mi it1 mk k)
+ MergeJoin(it2 kt t mi_idx mi it1 mk)
+ MergeJoin(it2 kt t mi_idx mi it1)
+ MergeJoin(it2 kt t mi_idx mi)
+ MergeJoin(kt t mi_idx mi)
+ MergeJoin(kt t mi_idx)
+ MergeJoin(t mi_idx)
+ IndexScan(it2)
+ SeqScan(kt)
+ IndexScan(t)
+ IndexScan(mi_idx)
+ SeqScan(mi)
+ IndexScan(it1)
+ IndexScan(mk)
+ IndexScan(k)
+ Leading(((((it2 ((kt (t mi_idx)) mi)) it1) mk) k)) */
+#
+---------------------------------------
+Planning took 48.1ms
+q14c, predicted time: 1046.5
+q14c,(predicted 1046.5),/*+ MergeJoin(k mk it1 mi it2 t kt mi_idx)
+ MergeJoin(mk it1 mi it2 t kt mi_idx)
+ MergeJoin(it1 mi it2 t kt mi_idx)
+ HashJoin(mi it2 t kt mi_idx)
+ MergeJoin(it2 t kt mi_idx)
+ MergeJoin(t kt mi_idx)
+ MergeJoin(t kt)
+ IndexScan(k)
+ IndexScan(mk)
+ SeqScan(it1)
+ SeqScan(mi)
+ IndexScan(it2)
+ IndexScan(t)
+ SeqScan(kt)
+ IndexScan(mi_idx)
+ Leading((k (mk (it1 (mi (it2 ((t kt) mi_idx))))))) */
+#
+---------------------------------------
+Planning took 326.1ms
+q15b, predicted time: 917.8
+q15b,(predicted 917.8),/*+ HashJoin(k it1 ct mc t mi at cn mk)
+ MergeJoin(it1 ct mc t mi at cn mk)
+ MergeJoin(it1 ct mc t mi at cn)
+ HashJoin(ct mc t mi at cn)
+ MergeJoin(mc t mi at cn)
+ MergeJoin(mc t mi at)
+ MergeJoin(mc t mi)
+ HashJoin(t mi)
+ IndexScan(k)
+ IndexScan(it1)
+ IndexScan(ct)
+ SeqScan(mc)
+ SeqScan(t)
+ IndexScan(mi)
+ IndexScan(at)
+ IndexScan(cn)
+ SeqScan(mk)
+ Leading((k ((it1 (ct (((mc (t mi)) at) cn))) mk))) */
+#
+---------------------------------------
+Planning took 171.9ms
+q15c, predicted time: 1320.7
+q15c,(predicted 1320.7),/*+ MergeJoin(k mk ct mc t mi at it1 cn)
+ MergeJoin(mk ct mc t mi at it1 cn)
+ HashJoin(ct mc t mi at it1 cn)
+ MergeJoin(ct mc t mi at it1)
+ HashJoin(mc t mi at it1)
+ HashJoin(t mi at it1)
+ MergeJoin(t mi at)
+ MergeJoin(t mi)
+ SeqScan(k)
+ SeqScan(mk)
+ IndexScan(ct)
+ SeqScan(mc)
+ SeqScan(t)
+ IndexScan(mi)
+ IndexScan(at)
+ IndexScan(it1)
+ IndexScan(cn)
+ Leading((k (mk ((ct (mc (((t mi) at) it1))) cn)))) */
+#
+---------------------------------------
+Planning took 114.4ms
+q15d, predicted time: 1321.3
+q15d,(predicted 1321.3),/*+ MergeJoin(k mk ct mc t mi at it1 cn)
+ MergeJoin(mk ct mc t mi at it1 cn)
+ HashJoin(ct mc t mi at it1 cn)
+ MergeJoin(ct mc t mi at it1)
+ HashJoin(mc t mi at it1)
+ HashJoin(t mi at it1)
+ MergeJoin(t mi at)
+ MergeJoin(t mi)
+ SeqScan(k)
+ SeqScan(mk)
+ IndexScan(ct)
+ SeqScan(mc)
+ SeqScan(t)
+ IndexScan(mi)
+ IndexScan(at)
+ IndexScan(it1)
+ IndexScan(cn)
+ Leading((k (mk ((ct (mc (((t mi) at) it1))) cn)))) */
+#
+---------------------------------------
+Planning took 29.8ms
+q16b, predicted time: 4508.2
+q16b,(predicted 4508.2),/*+ HashJoin(an cn mc n ci k mk t)
+ MergeJoin(cn mc n ci k mk t)
+ HashJoin(mc n ci k mk t)
+ HashJoin(n ci k mk t)
+ NestLoop(ci k mk t)
+ HashJoin(ci k mk)
+ HashJoin(k mk)
+ IndexScan(an)
+ IndexScan(cn)
+ SeqScan(mc)
+ SeqScan(n)
+ SeqScan(ci)
+ IndexScan(k)
+ IndexScan(mk)
+ IndexScan(t)
+ Leading((an (cn (mc (n ((ci (k mk)) t)))))) */
+#
+---------------------------------------
+Planning took 39.0ms
+q16c, predicted time: 4570.0
+q16c,(predicted 4570.0),/*+ MergeJoin(an cn mc n ci k mk t)
+ HashJoin(cn mc n ci k mk t)
+ HashJoin(mc n ci k mk t)
+ HashJoin(n ci k mk t)
+ HashJoin(ci k mk t)
+ HashJoin(ci k mk)
+ HashJoin(k mk)
+ IndexScan(an)
+ SeqScan(cn)
+ SeqScan(mc)
+ SeqScan(n)
+ SeqScan(ci)
+ IndexScan(k)
+ IndexScan(mk)
+ IndexScan(t)
+ Leading((an (cn (mc (n ((ci (k mk)) t)))))) */
+#
+---------------------------------------
+Planning took 35.5ms
+q16d, predicted time: 4649.3
+q16d,(predicted 4649.3),/*+ HashJoin(n an ci k mk t mc cn)
+ MergeJoin(an ci k mk t mc cn)
+ HashJoin(ci k mk t mc cn)
+ HashJoin(k mk t mc cn)
+ HashJoin(k mk t mc)
+ HashJoin(k mk t)
+ HashJoin(k mk)
+ SeqScan(n)
+ IndexScan(an)
+ SeqScan(ci)
+ IndexScan(k)
+ IndexScan(mk)
+ IndexScan(t)
+ SeqScan(mc)
+ SeqScan(cn)
+ Leading((n (an (ci ((((k mk) t) mc) cn))))) */
+#
+---------------------------------------
+Planning took 35.4ms
+q17b, predicted time: 3872.2
+q17b,(predicted 3872.2),/*+ HashJoin(mk cn mc ci n t k)
+ MergeJoin(mk cn mc ci n t)
+ HashJoin(cn mc ci n t)
+ MergeJoin(mc ci n t)
+ HashJoin(ci n t)
+ HashJoin(ci n)
+ SeqScan(mk)
+ SeqScan(cn)
+ SeqScan(mc)
+ IndexScan(ci)
+ IndexScan(n)
+ IndexScan(t)
+ SeqScan(k)
+ Leading(((mk (cn (mc ((ci n) t)))) k)) */
+#
+---------------------------------------
+Planning took 34.9ms
+q17c, predicted time: 3872.2
+q17c,(predicted 3872.2),/*+ HashJoin(mk cn mc ci n t k)
+ MergeJoin(mk cn mc ci n t)
+ HashJoin(cn mc ci n t)
+ MergeJoin(mc ci n t)
+ HashJoin(ci n t)
+ HashJoin(ci n)
+ SeqScan(mk)
+ SeqScan(cn)
+ SeqScan(mc)
+ IndexScan(ci)
+ IndexScan(n)
+ IndexScan(t)
+ SeqScan(k)
+ Leading(((mk (cn (mc ((ci n) t)))) k)) */
+#
+---------------------------------------
+Planning took 34.7ms
+q17d, predicted time: 3872.2
+q17d,(predicted 3872.2),/*+ HashJoin(mk cn mc ci n t k)
+ MergeJoin(mk cn mc ci n t)
+ HashJoin(cn mc ci n t)
+ MergeJoin(mc ci n t)
+ HashJoin(ci n t)
+ HashJoin(ci n)
+ SeqScan(mk)
+ SeqScan(cn)
+ SeqScan(mc)
+ IndexScan(ci)
+ IndexScan(n)
+ IndexScan(t)
+ SeqScan(k)
+ Leading(((mk (cn (mc ((ci n) t)))) k)) */
+#
+---------------------------------------
+Planning took 23.0ms
+q17e, predicted time: 4832.9
+q17e,(predicted 4832.9),/*+ NestLoop(mc n ci k mk t cn)
+ MergeJoin(mc n ci k mk t)
+ HashJoin(n ci k mk t)
+ HashJoin(ci k mk t)
+ HashJoin(ci k mk)
+ HashJoin(k mk)
+ SeqScan(mc)
+ SeqScan(n)
+ SeqScan(ci)
+ IndexScan(k)
+ IndexScan(mk)
+ IndexScan(t)
+ IndexScan(cn)
+ Leading(((mc (n ((ci (k mk)) t))) cn)) */
+#
+---------------------------------------
+Planning took 191.2ms
+q17f, predicted time: 4685.3
+q17f,(predicted 4685.3),/*+ HashJoin(ci n cn t mc k mk)
+ HashJoin(cn t mc k mk)
+ MergeJoin(t mc k mk)
+ MergeJoin(mc k mk)
+ HashJoin(k mk)
+ HashJoin(ci n)
+ IndexScan(ci)
+ IndexScan(n)
+ IndexScan(cn)
+ SeqScan(t)
+ IndexScan(mc)
+ IndexScan(k)
+ IndexScan(mk)
+ Leading(((ci n) (cn (t (mc (k mk)))))) */
+#
+---------------------------------------
+Planning took 253.7ms
+q18b, predicted time: 482.7
+q18b,(predicted 482.7),/*+ HashJoin(n ci it1 mi t mi_idx it2)
+ MergeJoin(it1 mi t mi_idx it2)
+ MergeJoin(mi t mi_idx it2)
+ HashJoin(t mi_idx it2)
+ MergeJoin(mi_idx it2)
+ MergeJoin(n ci)
+ IndexScan(n)
+ SeqScan(ci)
+ IndexScan(it1)
+ SeqScan(mi)
+ SeqScan(t)
+ IndexScan(mi_idx)
+ SeqScan(it2)
+ Leading(((n ci) (it1 (mi (t (mi_idx it2)))))) */
+#
+---------------------------------------
+Planning took 26.6ms
+q18c, predicted time: 994.2
+q18c,(predicted 994.2),/*+ HashJoin(it1 it2 t n mi ci mi_idx)
+ MergeJoin(it2 t n mi ci mi_idx)
+ MergeJoin(t n mi ci mi_idx)
+ MergeJoin(t n mi ci)
+ MergeJoin(n mi ci)
+ MergeJoin(mi ci)
+ SeqScan(it1)
+ IndexScan(it2)
+ IndexScan(t)
+ IndexScan(n)
+ IndexScan(mi)
+ SeqScan(ci)
+ IndexScan(mi_idx)
+ Leading((it1 (it2 ((t (n (mi ci))) mi_idx)))) */
+#
+---------------------------------------
+Planning took 42.8ms
+q19b, predicted time: 738.1
+q19b,(predicted 738.1),/*+ MergeJoin(chn an mi n ci mc cn t rt it)
+ MergeJoin(an mi n ci mc cn t rt it)
+ MergeJoin(mi n ci mc cn t rt it)
+ MergeJoin(mi n ci mc cn t rt)
+ HashJoin(n ci mc cn t rt)
+ HashJoin(n ci mc cn t)
+ MergeJoin(ci mc cn t)
+ MergeJoin(mc cn t)
+ MergeJoin(mc cn)
+ SeqScan(chn)
+ SeqScan(an)
+ IndexScan(mi)
+ SeqScan(n)
+ SeqScan(ci)
+ IndexScan(mc)
+ SeqScan(cn)
+ IndexScan(t)
+ SeqScan(rt)
+ IndexScan(it)
+ Leading((chn (an ((mi ((n (ci ((mc cn) t))) rt)) it)))) */
+#
+---------------------------------------
+Planning took 88.2ms
+q19c, predicted time: 1202.6
+q19c,(predicted 1202.6),/*+ MergeJoin(chn cn mc mi it t ci n rt an)
+ MergeJoin(chn cn mc mi it t ci n rt)
+ MergeJoin(cn mc mi it t ci n rt)
+ MergeJoin(mc mi it t ci n rt)
+ MergeJoin(mi it t ci n rt)
+ MergeJoin(mi it t ci n)
+ MergeJoin(mi it t ci)
+ MergeJoin(mi it t)
+ MergeJoin(mi it)
+ SeqScan(chn)
+ SeqScan(cn)
+ IndexScan(mc)
+ IndexScan(mi)
+ IndexScan(it)
+ IndexScan(t)
+ IndexScan(ci)
+ IndexScan(n)
+ SeqScan(rt)
+ IndexScan(an)
+ Leading(((chn (cn (mc (((((mi it) t) ci) n) rt)))) an)) */
+#
+---------------------------------------
+Planning took 175.6ms
+q19d, predicted time: 2523.9
+q19d,(predicted 2523.9),/*+ HashJoin(mi it ci t n mc cn an rt chn)
+ MergeJoin(mi it ci t n mc cn an rt)
+ NestLoop(mi it ci t n mc cn an)
+ MergeJoin(mi it ci t n mc cn)
+ HashJoin(mi it ci t n mc)
+ MergeJoin(mi it ci t n)
+ NestLoop(mi it ci t)
+ NestLoop(mi it ci)
+ NestLoop(mi it)
+ IndexScan(mi)
+ SeqScan(it)
+ IndexScan(ci)
+ IndexScan(t)
+ SeqScan(n)
+ SeqScan(mc)
+ IndexScan(cn)
+ IndexScan(an)
+ SeqScan(rt)
+ IndexScan(chn)
+ Leading((((((((((mi it) ci) t) n) mc) cn) an) rt) chn)) */
+#
+---------------------------------------
+Planning took 14.8ms
+q1b, predicted time: 533.2
+q1b,(predicted 533.2),/*+ MergeJoin(t ct mc mi_idx it)
+ MergeJoin(ct mc mi_idx it)
+ MergeJoin(mc mi_idx it)
+ NestLoop(mi_idx it)
+ SeqScan(t)
+ IndexScan(ct)
+ IndexScan(mc)
+ IndexScan(mi_idx)
+ IndexScan(it)
+ Leading((t (ct (mc (mi_idx it))))) */
+#
+---------------------------------------
+Planning took 16.5ms
+q1c, predicted time: 326.4
+q1c,(predicted 326.4),/*+ MergeJoin(t it ct mc mi_idx)
+ MergeJoin(it ct mc mi_idx)
+ MergeJoin(ct mc mi_idx)
+ MergeJoin(ct mc)
+ SeqScan(t)
+ IndexScan(it)
+ IndexScan(ct)
+ IndexScan(mc)
+ SeqScan(mi_idx)
+ Leading((t (it ((ct mc) mi_idx)))) */
+#
+---------------------------------------
+Planning took 14.1ms
+q1d, predicted time: 636.8
+q1d,(predicted 636.8),/*+ MergeJoin(t ct mc mi_idx it)
+ MergeJoin(ct mc mi_idx it)
+ MergeJoin(mc mi_idx it)
+ MergeJoin(mi_idx it)
+ SeqScan(t)
+ IndexScan(ct)
+ IndexScan(mc)
+ IndexScan(mi_idx)
+ IndexScan(it)
+ Leading((t (ct (mc (mi_idx it))))) */
+#
+---------------------------------------
+Planning took 332.0ms
+q20b, predicted time: 3680.3
+q20b,(predicted 3680.3),/*+ HashJoin(chn ci cct2 t kt cc cct1 n mk k)
+ HashJoin(ci cct2 t kt cc cct1 n mk k)
+ HashJoin(ci cct2 t kt cc cct1 n mk)
+ NestLoop(ci cct2 t kt cc cct1 n)
+ MergeJoin(ci cct2 t kt cc cct1)
+ HashJoin(cct2 t kt cc cct1)
+ MergeJoin(cct2 t kt cc)
+ NestLoop(t kt cc)
+ NestLoop(t kt)
+ SeqScan(chn)
+ IndexScan(ci)
+ SeqScan(cct2)
+ SeqScan(t)
+ IndexScan(kt)
+ IndexScan(cc)
+ IndexScan(cct1)
+ IndexScan(n)
+ IndexScan(mk)
+ SeqScan(k)
+ Leading((chn ((((ci ((cct2 ((t kt) cc)) cct1)) n) mk) k))) */
+#
+---------------------------------------
+Planning took 200.6ms
+q20c, predicted time: 4354.3
+q20c,(predicted 4354.3),/*+ HashJoin(ci cc cct2 cct1 t kt n mk k chn)
+ MergeJoin(ci cc cct2 cct1 t kt n mk k)
+ HashJoin(ci cc cct2 cct1 t kt n mk)
+ HashJoin(ci cc cct2 cct1 t kt n)
+ MergeJoin(ci cc cct2 cct1 t kt)
+ HashJoin(cc cct2 cct1 t kt)
+ HashJoin(cc cct2 cct1 t)
+ NestLoop(cc cct2 cct1)
+ NestLoop(cc cct2)
+ IndexScan(ci)
+ IndexScan(cc)
+ SeqScan(cct2)
+ SeqScan(cct1)
+ IndexScan(t)
+ SeqScan(kt)
+ SeqScan(n)
+ IndexScan(mk)
+ SeqScan(k)
+ SeqScan(chn)
+ Leading((((((ci ((((cc cct2) cct1) t) kt)) n) mk) k) chn)) */
+#
+---------------------------------------
+Planning took 99.0ms
+q21b, predicted time: 930.5
+q21b,(predicted 930.5),/*+ HashJoin(mk mc t lt ml mi cn ct k)
+ HashJoin(mk mc t lt ml mi cn ct)
+ MergeJoin(mk mc t lt ml mi cn)
+ MergeJoin(mc t lt ml mi cn)
+ MergeJoin(mc t lt ml mi)
+ HashJoin(t lt ml mi)
+ MergeJoin(t lt ml)
+ HashJoin(lt ml)
+ IndexScan(mk)
+ SeqScan(mc)
+ SeqScan(t)
+ SeqScan(lt)
+ IndexScan(ml)
+ IndexScan(mi)
+ IndexScan(cn)
+ SeqScan(ct)
+ IndexScan(k)
+ Leading((((mk ((mc ((t (lt ml)) mi)) cn)) ct) k)) */
+#
+---------------------------------------
+Planning took 101.5ms
+q21c, predicted time: 1160.7
+q21c,(predicted 1160.7),/*+ MergeJoin(k mc cn ct t mi ml lt mk)
+ HashJoin(mc cn ct t mi ml lt mk)
+ HashJoin(mc cn ct t mi ml lt)
+ NestLoop(mc cn ct t mi ml)
+ NestLoop(mc cn ct t mi)
+ MergeJoin(mc cn ct t)
+ MergeJoin(mc cn ct)
+ MergeJoin(mc cn)
+ IndexScan(k)
+ SeqScan(mc)
+ IndexScan(cn)
+ IndexScan(ct)
+ IndexScan(t)
+ IndexScan(mi)
+ IndexScan(ml)
+ SeqScan(lt)
+ IndexScan(mk)
+ Leading((k (((((((mc cn) ct) t) mi) ml) lt) mk))) */
+#
+---------------------------------------
+Planning took 589.6ms
+q22b, predicted time: 979.1
+q22b,(predicted 979.1),/*+ MergeJoin(it2 it1 mi mk ct kt t cn mc mi_idx k)
+ MergeJoin(it1 mi mk ct kt t cn mc mi_idx k)
+ NestLoop(mi mk ct kt t cn mc mi_idx k)
+ MergeJoin(mi mk ct kt t cn mc mi_idx)
+ MergeJoin(mk ct kt t cn mc mi_idx)
+ MergeJoin(ct kt t cn mc mi_idx)
+ MergeJoin(kt t cn mc mi_idx)
+ MergeJoin(t cn mc mi_idx)
+ NestLoop(cn mc mi_idx)
+ MergeJoin(cn mc)
+ SeqScan(it2)
+ IndexScan(it1)
+ IndexScan(mi)
+ IndexScan(mk)
+ IndexScan(ct)
+ SeqScan(kt)
+ IndexScan(t)
+ SeqScan(cn)
+ IndexScan(mc)
+ IndexScan(mi_idx)
+ IndexScan(k)
+ Leading((it2 (it1 ((mi (mk (ct (kt (t ((cn mc) mi_idx)))))) k)))) */
+#
+---------------------------------------
+Planning took 248.6ms
+q22c, predicted time: 1016.2
+q22c,(predicted 1016.2),/*+ MergeJoin(it2 k mk kt t ct cn mc mi_idx mi it1)
+ MergeJoin(k mk kt t ct cn mc mi_idx mi it1)
+ HashJoin(mk kt t ct cn mc mi_idx mi it1)
+ MergeJoin(mk kt t ct cn mc mi_idx mi)
+ MergeJoin(kt t ct cn mc mi_idx mi)
+ MergeJoin(kt t ct cn mc mi_idx)
+ MergeJoin(t ct cn mc mi_idx)
+ MergeJoin(ct cn mc mi_idx)
+ NestLoop(cn mc mi_idx)
+ MergeJoin(cn mc)
+ SeqScan(it2)
+ SeqScan(k)
+ SeqScan(mk)
+ SeqScan(kt)
+ SeqScan(t)
+ IndexScan(ct)
+ SeqScan(cn)
+ IndexScan(mc)
+ IndexScan(mi_idx)
+ SeqScan(mi)
+ IndexScan(it1)
+ Leading((it2 (k ((mk ((kt (t (ct ((cn mc) mi_idx)))) mi)) it1)))) */
+#
+---------------------------------------
+Planning took 158.4ms
+q22d, predicted time: 1340.3
+q22d,(predicted 1340.3),/*+ MergeJoin(mi_idx it1 k mk mi t it2 mc kt cn ct)
+ NestLoop(mi_idx it1 k mk mi t it2 mc kt cn)
+ MergeJoin(mi_idx it1 k mk mi t it2 mc kt)
+ MergeJoin(mi_idx it1 k mk mi t it2 mc)
+ HashJoin(mi_idx it1 k mk mi t it2)
+ MergeJoin(mi_idx it1 k mk mi t)
+ HashJoin(it1 k mk mi t)
+ HashJoin(k mk mi t)
+ MergeJoin(k mk mi)
+ HashJoin(k mk)
+ IndexScan(mi_idx)
+ SeqScan(it1)
+ IndexScan(k)
+ IndexScan(mk)
+ IndexScan(mi)
+ IndexScan(t)
+ SeqScan(it2)
+ SeqScan(mc)
+ SeqScan(kt)
+ IndexScan(cn)
+ SeqScan(ct)
+ Leading(((((((mi_idx (it1 (((k mk) mi) t))) it2) mc) kt) cn) ct)) */
+#
+---------------------------------------
+Planning took 466.6ms
+q23b, predicted time: 1205.9
+q23b,(predicted 1205.9),/*+ HashJoin(kt cc mi t cct1 mc ct cn mk it1 k)
+ NestLoop(kt cc mi t cct1 mc ct cn mk it1)
+ MergeJoin(kt cc mi t cct1 mc ct cn mk)
+ MergeJoin(kt cc mi t cct1 mc ct cn)
+ HashJoin(kt cc mi t cct1 mc ct)
+ MergeJoin(kt cc mi t cct1 mc)
+ MergeJoin(kt cc mi t cct1)
+ HashJoin(cc mi t cct1)
+ MergeJoin(cc mi t)
+ MergeJoin(cc mi)
+ SeqScan(kt)
+ IndexScan(cc)
+ IndexScan(mi)
+ IndexScan(t)
+ IndexScan(cct1)
+ IndexScan(mc)
+ SeqScan(ct)
+ SeqScan(cn)
+ IndexScan(mk)
+ IndexScan(it1)
+ IndexScan(k)
+ Leading((((((((kt (((cc mi) t) cct1)) mc) ct) cn) mk) it1) k)) */
+#
+---------------------------------------
+Planning took 341.6ms
+q23c, predicted time: 1269.9
+q23c,(predicted 1269.9),/*+ HashJoin(ct cc mi cct1 t kt mc cn mk k it1)
+ MergeJoin(ct cc mi cct1 t kt mc cn mk k)
+ MergeJoin(ct cc mi cct1 t kt mc cn mk)
+ MergeJoin(cc mi cct1 t kt mc cn mk)
+ MergeJoin(cc mi cct1 t kt mc cn)
+ NestLoop(cc mi cct1 t kt mc)
+ MergeJoin(cc mi cct1 t kt)
+ HashJoin(cc mi cct1 t)
+ MergeJoin(cc mi cct1)
+ MergeJoin(cc mi)
+ SeqScan(ct)
+ IndexScan(cc)
+ IndexScan(mi)
+ IndexScan(cct1)
+ SeqScan(t)
+ SeqScan(kt)
+ IndexScan(mc)
+ SeqScan(cn)
+ SeqScan(mk)
+ SeqScan(k)
+ IndexScan(it1)
+ Leading((((ct (((((((cc mi) cct1) t) kt) mc) cn) mk)) k) it1)) */
+#
+---------------------------------------
+Planning took 237.8ms
+q24b, predicted time: 1085.2
+q24b,(predicted 1085.2),/*+ HashJoin(chn k an cn mk n mi t ci rt mc it)
+ MergeJoin(k an cn mk n mi t ci rt mc it)
+ MergeJoin(an cn mk n mi t ci rt mc it)
+ MergeJoin(cn mk n mi t ci rt mc it)
+ HashJoin(mk n mi t ci rt mc it)
+ MergeJoin(mk n mi t ci rt mc)
+ MergeJoin(mk n mi t ci rt)
+ MergeJoin(n mi t ci rt)
+ MergeJoin(mi t ci rt)
+ MergeJoin(mi t ci)
+ MergeJoin(mi t)
+ IndexScan(chn)
+ SeqScan(k)
+ IndexScan(an)
+ SeqScan(cn)
+ IndexScan(mk)
+ IndexScan(n)
+ IndexScan(mi)
+ IndexScan(t)
+ IndexScan(ci)
+ SeqScan(rt)
+ SeqScan(mc)
+ SeqScan(it)
+ Leading((chn (k (an (cn (((mk (n (((mi t) ci) rt))) mc) it)))))) */
+#
+---------------------------------------
+Planning took 73.2ms
+q25b, predicted time: 1196.9
+q25b,(predicted 1196.9),/*+ MergeJoin(it2 mi_idx it1 k mk n t mi ci)
+ MergeJoin(mi_idx it1 k mk n t mi ci)
+ MergeJoin(it1 k mk n t mi ci)
+ MergeJoin(k mk n t mi ci)
+ HashJoin(mk n t mi ci)
+ MergeJoin(n t mi ci)
+ MergeJoin(t mi ci)
+ MergeJoin(t mi)
+ SeqScan(it2)
+ IndexScan(mi_idx)
+ SeqScan(it1)
+ SeqScan(k)
+ IndexScan(mk)
+ IndexScan(n)
+ IndexScan(t)
+ IndexScan(mi)
+ IndexScan(ci)
+ Leading((it2 (mi_idx (it1 (k (mk (n ((t mi) ci)))))))) */
+#
+---------------------------------------
+Planning took 43.0ms
+q25c, predicted time: 1468.9
+q25c,(predicted 1468.9),/*+ MergeJoin(k mk t mi_idx it2 mi ci it1 n)
+ MergeJoin(mk t mi_idx it2 mi ci it1 n)
+ HashJoin(t mi_idx it2 mi ci it1 n)
+ MergeJoin(t mi_idx it2 mi ci it1)
+ MergeJoin(t mi_idx it2 mi ci)
+ MergeJoin(t mi_idx it2 mi)
+ MergeJoin(t mi_idx it2)
+ MergeJoin(mi_idx it2)
+ SeqScan(k)
+ SeqScan(mk)
+ SeqScan(t)
+ IndexScan(mi_idx)
+ IndexScan(it2)
+ IndexScan(mi)
+ SeqScan(ci)
+ SeqScan(it1)
+ IndexScan(n)
+ Leading((k (mk (((((t (mi_idx it2)) mi) ci) it1) n)))) */
+#
+---------------------------------------
+Planning took 91.3ms
+q26b, predicted time: 4034.3
+q26b,(predicted 4034.3),/*+ HashJoin(ci kt cc cct2 cct1 t mi_idx it2 mk k chn n)
+ HashJoin(ci kt cc cct2 cct1 t mi_idx it2 mk k chn)
+ MergeJoin(ci kt cc cct2 cct1 t mi_idx it2 mk k)
+ MergeJoin(ci kt cc cct2 cct1 t mi_idx it2 mk)
+ MergeJoin(ci kt cc cct2 cct1 t mi_idx it2)
+ HashJoin(kt cc cct2 cct1 t mi_idx it2)
+ NestLoop(kt cc cct2 cct1 t mi_idx)
+ HashJoin(kt cc cct2 cct1 t)
+ MergeJoin(cc cct2 cct1 t)
+ NestLoop(cc cct2 cct1)
+ NestLoop(cc cct2)
+ IndexScan(ci)
+ SeqScan(kt)
+ IndexScan(cc)
+ SeqScan(cct2)
+ SeqScan(cct1)
+ SeqScan(t)
+ IndexScan(mi_idx)
+ IndexScan(it2)
+ IndexScan(mk)
+ SeqScan(k)
+ SeqScan(chn)
+ IndexScan(n)
+ Leading((((((ci (((kt (((cc cct2) cct1) t)) mi_idx) it2)) mk) k) chn) n)) */
+#
+---------------------------------------
+Planning took 56.7ms
+q26c, predicted time: 3497.6
+q26c,(predicted 3497.6),/*+ MergeJoin(cct2 mk cc t kt mi_idx it2 cct1 ci k n chn)
+ HashJoin(cct2 mk cc t kt mi_idx it2 cct1 ci k n)
+ MergeJoin(mk cc t kt mi_idx it2 cct1 ci k n)
+ MergeJoin(mk cc t kt mi_idx it2 cct1 ci k)
+ MergeJoin(mk cc t kt mi_idx it2 cct1 ci)
+ MergeJoin(cc t kt mi_idx it2 cct1 ci)
+ MergeJoin(cc t kt mi_idx it2 cct1)
+ MergeJoin(cc t kt mi_idx it2)
+ HashJoin(cc t kt mi_idx)
+ NestLoop(cc t kt)
+ NestLoop(cc t)
+ IndexScan(cct2)
+ SeqScan(mk)
+ IndexScan(cc)
+ IndexScan(t)
+ SeqScan(kt)
+ SeqScan(mi_idx)
+ IndexScan(it2)
+ SeqScan(cct1)
+ SeqScan(ci)
+ SeqScan(k)
+ IndexScan(n)
+ SeqScan(chn)
+ Leading(((cct2 (((mk ((((((cc t) kt) mi_idx) it2) cct1) ci)) k) n)) chn)) */
+#
+---------------------------------------
+Planning took 222.1ms
+q27b, predicted time: 780.7
+q27b,(predicted 780.7),/*+ NestLoop(mk mc cc mi lt ml t cct1 cct2 cn ct k)
+ MergeJoin(mk mc cc mi lt ml t cct1 cct2 cn ct)
+ MergeJoin(mk mc cc mi lt ml t cct1 cct2 cn)
+ MergeJoin(mc cc mi lt ml t cct1 cct2 cn)
+ MergeJoin(mc cc mi lt ml t cct1 cct2)
+ MergeJoin(cc mi lt ml t cct1 cct2)
+ MergeJoin(cc mi lt ml t cct1)
+ MergeJoin(cc mi lt ml t)
+ MergeJoin(mi lt ml t)
+ MergeJoin(mi lt ml)
+ HashJoin(lt ml)
+ SeqScan(mk)
+ SeqScan(mc)
+ IndexScan(cc)
+ IndexScan(mi)
+ SeqScan(lt)
+ SeqScan(ml)
+ SeqScan(t)
+ IndexScan(cct1)
+ SeqScan(cct2)
+ IndexScan(cn)
+ SeqScan(ct)
+ IndexScan(k)
+ Leading((((mk ((mc (((cc ((mi (lt ml)) t)) cct1) cct2)) cn)) ct) k)) */
+#
+---------------------------------------
+Planning took 158.1ms
+q27c, predicted time: 1135.2
+q27c,(predicted 1135.2),/*+ MergeJoin(k mk ct mc mi ml cct2 cct1 cc t lt cn)
+ MergeJoin(mk ct mc mi ml cct2 cct1 cc t lt cn)
+ HashJoin(ct mc mi ml cct2 cct1 cc t lt cn)
+ MergeJoin(ct mc mi ml cct2 cct1 cc t lt)
+ MergeJoin(mc mi ml cct2 cct1 cc t lt)
+ HashJoin(mi ml cct2 cct1 cc t lt)
+ MergeJoin(ml cct2 cct1 cc t lt)
+ MergeJoin(ml cct2 cct1 cc t)
+ HashJoin(cct2 cct1 cc t)
+ MergeJoin(cct2 cct1 cc)
+ MergeJoin(cct1 cc)
+ IndexScan(k)
+ SeqScan(mk)
+ SeqScan(ct)
+ SeqScan(mc)
+ SeqScan(mi)
+ IndexScan(ml)
+ SeqScan(cct2)
+ IndexScan(cct1)
+ IndexScan(cc)
+ SeqScan(t)
+ IndexScan(lt)
+ IndexScan(cn)
+ Leading((k (mk ((ct (mc (mi ((ml ((cct2 (cct1 cc)) t)) lt)))) cn)))) */
+#
+---------------------------------------
+Planning took 616.6ms
+q28b, predicted time: 780.3
+q28b,(predicted 780.3),/*+ HashJoin(mi ct kt cn it2 mi_idx mc t cct1 cc cct2 it1 mk k)
+ MergeJoin(mi ct kt cn it2 mi_idx mc t cct1 cc cct2 it1 mk)
+ NestLoop(mi ct kt cn it2 mi_idx mc t cct1 cc cct2 it1)
+ HashJoin(mi ct kt cn it2 mi_idx mc t cct1 cc cct2)
+ MergeJoin(ct kt cn it2 mi_idx mc t cct1 cc cct2)
+ MergeJoin(ct kt cn it2 mi_idx mc t cct1 cc)
+ HashJoin(kt cn it2 mi_idx mc t cct1 cc)
+ MergeJoin(cct1 cc)
+ MergeJoin(kt cn it2 mi_idx mc t)
+ MergeJoin(cn it2 mi_idx mc t)
+ HashJoin(it2 mi_idx mc t)
+ HashJoin(it2 mi_idx mc)
+ HashJoin(it2 mi_idx)
+ SeqScan(mi)
+ IndexScan(ct)
+ SeqScan(kt)
+ SeqScan(cn)
+ IndexScan(it2)
+ IndexScan(mi_idx)
+ SeqScan(mc)
+ SeqScan(t)
+ IndexScan(cct1)
+ IndexScan(cc)
+ SeqScan(cct2)
+ IndexScan(it1)
+ IndexScan(mk)
+ IndexScan(k)
+ Leading(((((mi ((ct ((kt (cn (((it2 mi_idx) mc) t))) (cct1 cc))) cct2)) it1) mk) k)) */
+#
+---------------------------------------
+Planning took 187.1ms
+q28c, predicted time: 1007.7
+q28c,(predicted 1007.7),/*+ MergeJoin(k it1 mk ct kt cct2 cc mi_idx t it2 mi mc cn cct1)
+ MergeJoin(it1 mk ct kt cct2 cc mi_idx t it2 mi mc cn cct1)
+ MergeJoin(mk ct kt cct2 cc mi_idx t it2 mi mc cn cct1)
+ MergeJoin(ct kt cct2 cc mi_idx t it2 mi mc cn cct1)
+ MergeJoin(kt cct2 cc mi_idx t it2 mi mc cn cct1)
+ NestLoop(cct2 cc mi_idx t it2 mi mc cn cct1)
+ NestLoop(cct2 cc mi_idx t it2 mi mc cn)
+ HashJoin(cct2 cc mi_idx t it2 mi mc)
+ HashJoin(cct2 cc mi_idx t it2 mi)
+ HashJoin(cct2 cc mi_idx t it2)
+ HashJoin(cct2 cc mi_idx t)
+ NestLoop(cct2 cc mi_idx)
+ HashJoin(cct2 cc)
+ SeqScan(k)
+ IndexScan(it1)
+ IndexScan(mk)
+ SeqScan(ct)
+ SeqScan(kt)
+ SeqScan(cct2)
+ IndexScan(cc)
+ IndexScan(mi_idx)
+ IndexScan(t)
+ SeqScan(it2)
+ SeqScan(mi)
+ IndexScan(mc)
+ IndexScan(cn)
+ IndexScan(cct1)
+ Leading((k (it1 (mk (ct (kt ((((((((cct2 cc) mi_idx) t) it2) mi) mc) cn) cct1))))))) */
+#
+---------------------------------------
+Planning took 312.5ms
+q29b, predicted time: 1377.1
+q29b,(predicted 1377.1),/*+ HashJoin(k mk cc t cct1 mi cct2 it ci pi rt mc cn an n it3 chn)
+ MergeJoin(k mk cc t cct1 mi cct2 it ci pi rt mc cn an n it3)
+ MergeJoin(k mk cc t cct1 mi cct2 it ci pi rt mc cn an n)
+ HashJoin(k mk cc t cct1 mi cct2 it ci pi rt mc cn an)
+ HashJoin(k mk cc t cct1 mi cct2 it ci pi rt mc cn)
+ HashJoin(k mk cc t cct1 mi cct2 it ci pi rt mc)
+ HashJoin(k mk cc t cct1 mi cct2 it ci pi rt)
+ HashJoin(k mk cc t cct1 mi cct2 it ci pi)
+ HashJoin(k mk cc t cct1 mi cct2 it ci)
+ HashJoin(k mk cc t cct1 mi cct2 it)
+ HashJoin(k mk cc t cct1 mi cct2)
+ HashJoin(k mk cc t cct1 mi)
+ HashJoin(k mk cc t cct1)
+ HashJoin(k mk cc t)
+ MergeJoin(k mk cc)
+ HashJoin(k mk)
+ IndexScan(k)
+ IndexScan(mk)
+ IndexScan(cc)
+ IndexScan(t)
+ IndexScan(cct1)
+ SeqScan(mi)
+ IndexScan(cct2)
+ SeqScan(it)
+ IndexScan(ci)
+ IndexScan(pi)
+ SeqScan(rt)
+ SeqScan(mc)
+ IndexScan(cn)
+ IndexScan(an)
+ SeqScan(n)
+ SeqScan(it3)
+ IndexScan(chn)
+ Leading(((((((((((((((((k mk) cc) t) cct1) mi) cct2) it) ci) pi) rt) mc) cn) an) n) it3) chn)) */
+#
+---------------------------------------
+Planning took 153.5ms
+q29c, predicted time: 1580.2
+q29c,(predicted 1580.2),/*+ MergeJoin(k mk cc cct1 cct2 t ci rt pi n mc cn an it3 mi chn it)
+ MergeJoin(k mk cc cct1 cct2 t ci rt pi n mc cn an it3 mi chn)
+ MergeJoin(k mk cc cct1 cct2 t ci rt pi n mc cn an it3 mi)
+ HashJoin(k mk cc cct1 cct2 t ci rt pi n mc cn an it3)
+ HashJoin(k mk cc cct1 cct2 t ci rt pi n mc cn an)
+ HashJoin(k mk cc cct1 cct2 t ci rt pi n mc cn)
+ HashJoin(k mk cc cct1 cct2 t ci rt pi n mc)
+ HashJoin(k mk cc cct1 cct2 t ci rt pi n)
+ HashJoin(k mk cc cct1 cct2 t ci rt pi)
+ HashJoin(k mk cc cct1 cct2 t ci rt)
+ HashJoin(k mk cc cct1 cct2 t ci)
+ HashJoin(k mk cc cct1 cct2 t)
+ HashJoin(k mk cc cct1 cct2)
+ HashJoin(k mk cc cct1)
+ MergeJoin(k mk cc)
+ HashJoin(k mk)
+ IndexScan(k)
+ IndexScan(mk)
+ IndexScan(cc)
+ IndexScan(cct1)
+ SeqScan(cct2)
+ IndexScan(t)
+ IndexScan(ci)
+ SeqScan(rt)
+ IndexScan(pi)
+ IndexScan(n)
+ SeqScan(mc)
+ IndexScan(cn)
+ IndexScan(an)
+ IndexScan(it3)
+ IndexScan(mi)
+ IndexScan(chn)
+ IndexScan(it)
+ Leading(((((((((((((((((k mk) cc) cct1) cct2) t) ci) rt) pi) n) mc) cn) an) it3) mi) chn) it)) */
+#
+---------------------------------------
+Planning took 40.8ms
+q2b, predicted time: 1295.9
+q2b,(predicted 1295.9),/*+ NestLoop(t mc cn mk k)
+ MergeJoin(t mc cn mk)
+ MergeJoin(t mc cn)
+ MergeJoin(mc cn)
+ SeqScan(t)
+ IndexScan(mc)
+ IndexScan(cn)
+ SeqScan(mk)
+ IndexScan(k)
+ Leading((((t (mc cn)) mk) k)) */
+#
+---------------------------------------
+Planning took 39.4ms
+q2c, predicted time: 1293.4
+q2c,(predicted 1293.4),/*+ NestLoop(t mc cn mk k)
+ MergeJoin(t mc cn mk)
+ MergeJoin(t mc cn)
+ MergeJoin(mc cn)
+ SeqScan(t)
+ IndexScan(mc)
+ IndexScan(cn)
+ SeqScan(mk)
+ IndexScan(k)
+ Leading((((t (mc cn)) mk) k)) */
+#
+---------------------------------------
+Planning took 21.9ms
+q2d, predicted time: 1334.6
+q2d,(predicted 1334.6),/*+ MergeJoin(mc t k mk cn)
+ HashJoin(mc t k mk)
+ MergeJoin(t k mk)
+ HashJoin(k mk)
+ SeqScan(mc)
+ SeqScan(t)
+ IndexScan(k)
+ IndexScan(mk)
+ SeqScan(cn)
+ Leading(((mc (t (k mk))) cn)) */
+#
+---------------------------------------
+Planning took 70.5ms
+q30b, predicted time: 1062.4
+q30b,(predicted 1062.4),/*+ NestLoop(mk n ci mi t cc mi_idx k cct1 cct2 it1 it2)
+ MergeJoin(mk n ci mi t cc mi_idx k cct1 cct2 it1)
+ MergeJoin(mk n ci mi t cc mi_idx k cct1 cct2)
+ HashJoin(mk n ci mi t cc mi_idx k cct1)
+ MergeJoin(mk n ci mi t cc mi_idx k)
+ MergeJoin(mk n ci mi t cc mi_idx)
+ MergeJoin(mk n ci mi t cc)
+ MergeJoin(n ci mi t cc)
+ MergeJoin(ci mi t cc)
+ MergeJoin(mi t cc)
+ MergeJoin(mi t)
+ SeqScan(mk)
+ IndexScan(n)
+ SeqScan(ci)
+ IndexScan(mi)
+ IndexScan(t)
+ IndexScan(cc)
+ IndexScan(mi_idx)
+ SeqScan(k)
+ IndexScan(cct1)
+ IndexScan(cct2)
+ SeqScan(it1)
+ IndexScan(it2)
+ Leading((((((((mk (n (ci ((mi t) cc)))) mi_idx) k) cct1) cct2) it1) it2)) */
+#
+---------------------------------------
+Planning took 135.3ms
+q30c, predicted time: 1359.4
+q30c,(predicted 1359.4),/*+ HashJoin(k mk it2 mi_idx ci mi t cct1 cc cct2 n it1)
+ MergeJoin(mk it2 mi_idx ci mi t cct1 cc cct2 n it1)
+ MergeJoin(it2 mi_idx ci mi t cct1 cc cct2 n it1)
+ HashJoin(mi_idx ci mi t cct1 cc cct2 n it1)
+ MergeJoin(mi_idx ci mi t cct1 cc cct2 n)
+ MergeJoin(ci mi t cct1 cc cct2 n)
+ MergeJoin(ci mi t cct1 cc cct2)
+ MergeJoin(mi t cct1 cc cct2)
+ HashJoin(t cct1 cc cct2)
+ MergeJoin(t cct1 cc)
+ MergeJoin(cct1 cc)
+ IndexScan(k)
+ SeqScan(mk)
+ SeqScan(it2)
+ SeqScan(mi_idx)
+ SeqScan(ci)
+ IndexScan(mi)
+ SeqScan(t)
+ IndexScan(cct1)
+ IndexScan(cc)
+ IndexScan(cct2)
+ IndexScan(n)
+ IndexScan(it1)
+ Leading((k (mk (it2 ((mi_idx ((ci (mi ((t (cct1 cc)) cct2))) n)) it1))))) */
+#
+---------------------------------------
+Planning took 308.9ms
+q31b, predicted time: 1140.6
+q31b,(predicted 1140.6),/*+ MergeJoin(it2 k ci mk mc cn mi t mi_idx n it1)
+ MergeJoin(k ci mk mc cn mi t mi_idx n it1)
+ MergeJoin(k ci mk mc cn mi t mi_idx n)
+ NestLoop(ci mk mc cn mi t mi_idx n)
+ MergeJoin(ci mk mc cn mi t mi_idx)
+ MergeJoin(mk mc cn mi t mi_idx)
+ MergeJoin(mc cn mi t mi_idx)
+ MergeJoin(mc cn mi t)
+ MergeJoin(mc cn mi)
+ MergeJoin(mc cn)
+ SeqScan(it2)
+ SeqScan(k)
+ IndexScan(ci)
+ IndexScan(mk)
+ IndexScan(mc)
+ SeqScan(cn)
+ IndexScan(mi)
+ SeqScan(t)
+ IndexScan(mi_idx)
+ IndexScan(n)
+ SeqScan(it1)
+ Leading((it2 ((k ((ci (mk ((((mc cn) mi) t) mi_idx))) n)) it1))) */
+#
+---------------------------------------
+Planning took 64.4ms
+q31c, predicted time: 1861.0
+q31c,(predicted 1861.0),/*+ MergeJoin(k ci mc cn mi_idx mi t it2 mk n it1)
+ HashJoin(k ci mc cn mi_idx mi t it2 mk n)
+ MergeJoin(k ci mc cn mi_idx mi t it2 mk)
+ MergeJoin(ci mc cn mi_idx mi t it2 mk)
+ MergeJoin(mc cn mi_idx mi t it2 mk)
+ MergeJoin(mc cn mi_idx mi t it2)
+ HashJoin(mc cn mi_idx mi t)
+ HashJoin(mc cn mi_idx mi)
+ HashJoin(mc cn mi_idx)
+ MergeJoin(mc cn)
+ SeqScan(k)
+ IndexScan(ci)
+ IndexScan(mc)
+ IndexScan(cn)
+ IndexScan(mi_idx)
+ IndexScan(mi)
+ SeqScan(t)
+ IndexScan(it2)
+ IndexScan(mk)
+ SeqScan(n)
+ SeqScan(it1)
+ Leading((((k (ci ((((((mc cn) mi_idx) mi) t) it2) mk))) n) it1)) */
+#
+---------------------------------------
+Planning took 130.0ms
+q32b, predicted time: 1304.5
+q32b,(predicted 1304.5),/*+ MergeJoin(k lt t2 t1 ml mk)
+ HashJoin(lt t2 t1 ml mk)
+ MergeJoin(lt t2 t1 ml)
+ HashJoin(t2 t1 ml)
+ HashJoin(t1 ml)
+ IndexScan(k)
+ SeqScan(lt)
+ SeqScan(t2)
+ SeqScan(t1)
+ IndexScan(ml)
+ IndexScan(mk)
+ Leading((k ((lt (t2 (t1 ml))) mk))) */
+#
+---------------------------------------
+Planning took 867.7ms
+q33b, predicted time: 400.0
+q33b,(predicted 400.0),/*+ MergeJoin(it2 kt1 kt2 t2 it1 mi_idx2 cn1 mc1 mi_idx1 lt ml mc2 cn2 t1)
+ MergeJoin(kt1 kt2 t2 it1 mi_idx2 cn1 mc1 mi_idx1 lt ml mc2 cn2 t1)
+ MergeJoin(kt2 t2 it1 mi_idx2 cn1 mc1 mi_idx1 lt ml mc2 cn2 t1)
+ MergeJoin(kt2 t2 it1 mi_idx2 cn1 mc1 mi_idx1 lt ml mc2 cn2)
+ MergeJoin(t2 it1 mi_idx2 cn1 mc1 mi_idx1 lt ml mc2 cn2)
+ MergeJoin(it1 mi_idx2 cn1 mc1 mi_idx1 lt ml mc2 cn2)
+ MergeJoin(mi_idx2 cn1 mc1 mi_idx1 lt ml mc2 cn2)
+ MergeJoin(cn1 mc1 mi_idx1 lt ml mc2 cn2)
+ MergeJoin(mc1 mi_idx1 lt ml mc2 cn2)
+ MergeJoin(mc1 mi_idx1 lt ml mc2)
+ MergeJoin(mi_idx1 lt ml mc2)
+ MergeJoin(lt ml mc2)
+ MergeJoin(lt ml)
+ SeqScan(it2)
+ SeqScan(kt1)
+ IndexScan(kt2)
+ SeqScan(t2)
+ IndexScan(it1)
+ IndexScan(mi_idx2)
+ IndexScan(cn1)
+ IndexScan(mc1)
+ IndexScan(mi_idx1)
+ SeqScan(lt)
+ SeqScan(ml)
+ SeqScan(mc2)
+ SeqScan(cn2)
+ SeqScan(t1)
+ Leading((it2 (kt1 ((kt2 (t2 (it1 (mi_idx2 (cn1 ((mc1 (mi_idx1 ((lt ml) mc2))) cn2)))))) t1)))) */
+#
+---------------------------------------
+Planning took 804.2ms
+q33c, predicted time: 569.1
+q33c,(predicted 569.1),/*+ MergeJoin(it2 kt2 t2 it1 mi_idx2 kt1 cn1 cn2 mc1 mc2 mi_idx1 lt ml t1)
+ MergeJoin(kt2 t2 it1 mi_idx2 kt1 cn1 cn2 mc1 mc2 mi_idx1 lt ml t1)
+ MergeJoin(t2 it1 mi_idx2 kt1 cn1 cn2 mc1 mc2 mi_idx1 lt ml t1)
+ MergeJoin(it1 mi_idx2 kt1 cn1 cn2 mc1 mc2 mi_idx1 lt ml t1)
+ MergeJoin(mi_idx2 kt1 cn1 cn2 mc1 mc2 mi_idx1 lt ml t1)
+ MergeJoin(kt1 cn1 cn2 mc1 mc2 mi_idx1 lt ml t1)
+ MergeJoin(cn1 cn2 mc1 mc2 mi_idx1 lt ml t1)
+ MergeJoin(cn2 mc1 mc2 mi_idx1 lt ml t1)
+ MergeJoin(mc1 mc2 mi_idx1 lt ml t1)
+ MergeJoin(mc2 mi_idx1 lt ml t1)
+ MergeJoin(mi_idx1 lt ml t1)
+ MergeJoin(lt ml t1)
+ MergeJoin(lt ml)
+ SeqScan(it2)
+ SeqScan(kt2)
+ SeqScan(t2)
+ IndexScan(it1)
+ SeqScan(mi_idx2)
+ SeqScan(kt1)
+ SeqScan(cn1)
+ IndexScan(cn2)
+ IndexScan(mc1)
+ SeqScan(mc2)
+ IndexScan(mi_idx1)
+ SeqScan(lt)
+ SeqScan(ml)
+ SeqScan(t1)
+ Leading((it2 (kt2 (t2 (it1 (mi_idx2 (kt1 (cn1 (cn2 (mc1 (mc2 (mi_idx1 ((lt ml) t1))))))))))))) */
+#
+---------------------------------------
+Planning took 29.0ms
+q3b, predicted time: 739.8
+q3b,(predicted 739.8),/*+ MergeJoin(mk mi t k)
+ MergeJoin(mk mi t)
+ MergeJoin(mi t)
+ IndexScan(mk)
+ SeqScan(mi)
+ SeqScan(t)
+ IndexScan(k)
+ Leading(((mk (mi t)) k)) */
+#
+---------------------------------------
+Planning took 11.9ms
+q3c, predicted time: 1029.1
+q3c,(predicted 1029.1),/*+ NestLoop(t k mk mi)
+ MergeJoin(t k mk)
+ HashJoin(k mk)
+ SeqScan(t)
+ IndexScan(k)
+ IndexScan(mk)
+ IndexScan(mi)
+ Leading(((t (k mk)) mi)) */
+#
+---------------------------------------
+Planning took 13.3ms
+q4b, predicted time: 703.3
+q4b,(predicted 703.3),/*+ NestLoop(mk t it mi_idx k)
+ MergeJoin(mk t it mi_idx)
+ MergeJoin(t it mi_idx)
+ NestLoop(it mi_idx)
+ IndexScan(mk)
+ SeqScan(t)
+ IndexScan(it)
+ IndexScan(mi_idx)
+ IndexScan(k)
+ Leading(((mk (t (it mi_idx))) k)) */
+#
+---------------------------------------
+Planning took 22.0ms
+q4c, predicted time: 1069.5
+q4c,(predicted 1069.5),/*+ HashJoin(t k mk mi_idx it)
+ NestLoop(t k mk mi_idx)
+ MergeJoin(t k mk)
+ HashJoin(k mk)
+ SeqScan(t)
+ IndexScan(k)
+ IndexScan(mk)
+ IndexScan(mi_idx)
+ SeqScan(it)
+ Leading((((t (k mk)) mi_idx) it)) */
+#
+---------------------------------------
+Planning took 15.6ms
+q5b, predicted time: 216.0
+q5b,(predicted 216.0),/*+ MergeJoin(t mi mc ct it)
+ MergeJoin(mi mc ct it)
+ MergeJoin(mi mc ct)
+ MergeJoin(mc ct)
+ SeqScan(t)
+ SeqScan(mi)
+ IndexScan(mc)
+ SeqScan(ct)
+ IndexScan(it)
+ Leading((t ((mi (mc ct)) it))) */
+#
+---------------------------------------
+Planning took 35.5ms
+q5c, predicted time: 458.6
+q5c,(predicted 458.6),/*+ MergeJoin(t mi ct mc it)
+ MergeJoin(mi ct mc it)
+ MergeJoin(mi ct mc)
+ MergeJoin(ct mc)
+ SeqScan(t)
+ SeqScan(mi)
+ IndexScan(ct)
+ IndexScan(mc)
+ IndexScan(it)
+ Leading((t ((mi (ct mc)) it))) */
+#
+---------------------------------------
+Planning took 13.1ms
+q6b, predicted time: 3958.5
+q6b,(predicted 3958.5),/*+ HashJoin(mk t ci n k)
+ HashJoin(mk t ci n)
+ HashJoin(t ci n)
+ HashJoin(t ci)
+ SeqScan(mk)
+ IndexScan(t)
+ IndexScan(ci)
+ IndexScan(n)
+ SeqScan(k)
+ Leading(((mk ((t ci) n)) k)) */
+#
+---------------------------------------
+Planning took 13.0ms
+q6c, predicted time: 3958.6
+q6c,(predicted 3958.6),/*+ HashJoin(mk t ci n k)
+ HashJoin(mk t ci n)
+ HashJoin(t ci n)
+ HashJoin(t ci)
+ SeqScan(mk)
+ IndexScan(t)
+ IndexScan(ci)
+ IndexScan(n)
+ SeqScan(k)
+ Leading(((mk ((t ci) n)) k)) */
+#
+---------------------------------------
+Planning took 38.8ms
+q6d, predicted time: 4395.5
+q6d,(predicted 4395.5),/*+ HashJoin(ci n t mk k)
+ MergeJoin(ci n t mk)
+ HashJoin(ci n t)
+ HashJoin(ci n)
+ IndexScan(ci)
+ IndexScan(n)
+ SeqScan(t)
+ IndexScan(mk)
+ IndexScan(k)
+ Leading(((((ci n) t) mk) k)) */
+#
+---------------------------------------
+Planning took 158.4ms
+q6e, predicted time: 4395.4
+q6e,(predicted 4395.4),/*+ HashJoin(ci n t mk k)
+ MergeJoin(ci n t mk)
+ HashJoin(ci n t)
+ HashJoin(ci n)
+ IndexScan(ci)
+ IndexScan(n)
+ SeqScan(t)
+ IndexScan(mk)
+ IndexScan(k)
+ Leading(((((ci n) t) mk) k)) */

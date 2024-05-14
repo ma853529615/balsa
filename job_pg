@@ -1,0 +1,3572 @@
+Looking up params by name: Baseline
+BalsaAgent params:
+{
+  adamw: None
+  agent_checkpoint: None
+  avoid_eq_filters: False
+  beam: 20
+  bs: 1024
+  bushy: True
+  check_hint: True
+  cls: <class 'experiments.Baseline'>
+  cost_model: "postgrescost"
+  cross_entropy: False
+  db: "imdbload"
+  dedup_training_data: True
+  drop_cache: True
+  dropout: 0.0
+  early_stop_on_skip_fraction: None
+  ema_decay: 0.95
+  engine: "postgres"
+  engine_dialect_query_dir: None
+  epochs: 100
+  epsilon_greedy: 0
+  epsilon_greedy_random_plan: False
+  epsilon_greedy_random_transform: False
+  epsilon_greedy_within_beam_search: False
+  explore_soft_v: False
+  explore_visit_counts: False
+  explore_visit_counts_latency_sort: False
+  explore_visit_counts_sort: False
+  final_decay_rate: None
+  finetune_out_mlp_only: False
+  generic_ops_only_for_min_card_cost: False
+  gradient_clip_val: 0
+  increment_iter_despite_timeouts: False
+  inherit_optimizer_state: False
+  init_experience: "data/initial_policy_data.pkl"
+  initial_timeout_ms: None
+  l2_lambda: 0
+  label_transform_running_stats: False
+  label_transforms: ['log1p', 'standardize']
+  linear_decay_to_zero: False
+  loss_type: None
+  lr: 0.001
+  lr_decay_iters: None
+  lr_decay_rate: None
+  lr_piecewise: None
+  on_policy: False
+  param_noise: 0.0
+  param_tau: 1.0
+  per_transition_sgd_steps: -1
+  perturb_query_features: None
+  physical_execution_hindsight: False
+  plan_physical: True
+  planner_config: None
+  pos_embs: True
+  prev_replay_buffers_glob: None
+  prev_replay_buffers_glob_val: None
+  prev_replay_keep_last_fraction: 1
+  query_dir: "queries/join-order-benchmark"
+  query_glob: "*.sql"
+  real_use_plan_restrictions: True
+  reduce_lr_within_val_iter: False
+  relax_timeout_factor: None
+  relax_timeout_on_n_timeout_iters: None
+  replay_buffer_reset_at_iter: None
+  run_baseline: True
+  search_method: "beam_bk"
+  search_space_join_ops: ['Hash Join', 'Merge Join', 'Nested Loop']
+  search_space_scan_ops: ['Index Scan', 'Index Only Scan', 'Seq Scan']
+  search_until_n_complete_plans: 10
+  sim: True
+  sim_checkpoint: None
+  sim_data_collection_intermediate_goals: True
+  sim_query_featurizer: True
+  sim_use_plan_restrictions: True
+  skip_sim_init_iter_1p: False
+  skip_training_on_expert: True
+  skip_training_on_timeouts: False
+  special_timeout_label: True
+  test_after_n_iters: 0
+  test_dir: None
+  test_every_n_iters: 1
+  test_query_glob: None
+  test_using_retrained_model: False
+  timeout_slack: 2
+  track_model_moving_averages: False
+  tree_conv: True
+  tree_conv_version: None
+  update_label_stats_every_iter: True
+  use_adaptive_lr: None
+  use_adaptive_lr_decay_to_zero: None
+  use_cache: True
+  use_ema_source: False
+  use_last_n_iters: -1
+  use_local_execution: True
+  use_new_data_only: False
+  use_timeout: True
+  v2: True
+  val_iters: 500
+  validate_early_stop_patience: 3
+  validate_every_n_epochs: 5
+  validate_fraction: 0.1
+}
+Connected to ray!  Resources: {'pg': 1.0, 'GPU': 1.0, 'object_store_memory': 68750874624.0, 'accelerator_type:A100': 1.0, 'memory': 150418707456.0, 'CPU': 1.0, 'node:172.18.198.202': 1.0}
+80 train queries: ['10b', '10c', '11b', '11c', '11d', '12b', '12c', '13b', '13c', '13d', '14b', '14c', '15b', '15c', '15d', '16b', '16c', '16d', '17b', '17c', '17d', '17e', '17f', '18b', '18c', '19b', '19c', '19d', '1b', '1c', '1d', '20b', '20c', '21b', '21c', '22b', '22c', '22d', '23b', '23c', '24b', '25b', '25c', '26b', '26c', '27b', '27c', '28b', '28c', '29b', '29c', '2b', '2c', '2d', '30b', '30c', '31b', '31c', '32b', '33b', '33c', '3b', '3c', '4b', '4c', '5b', '5c', '6b', '6c', '6d', '6e', '6f', '7b', '7c', '8b', '8c', '8d', '9b', '9c', '9d']
+33 test queries: ['10a', '11a', '12a', '13a', '14a', '15a', '16a', '17a', '18a', '19a', '1a', '20a', '21a', '22a', '23a', '24a', '25a', '26a', '27a', '28a', '29a', '2a', '30a', '31a', '32a', '33a', '3a', '4a', '5a', '6a', '7a', '8a', '9a']
+plans_lib.FilterScansOrJoins()
+plans_lib.GatherUnaryFiltersInfo()
+postgres.EstimateFilterRows()
+171 unique filters
+{('aka_name AS an', "((an.name IS NOT NULL) AND (((an.name)::text ~~ '%a%'::text) OR ((an.name)::text ~~ 'A%'::text)))"): 637664,
+ ('aka_name AS an', "((an.name)::text ~~ '%a%'::text)"): 626557,
+ ('cast_info AS ci', "((ci.note)::text = '(voice)'::text)"): 717638,
+ ('cast_info AS ci', "((ci.note)::text = '(voice: English version)'::text)"): 97860,
+ ('cast_info AS ci', '((ci.note)::text = ANY (\'{(voice),"(voice) (uncredited)","(voice: English version)"}\'::text[]))'): 846910,
+ ('cast_info AS ci', '((ci.note)::text = ANY (\'{(voice),"(voice: Japanese version)","(voice) (uncredited)","(voice: English version)"}\'::text[]))'): 872281,
+ ('cast_info AS ci', '((ci.note)::text = ANY (\'{(writer),"(head writer)","(written by)",(story),"(story editor)"}\'::text[]))'): 1245597,
+ ('cast_info AS ci', "((ci.note)::text ~~ '%(producer)%'::text)"): 1440597,
+ ('char_name AS chn', "(((chn.name)::text !~~ '%Sherlock%'::text) AND (((chn.name)::text ~~ '%Tony%Stark%'::text) OR ((chn.name)::text ~~ '%Iron%Man%'::text)))"): 628,
+ ('char_name AS chn', "((chn.name IS NOT NULL) AND (((chn.name)::text ~~ '%man%'::text) OR ((chn.name)::text ~~ '%Man%'::text)))"): 312079,
+ ('char_name AS chn', "((chn.name)::text = 'Queen'::text)"): 1,
+ ('comp_cast_type AS cct1', "((cct1.kind)::text = 'cast'::text)"): 1,
+ ('comp_cast_type AS cct1', "((cct1.kind)::text = 'complete+verified'::text)"): 1,
+ ('comp_cast_type AS cct1', "((cct1.kind)::text = 'crew'::text)"): 1,
+ ('comp_cast_type AS cct1', "((cct1.kind)::text = ANY ('{cast,crew}'::text[]))"): 2,
+ ('comp_cast_type AS cct2', "((cct2.kind)::text <> 'complete+verified'::text)"): 3,
+ ('comp_cast_type AS cct2', "((cct2.kind)::text = 'complete'::text)"): 1,
+ ('comp_cast_type AS cct2', "((cct2.kind)::text = 'complete+verified'::text)"): 1,
+ ('comp_cast_type AS cct2', "((cct2.kind)::text ~~ '%complete%'::text)"): 1,
+ ('comp_cast_type AS cct2', "((cct2.kind)::text ~~ 'complete%'::text)"): 1,
+ ('company_name AS cn', "(((cn.country_code)::text <> '[pl]'::text) AND (((cn.name)::text ~~ '%Film%'::text) OR ((cn.name)::text ~~ '%Warner%'::text)))"): 36113,
+ ('company_name AS cn', "(((cn.country_code)::text <> '[pl]'::text) AND (((cn.name)::text ~~ '20th Century Fox%'::text) OR ((cn.name)::text ~~ 'Twentieth Century Fox%'::text)))"): 77,
+ ('company_name AS cn', "(((cn.country_code)::text = '[us]'::text) AND ((cn.name)::text = 'DreamWorks Animation'::text))"): 1,
+ ('company_name AS cn', "(((cn.country_code)::text = '[us]'::text) AND ((cn.name)::text = 'YouTube'::text))"): 1,
+ ('company_name AS cn', "((cn.country_code)::text <> '[pl]'::text)"): 210463,
+ ('company_name AS cn', "((cn.country_code)::text <> '[us]'::text)"): 126303,
+ ('company_name AS cn', "((cn.country_code)::text = '[jp]'::text)"): 6392,
+ ('company_name AS cn', "((cn.country_code)::text = '[nl]'::text)"): 2326,
+ ('company_name AS cn', "((cn.country_code)::text = '[ru]'::text)"): 1332,
+ ('company_name AS cn', "((cn.country_code)::text = '[sm]'::text)"): 20,
+ ('company_name AS cn', "((cn.country_code)::text = '[us]'::text)"): 85304,
+ ('company_name AS cn', "((cn.name)::text ~~ 'Lionsgate%'::text)"): 23,
+ ('company_name AS cn1', "((cn1.country_code)::text <> '[us]'::text)"): 126303,
+ ('company_name AS cn1', "((cn1.country_code)::text = '[nl]'::text)"): 2326,
+ ('company_type AS ct', "((ct.kind IS NOT NULL) AND (((ct.kind)::text = 'production companies'::text) OR ((ct.kind)::text = 'distributors'::text)))"): 2,
+ ('company_type AS ct', "((ct.kind IS NOT NULL) AND ((ct.kind)::text <> 'production companies'::text))"): 3,
+ ('company_type AS ct', "((ct.kind)::text = 'production companies'::text)"): 1,
+ ('info_type AS it', "((it.info)::text = 'bottom 10 rank'::text)"): 1,
+ ('info_type AS it', "((it.info)::text = 'mini biography'::text)"): 1,
+ ('info_type AS it', "((it.info)::text = 'rating'::text)"): 1,
+ ('info_type AS it', "((it.info)::text = 'release dates'::text)"): 1,
+ ('info_type AS it', "((it.info)::text = 'top 250 rank'::text)"): 1,
+ ('info_type AS it1', "((it1.info)::text = 'budget'::text)"): 1,
+ ('info_type AS it1', "((it1.info)::text = 'countries'::text)"): 1,
+ ('info_type AS it1', "((it1.info)::text = 'genres'::text)"): 1,
+ ('info_type AS it1', "((it1.info)::text = 'rating'::text)"): 1,
+ ('info_type AS it1', "((it1.info)::text = 'release dates'::text)"): 1,
+ ('info_type AS it2', "((it2.info)::text = 'bottom 10 rank'::text)"): 1,
+ ('info_type AS it2', "((it2.info)::text = 'rating'::text)"): 1,
+ ('info_type AS it2', "((it2.info)::text = 'release dates'::text)"): 1,
+ ('info_type AS it2', "((it2.info)::text = 'votes'::text)"): 1,
+ ('info_type AS it3', "((it3.info)::text = 'height'::text)"): 1,
+ ('info_type AS it3', "((it3.info)::text = 'trivia'::text)"): 1,
+ ('keyword AS k', "((k.keyword IS NOT NULL) AND ((k.keyword)::text = ANY ('{murder,murder-in-title,blood,violence}'::text[])))"): 4,
+ ('keyword AS k', "((k.keyword)::text = 'character-name-in-title'::text)"): 1,
+ ('keyword AS k', "((k.keyword)::text = 'computer-animation'::text)"): 1,
+ ('keyword AS k', "((k.keyword)::text = 'marvel-cinematic-universe'::text)"): 1,
+ ('keyword AS k', "((k.keyword)::text = 'sequel'::text)"): 1,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{hero,martial-arts,hand-to-hand-combat,computer-animated-movie}'::text[]))"): 4,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{murder,blood,gore,death,female-nudity}'::text[]))"): 5,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{murder,murder-in-title,blood,violence}'::text[]))"): 4,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{murder,murder-in-title}'::text[]))"): 2,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{murder,violence,blood,gore,death,female-nudity,hospital}'::text[]))"): 7,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{nerd,loner,alienation,dignity}'::text[]))"): 4,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{sequel,revenge,based-on-novel}'::text[]))"): 3,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{superhero,marvel-comics,based-on-comic,fight}'::text[]))"): 4,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{superhero,marvel-comics,based-on-comic,tv-special,fight,violence,magnet,web,claw,laser}'::text[]))"): 10,
+ ('keyword AS k', "((k.keyword)::text = ANY ('{superhero,sequel,second-part,marvel-comics,based-on-comic,tv-special,fight,violence}'::text[]))"): 8,
+ ('keyword AS k', "((k.keyword)::text ~~ '%sequel%'::text)"): 13,
+ ('kind_type AS kt', "((kt.kind)::text = 'movie'::text)"): 1,
+ ('kind_type AS kt', '((kt.kind)::text = ANY (\'{movie,"tv movie","video movie","video game"}\'::text[]))'): 4,
+ ('kind_type AS kt', "((kt.kind)::text = ANY ('{movie,episode}'::text[]))"): 2,
+ ('kind_type AS kt1', "((kt1.kind)::text = 'tv series'::text)"): 1,
+ ('kind_type AS kt1', '((kt1.kind)::text = ANY (\'{"tv series",episode}\'::text[]))'): 2,
+ ('kind_type AS kt2', "((kt2.kind)::text = 'tv series'::text)"): 1,
+ ('kind_type AS kt2', '((kt2.kind)::text = ANY (\'{"tv series",episode}\'::text[]))'): 2,
+ ('link_type AS lt', "((lt.link)::text = 'features'::text)"): 1,
+ ('link_type AS lt', '((lt.link)::text = ANY (\'{references,"referenced in",features,"featured in"}\'::text[]))'): 4,
+ ('link_type AS lt', '((lt.link)::text = ANY (\'{sequel,follows,"followed by"}\'::text[]))'): 3,
+ ('link_type AS lt', "((lt.link)::text ~~ '%follow%'::text)"): 1,
+ ('link_type AS lt', "((lt.link)::text ~~ '%follows%'::text)"): 1,
+ ('movie_companies AS mc', "(((mc.note)::text !~~ '%(TV)%'::text) AND ((mc.note)::text ~~ '%(USA)%'::text))"): 176049,
+ ('movie_companies AS mc', "(((mc.note)::text !~~ '%(USA)%'::text) AND ((mc.note)::text ~~ '%(200%)%'::text))"): 138700,
+ ('movie_companies AS mc', "(((mc.note)::text !~~ '%(as Metro-Goldwyn-Mayer Pictures)%'::text) AND ((mc.note)::text ~~ '%(co-production)%'::text))"): 8434,
+ ('movie_companies AS mc', "(((mc.note)::text ~~ '%(200%)%'::text) AND (((mc.note)::text ~~ '%(USA)%'::text) OR ((mc.note)::text ~~ '%(worldwide)%'::text)))"): 90021,
+ ('movie_companies AS mc', "(((mc.note)::text ~~ '%(200%)%'::text) AND ((mc.note)::text ~~ '%(worldwide)%'::text))"): 12904,
+ ('movie_companies AS mc', "(((mc.note)::text ~~ '%(Japan)%'::text) AND ((mc.note)::text !~~ '%(USA)%'::text) AND (((mc.note)::text ~~ '%(2006)%'::text) OR ((mc.note)::text ~~ '%(2007)%'::text)))"): 607,
+ ('movie_companies AS mc', "(((mc.note)::text ~~ '%(VHS)%'::text) AND ((mc.note)::text ~~ '%(USA)%'::text) AND ((mc.note)::text ~~ '%(1994)%'::text))"): 32,
+ ('movie_companies AS mc', "((mc.note)::text !~~ '%(as Metro-Goldwyn-Mayer Pictures)%'::text)"): 1324389,
+ ('movie_companies AS mc', "((mc.note)::text ~~ '%(Blu-ray)%'::text)"): 9246,
+ ('movie_companies AS mc', '(mc.note IS NOT NULL)'): 1324481,
+ ('movie_companies AS mc', '(mc.note IS NULL)'): 1284648,
+ ('movie_info AS mi', "(((mi.note)::text ~~ '%internet%'::text) AND ((mi.info)::text ~~ 'USA:% 200%'::text))"): 165,
+ ('movie_info AS mi', "((mi.info IS NOT NULL) AND (((mi.info)::text ~~ 'Japan:%200%'::text) OR ((mi.info)::text ~~ 'USA:%200%'::text)))"): 309901,
+ ('movie_info AS mi', "((mi.info IS NOT NULL) AND (((mi.info)::text ~~ 'Japan:%2007%'::text) OR ((mi.info)::text ~~ 'USA:%2008%'::text)))"): 1540,
+ ('movie_info AS mi', "((mi.info IS NOT NULL) AND (((mi.info)::text ~~ 'Japan:%201%'::text) OR ((mi.info)::text ~~ 'USA:%201%'::text)))"): 464648,
+ ('movie_info AS mi', "((mi.info IS NOT NULL) AND ((mi.note)::text ~~ '%internet%'::text) AND (((mi.info)::text ~~ 'USA:% 199%'::text) OR ((mi.info)::text ~~ 'USA:% 200%'::text)))"): 165,
+ ('movie_info AS mi', "((mi.info)::text = 'Bulgaria'::text)"): 373,
+ ('movie_info AS mi', "((mi.info)::text = 'Horror'::text)"): 26693,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Drama,Horror,Western,Family}'::text[]))"): 294981,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Germany,German,USA,American}'::text[]))"): 699325,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Germany,German}'::text[]))"): 106276,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Horror,Action,Sci-Fi,Thriller,Crime,War}'::text[]))"): 181411,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Horror,Thriller}'::text[]))"): 64260,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Sweden,Germany,Swedish,German}'::text[]))"): 107022,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Sweden,Norway,Germany,Denmark,Swedish,Danish,Norwegian,German,USA,American}'::text[]))"): 716512,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Sweden,Norway,Germany,Denmark,Swedish,Denish,Norwegian,German,English}'::text[]))"): 909908,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{Sweden,Norway,Germany,Denmark,Swedish,Denish,Norwegian,German,USA,American}'::text[]))"): 716512,
+ ('movie_info AS mi', "((mi.info)::text = ANY ('{USA,America}'::text[]))"): 593049,
+ ('movie_info AS mi', "((mi.info)::text ~~ 'USA:%200%'::text)"): 233344,
+ ('movie_info AS mi', "((mi.note IS NULL) AND ((mi.info)::text = ANY ('{Horror,Thriller}'::text[])))"): 58258,
+ ('movie_info AS mi', "((mi.note)::text ~~ '%internet%'::text)"): 10460,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text < '7.0'::text)"): 1173667,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text < '8.5'::text)"): 1344240,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text > '2.0'::text)"): 858714,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text > '6.0'::text)"): 375203,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text > '6.5'::text)"): 299602,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text > '7.0'::text)"): 191406,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text > '8.0'::text)"): 51638,
+ ('movie_info_idx AS mi_idx', "((mi_idx.info)::text > '9.0'::text)"): 6354,
+ ('movie_info_idx AS mi_idx2', "((mi_idx2.info)::text < '3.0'::text)"): 654405,
+ ('movie_info_idx AS mi_idx2', "((mi_idx2.info)::text < '3.5'::text)"): 702257,
+ ('name AS n', "(((n.name)::text ~~ '%An%'::text) AND ((n.gender)::text = 'f'::text))"): 29370,
+ ('name AS n', "(((n.name)::text ~~ '%Angel%'::text) AND ((n.gender)::text = 'f'::text))"): 9790,
+ ('name AS n', "(((n.name)::text ~~ '%Yo%'::text) AND ((n.name)::text !~~ '%Yu%'::text))"): 42092,
+ ('name AS n', "(((n.name_pcode_cf)::text >= 'A'::text) AND ((n.name_pcode_cf)::text <= 'F'::text) AND (((n.gender)::text = 'm'::text) OR (((n.gender)::text = 'f'::text) AND ((n.name)::text ~~ 'A%'::text))))"): 470362,
+ ('name AS n', "(((n.name_pcode_cf)::text ~~ 'D%'::text) AND ((n.gender)::text = 'm'::text))"): 96902,
+ ('name AS n', "((n.gender IS NOT NULL) AND ((n.gender)::text = 'f'::text))"): 629896,
+ ('name AS n', "((n.gender)::text = 'f'::text)"): 969220,
+ ('name AS n', "((n.gender)::text = 'm'::text)"): 1739233,
+ ('name AS n', "((n.name)::text ~~ '%B%'::text)"): 420959,
+ ('name AS n', "((n.name)::text ~~ '%Bert%'::text)"): 417,
+ ('name AS n', "((n.name)::text ~~ '%Downey%Robert%'::text)"): 417,
+ ('name AS n', "((n.name)::text ~~ 'X%'::text)"): 417,
+ ('name AS n', "((n.name)::text ~~ 'Z%'::text)"): 417,
+ ('person_info AS pi', "((pi.note)::text = 'Volker Boehm'::text)"): 29,
+ ('person_info AS pi', '(pi.note IS NOT NULL)'): 82489,
+ ('role_type AS rt', "((rt.role)::text = 'actor'::text)"): 1,
+ ('role_type AS rt', "((rt.role)::text = 'actress'::text)"): 1,
+ ('role_type AS rt', "((rt.role)::text = 'costume designer'::text)"): 1,
+ ('role_type AS rt', "((rt.role)::text = 'writer'::text)"): 1,
+ ('title AS t', "(((t.title)::text <> ''::text) AND (((t.title)::text ~~ '%Champion%'::text) OR ((t.title)::text ~~ '%Loser%'::text)))"): 471,
+ ('title AS t', "(((t.title)::text <> ''::text) AND (((t.title)::text ~~ 'Champion%'::text) OR ((t.title)::text ~~ 'Loser%'::text)))"): 471,
+ ('title AS t', "(((t.title)::text ~~ '%Money%'::text) AND (t.production_year = 1998))"): 4,
+ ('title AS t', '((t.episode_nr >= 5) AND (t.episode_nr < 100))'): 699078,
+ ('title AS t', "((t.production_year > 2000) AND (((t.title)::text ~~ '%Freddy%'::text) OR ((t.title)::text ~~ '%Jason%'::text) OR ((t.title)::text ~~ 'Saw%'::text)))"): 382,
+ ('title AS t', "((t.production_year > 2000) AND (((t.title)::text ~~ 'Birdemic%'::text) OR ((t.title)::text ~~ '%Movie%'::text)))"): 255,
+ ('title AS t', "((t.production_year > 2010) AND (((t.title)::text ~~ '%murder%'::text) OR ((t.title)::text ~~ '%Murder%'::text) OR ((t.title)::text ~~ '%Mord%'::text)))"): 109,
+ ('title AS t', "((t.production_year > 2010) AND ((t.title)::text ~~ 'Kung Fu Panda%'::text))"): 36,
+ ('title AS t', "((t.production_year > 2010) AND ((t.title)::text ~~ 'Vampire%'::text))"): 36,
+ ('title AS t', '((t.production_year >= 1950) AND (t.production_year <= 2010))'): 1900555,
+ ('title AS t', '((t.production_year >= 1980) AND (t.production_year <= 1984))'): 81215,
+ ('title AS t', '((t.production_year >= 1980) AND (t.production_year <= 2010))'): 1548072,
+ ('title AS t', "((t.production_year >= 2000) AND (t.production_year <= 2005) AND ((t.title)::text = 'Shrek 2'::text))"): 3,
+ ('title AS t', '((t.production_year >= 2000) AND (t.production_year <= 2010))'): 1030165,
+ ('title AS t', '((t.production_year >= 2005) AND (t.production_year <= 2010))'): 707588,
+ ('title AS t', "((t.production_year >= 2006) AND (t.production_year <= 2007) AND (((t.title)::text ~~ 'One Piece%'::text) OR ((t.title)::text ~~ 'Dragon Ball Z%'::text)))"): 44,
+ ('title AS t', "((t.production_year >= 2007) AND (t.production_year <= 2008) AND ((t.title)::text ~~ '%Kung%Fu%Panda%'::text))"): 23,
+ ('title AS t', '((t.production_year >= 2007) AND (t.production_year <= 2010))'): 503501,
+ ('title AS t', '((t.production_year >= 2008) AND (t.production_year <= 2014))'): 771328,
+ ('title AS t', '(t.episode_nr < 100)'): 952851,
+ ('title AS t', '(t.production_year = 1998)'): 45425,
+ ('title AS t', '(t.production_year > 1950)'): 2284282,
+ ('title AS t', '(t.production_year > 1990)'): 1735084,
+ ('title AS t', '(t.production_year > 2000)'): 1365517,
+ ('title AS t', '(t.production_year > 2005)'): 1001392,
+ ('title AS t', '(t.production_year > 2009)'): 531273,
+ ('title AS t', '(t.production_year > 2010)'): 390757,
+ ('title AS t', '(t.production_year > 2014)'): 26,
+ ('title AS t2', '((t2.production_year >= 2000) AND (t2.production_year <= 2010))'): 1030165,
+ ('title AS t2', '(t2.production_year = 2007)'): 122876}
+Dropping buffer cache.
+Running queries as-is (baseline PG performance)...
+---------------------------------------
+FinalizeAggregate cost=583.769
+  Gather cost=158342.69
+    PartialAggregate cost=157342.09
+      Hash Join cost=157341.96
+        Nested Loop cost=157340.74
+          Nested Loop cost=157316.81
+            Hash Join cost=157166.18
+              Hash Join cost=157151.24
+                Seq Scan [cast_info AS ci] cost=138395.05
+                Hash cost=17783.65
+                  Hash Join cost=17783.65
+                    Seq Scan [movie_companies AS mc] cost=13092.55
+                    Hash cost=2471.92
+                      Seq Scan [company_name AS cn] cost=2471.92
+              Hash cost=1.15
+                Seq Scan [role_type AS rt] cost=1.15
+            Index Scan [title AS t] cost=0.47
+          Index Scan [char_name AS chn] cost=0.48
+        Hash cost=1.04
+          Seq Scan [company_type AS ct] cost=1.04
+
+
+0 th query
+q10b,583.8 (baseline)
+Execution time: 583.769
+---------------------------------------
+FinalizeAggregate cost=1600.771
+  Gather cost=211316.81
+    PartialAggregate cost=210316.51
+      Hash Join cost=209502.07
+        Hash Join cost=208620.39
+          Hash Join cost=18401.09
+            Seq Scan [movie_companies AS mc] cost=13092.55
+            Hash cost=2471.92
+              Seq Scan [company_name AS cn] cost=2471.92
+          Hash cost=187401.9
+            Hash Join cost=187401.9
+              Seq Scan [title AS t] cost=16839.97
+              Hash cost=166166.79
+                Hash Join cost=166166.79
+                  Hash Join cost=165744.72
+                    Seq Scan [cast_info AS ci] cost=138395.05
+                    Hash cost=16905.85
+                      Seq Scan [char_name AS chn] cost=16905.85
+                  Hash cost=1.12
+                    Seq Scan [role_type AS rt] cost=1.12
+        Hash cost=1.04
+          Seq Scan [company_type AS ct] cost=1.04
+
+
+1 th query
+q10c,1600.8 (baseline)
+Execution time: 1600.771
+---------------------------------------
+SimpleAggregate cost=4637.403
+  Nested Loop cost=11682.99
+    Nested Loop cost=11682.66
+      Nested Loop cost=11682.49
+        Merge Join cost=11682.16
+          Gather Merge cost=193749.78
+            Nested Loop cost=192747.46
+              Nested Loop cost=84878.03
+                Index Scan [title AS t] cost=38052.64
+                Seq Scan [movie_companies AS mc] cost=30767.29
+              Seq Scan [movie_keyword AS mk] cost=51320.3
+          Sort cost=532.8
+            Hash Join cost=439.48
+              Seq Scan [movie_link AS ml] cost=340.97
+              Hash cost=1.23
+                Seq Scan [link_type AS lt] cost=1.23
+        Index Scan [company_name AS cn] cost=0.32
+      Index Scan [company_type AS ct] cost=0.15
+    Index Scan [keyword AS k] cost=0.32
+
+
+2 th query
+q11b,4637.4 (baseline)
+Execution time: 4637.403
+---------------------------------------
+SimpleAggregate cost=11827.596
+  Nested Loop cost=43022.02
+    Nested Loop cost=43021.87
+      Nested Loop cost=42305.93
+        Gather cost=42305.47
+          Nested Loop cost=41305.37
+            Hash Join cost=41284.07
+              Hash Join cost=41282.51
+                Seq Scan [movie_companies AS mc] cost=13092.55
+                Hash cost=26587.07
+                  Hash Join cost=26587.07
+                    Seq Scan [movie_keyword AS mk] cost=20674.32
+                    Hash cost=2081.84
+                      Seq Scan [keyword AS k] cost=2081.84
+              Hash cost=1.05
+                Seq Scan [company_type AS ct] cost=1.05
+            Index Scan [company_name AS cn] cost=0.32
+        Index Scan [title AS t] cost=0.46
+      Seq Scan [movie_link AS ml] cost=340.97
+    Index Only Scan [link_type AS lt] cost=0.16
+
+
+3 th query
+q11c,11827.6 (baseline)
+Execution time: 11827.596
+---------------------------------------
+FinalizeAggregate cost=266.265
+  Gather cost=43035.07
+    PartialAggregate cost=42034.77
+      Nested Loop cost=42034.64
+        Hash Join cost=42028.92
+          Hash Join cost=42027.71
+            Seq Scan [movie_companies AS mc] cost=13092.55
+            Hash cost=27332.77
+              Nested Loop cost=27332.77
+                Nested Loop cost=27331.37
+                  Hash Join cost=27326.65
+                    Hash Join cost=26587.07
+                      Seq Scan [movie_keyword AS mk] cost=20674.32
+                      Hash cost=2081.84
+                        Seq Scan [keyword AS k] cost=2081.84
+                    Hash cost=340.97
+                      Seq Scan [movie_link AS ml] cost=340.97
+                  Index Scan [title AS t] cost=0.46
+                Index Only Scan [link_type AS lt] cost=0.16
+          Hash cost=1.05
+            Seq Scan [company_type AS ct] cost=1.05
+        Index Scan [company_name AS cn] cost=0.32
+
+
+4 th query
+q11d,266.3 (baseline)
+Execution time: 266.265
+---------------------------------------
+SimpleAggregate cost=677.4
+  Nested Loop cost=105197.05
+    Gather cost=105196.88
+      Nested Loop cost=104196.78
+        Hash Join cost=104196.47
+          Seq Scan [movie_companies AS mc] cost=13092.55
+          Hash cost=87947.69
+            Nested Loop cost=87947.69
+              Hash Join cost=87624.89
+                Hash Join cost=78167.31
+                  Seq Scan [movie_info AS mi] cost=70087.54
+                  Hash cost=2.41
+                    Seq Scan [info_type AS it1] cost=2.41
+                Hash cost=9292.6
+                  Hash Join cost=9292.6
+                    Seq Scan [movie_info_idx AS mi_idx] cost=7724.15
+                    Hash cost=2.41
+                      Seq Scan [info_type AS it2] cost=2.41
+              Index Scan [title AS t] cost=0.46
+        Index Scan [company_name AS cn] cost=0.32
+    Index Scan [company_type AS ct] cost=0.15
+
+
+5 th query
+q12b,677.4 (baseline)
+Execution time: 677.4
+---------------------------------------
+FinalizeAggregate cost=863.474
+  Gather cost=111723.99
+    PartialAggregate cost=110723.69
+      Nested Loop cost=110723.67
+        Nested Loop cost=110723.04
+          Hash Join cost=110721.97
+            Seq Scan [movie_companies AS mc] cost=13092.55
+            Hash cost=94473.2
+              Nested Loop cost=94473.2
+                Hash Join cost=94472.0
+                  Hash Join cost=85079.9
+                    Seq Scan [movie_info AS mi] cost=84916.8
+                    Hash cost=2.41
+                      Seq Scan [info_type AS it1] cost=2.41
+                  Hash cost=9381.31
+                    Hash Join cost=9381.31
+                      Seq Scan [movie_info_idx AS mi_idx] cost=9161.68
+                      Hash cost=2.41
+                        Seq Scan [info_type AS it2] cost=2.41
+                Index Scan [title AS t] cost=0.6
+          Index Scan [company_type AS ct] cost=0.15
+        Index Scan [company_name AS cn] cost=0.32
+
+
+6 th query
+q12c,863.5 (baseline)
+Execution time: 863.474
+---------------------------------------
+SimpleAggregate cost=1666.449
+  Nested Loop cost=105197.29
+    Nested Loop cost=105197.06
+      Gather cost=105196.89
+        Nested Loop cost=104196.79
+          Hash Join cost=104196.48
+            Seq Scan [movie_companies AS mc] cost=13092.55
+            Hash cost=87947.69
+              Nested Loop cost=87947.69
+                Hash Join cost=87624.89
+                  Hash Join cost=78167.31
+                    Seq Scan [movie_info AS mi] cost=70087.54
+                    Hash cost=2.41
+                      Seq Scan [info_type AS it2] cost=2.41
+                  Hash cost=9292.6
+                    Hash Join cost=9292.6
+                      Seq Scan [movie_info_idx AS miidx] cost=7724.15
+                      Hash cost=2.41
+                        Seq Scan [info_type AS it] cost=2.41
+                Index Scan [title AS t] cost=0.46
+          Index Scan [company_name AS cn] cost=0.32
+      Index Scan [company_type AS ct] cost=0.15
+    Index Scan [kind_type AS kt] cost=0.18
+
+
+7 th query
+q13b,1666.4 (baseline)
+Execution time: 1666.449
+---------------------------------------
+SimpleAggregate cost=1605.739
+  Nested Loop cost=105197.29
+    Nested Loop cost=105197.06
+      Gather cost=105196.89
+        Nested Loop cost=104196.79
+          Hash Join cost=104196.48
+            Seq Scan [movie_companies AS mc] cost=13092.55
+            Hash cost=87947.69
+              Nested Loop cost=87947.69
+                Hash Join cost=87624.89
+                  Hash Join cost=78167.31
+                    Seq Scan [movie_info AS mi] cost=70087.54
+                    Hash cost=2.41
+                      Seq Scan [info_type AS it2] cost=2.41
+                  Hash cost=9292.6
+                    Hash Join cost=9292.6
+                      Seq Scan [movie_info_idx AS miidx] cost=7724.15
+                      Hash cost=2.41
+                        Seq Scan [info_type AS it] cost=2.41
+                Index Scan [title AS t] cost=0.46
+          Index Scan [company_name AS cn] cost=0.32
+      Index Scan [company_type AS ct] cost=0.15
+    Index Scan [kind_type AS kt] cost=0.18
+
+
+8 th query
+q13c,1605.7 (baseline)
+Execution time: 1605.739
+---------------------------------------
+FinalizeAggregate cost=3046.642
+  Gather cost=105272.51
+    PartialAggregate cost=104272.21
+      Nested Loop cost=104271.61
+        Hash Join cost=104203.59
+          Hash Join cost=104198.22
+            Seq Scan [movie_companies AS mc] cost=13092.55
+            Hash cost=87946.48
+              Hash Join cost=87946.48
+                Nested Loop cost=87942.4
+                  Hash Join cost=87624.89
+                    Hash Join cost=78167.31
+                      Seq Scan [movie_info AS mi] cost=70087.54
+                      Hash cost=2.41
+                        Seq Scan [info_type AS it2] cost=2.41
+                    Hash cost=9292.6
+                      Hash Join cost=9292.6
+                        Seq Scan [movie_info_idx AS miidx] cost=7724.15
+                        Hash cost=2.41
+                          Seq Scan [info_type AS it] cost=2.41
+                  Index Scan [title AS t] cost=0.45
+                Hash cost=1.09
+                  Seq Scan [kind_type AS kt] cost=1.09
+          Hash cost=1.05
+            Seq Scan [company_type AS ct] cost=1.05
+        Index Scan [company_name AS cn] cost=0.32
+
+
+9 th query
+q13d,3046.6 (baseline)
+Execution time: 3046.642
+---------------------------------------
+FinalizeAggregate cost=1253.16
+  Gather cost=144317.89
+    PartialAggregate cost=143317.59
+      Nested Loop cost=143317.58
+        Nested Loop cost=143317.18
+          Hash Join cost=143316.86
+            Seq Scan [movie_keyword AS mk] cost=20674.32
+            Hash cost=117170.02
+              Nested Loop cost=117170.02
+                Hash Join cost=117165.36
+                  Hash Join cost=107553.41
+                    Seq Scan [movie_info AS mi] cost=107160.71
+                    Hash cost=2.41
+                      Seq Scan [info_type AS it1] cost=2.41
+                  Hash cost=9589.87
+                    Hash Join cost=9589.87
+                      Seq Scan [movie_info_idx AS mi_idx] cost=9161.68
+                      Hash cost=2.41
+                        Seq Scan [info_type AS it2] cost=2.41
+                Index Scan [title AS t] cost=0.52
+          Index Scan [keyword AS k] cost=0.32
+        Index Scan [kind_type AS kt] cost=0.26
+
+
+10 th query
+q14b,1253.2 (baseline)
+Execution time: 1253.16
+---------------------------------------
+SimpleAggregate cost=1619.701
+  Gather cost=145493.32
+    Nested Loop cost=144493.22
+      Hash Join cost=144474.14
+        Seq Scan [movie_keyword AS mk] cost=20674.32
+        Hash cost=118327.26
+          Hash Join cost=118327.26
+            Nested Loop cost=118326.09
+              Hash Join cost=118309.78
+                Hash Join cost=107553.41
+                  Seq Scan [movie_info AS mi] cost=107160.71
+                  Hash cost=2.41
+                    Seq Scan [info_type AS it1] cost=2.41
+                Hash cost=10689.52
+                  Hash Join cost=10689.52
+                    Seq Scan [movie_info_idx AS mi_idx] cost=9161.68
+                    Hash cost=2.41
+                      Seq Scan [info_type AS it2] cost=2.41
+              Index Scan [title AS t] cost=0.48
+            Hash cost=1.09
+              Seq Scan [kind_type AS kt] cost=1.09
+      Index Scan [keyword AS k] cost=0.32
+
+
+11 th query
+q14c,1619.7 (baseline)
+Execution time: 1619.701
+---------------------------------------
+FinalizeAggregate cost=600.2
+  Gather cost=132993.45
+    PartialAggregate cost=131993.15
+      Nested Loop cost=131993.13
+        Hash Join cost=131992.19
+          Seq Scan [movie_keyword AS mk] cost=20674.32
+          Hash cost=105845.35
+            Nested Loop cost=105845.35
+              Nested Loop cost=105844.78
+                Nested Loop cost=105844.62
+                  Hash Join cost=105843.72
+                    Seq Scan [movie_companies AS mc] cost=17300.82
+                    Hash cost=88527.27
+                      Hash Join cost=88527.27
+                        Seq Scan [aka_title AS at] cost=3043.13
+                        Hash cost=84919.32
+                          Hash Join cost=84919.32
+                            Seq Scan [movie_info AS mi] cost=84916.8
+                            Hash cost=2.41
+                              Seq Scan [info_type AS it1] cost=2.41
+                  Index Scan [company_name AS cn] cost=0.6
+                Index Only Scan [company_type AS ct] cost=0.15
+              Index Scan [title AS t] cost=0.57
+        Index Only Scan [keyword AS k] cost=0.31
+
+
+12 th query
+q15b,600.2 (baseline)
+Execution time: 600.2
+---------------------------------------
+FinalizeAggregate cost=1206.242
+  Gather cost=139341.36
+    PartialAggregate cost=138341.16
+      Hash Join cost=138341.06
+        Seq Scan [aka_title AS at] cost=3043.13
+        Hash cost=134733.03
+          Nested Loop cost=134733.03
+            Hash Join cost=134730.84
+              Seq Scan [movie_keyword AS mk] cost=20674.32
+              Hash cost=108584.0
+                Nested Loop cost=108584.0
+                  Nested Loop cost=108583.52
+                    Nested Loop cost=108583.37
+                      Hash Join cost=108582.73
+                        Seq Scan [movie_companies AS mc] cost=13092.55
+                        Hash cost=92333.95
+                          Hash Join cost=92333.95
+                            Seq Scan [movie_info AS mi] cost=92331.44
+                            Hash cost=2.41
+                              Seq Scan [info_type AS it1] cost=2.41
+                      Index Scan [company_name AS cn] cost=0.32
+                    Index Only Scan [company_type AS ct] cost=0.15
+                  Index Scan [title AS t] cost=0.47
+            Index Only Scan [keyword AS k] cost=0.31
+
+
+13 th query
+q15c,1206.2 (baseline)
+Execution time: 1206.242
+---------------------------------------
+FinalizeAggregate cost=954.522
+  Gather cost=124754.02
+    PartialAggregate cost=123753.82
+      Hash Join cost=123747.27
+        Seq Scan [aka_title AS at] cost=3043.13
+        Hash cost=120134.21
+          Nested Loop cost=120134.21
+            Hash Join cost=120011.59
+              Seq Scan [movie_keyword AS mk] cost=20674.32
+              Hash cost=93864.06
+                Hash Join cost=93864.06
+                  Nested Loop cost=93862.75
+                    Hash Join cost=93828.27
+                      Seq Scan [movie_companies AS mc] cost=13092.55
+                      Hash cost=77579.31
+                        Nested Loop cost=77579.31
+                          Hash Join cost=77510.3
+                            Seq Scan [movie_info AS mi] cost=77502.17
+                            Hash cost=2.41
+                              Seq Scan [info_type AS it1] cost=2.41
+                          Index Scan [title AS t] cost=3.63
+                    Index Scan [company_name AS cn] cost=0.32
+                  Hash cost=1.04
+                    Seq Scan [company_type AS ct] cost=1.04
+            Index Only Scan [keyword AS k] cost=0.31
+
+
+14 th query
+q15d,954.5 (baseline)
+Execution time: 954.522
+---------------------------------------
+FinalizeAggregate cost=4273.16
+  Gather cost=196580.26
+    PartialAggregate cost=195579.96
+      Hash Join cost=195574.62
+        Seq Scan [aka_name AS an] cost=5739.55
+        Hash cost=188741.7
+          Nested Loop cost=188741.7
+            Hash Join cost=188638.35
+              Seq Scan [cast_info AS ci] cost=123293.24
+              Hash cost=42691.63
+                Nested Loop cost=42691.63
+                  Hash Join cost=42673.28
+                    Seq Scan [movie_companies AS mc] cost=13092.55
+                    Hash cost=26424.36
+                      Nested Loop cost=26424.36
+                        Hash Join cost=26419.33
+                          Seq Scan [movie_keyword AS mk] cost=20674.32
+                          Hash cost=1914.12
+                            Seq Scan [keyword AS k] cost=1914.12
+                        Index Scan [title AS t] cost=0.46
+                  Index Scan [company_name AS cn] cost=0.32
+            Index Only Scan [name AS n] cost=0.45
+
+
+15 th query
+q16b,4273.2 (baseline)
+Execution time: 4273.16
+---------------------------------------
+FinalizeAggregate cost=2120.191
+  Gather cost=196498.85
+    PartialAggregate cost=195498.55
+      Hash Join cost=195496.53
+        Seq Scan [aka_name AS an] cost=5739.55
+        Hash cost=188665.49
+          Nested Loop cost=188665.49
+            Hash Join cost=188626.4
+              Seq Scan [cast_info AS ci] cost=123293.24
+              Hash cost=42680.15
+                Nested Loop cost=42680.15
+                  Hash Join cost=42673.19
+                    Seq Scan [movie_companies AS mc] cost=13092.55
+                    Hash cost=26424.38
+                      Nested Loop cost=26424.38
+                        Hash Join cost=26419.33
+                          Seq Scan [movie_keyword AS mk] cost=20674.32
+                          Hash cost=1914.12
+                            Seq Scan [keyword AS k] cost=1914.12
+                        Index Scan [title AS t] cost=0.46
+                  Index Scan [company_name AS cn] cost=0.32
+            Index Only Scan [name AS n] cost=0.45
+
+
+16 th query
+q16c,2120.2 (baseline)
+Execution time: 2120.191
+---------------------------------------
+FinalizeAggregate cost=2068.482
+  Gather cost=196485.71
+    PartialAggregate cost=195485.41
+      Hash Join cost=195483.93
+        Seq Scan [aka_name AS an] cost=5739.55
+        Hash cost=188653.2
+          Nested Loop cost=188653.2
+            Hash Join cost=188624.44
+              Seq Scan [cast_info AS ci] cost=123293.24
+              Hash cost=42678.27
+                Nested Loop cost=42678.27
+                  Hash Join cost=42673.21
+                    Seq Scan [movie_companies AS mc] cost=13092.55
+                    Hash cost=26424.41
+                      Nested Loop cost=26424.41
+                        Hash Join cost=26419.33
+                          Seq Scan [movie_keyword AS mk] cost=20674.32
+                          Hash cost=1914.12
+                            Seq Scan [keyword AS k] cost=1914.12
+                        Index Scan [title AS t] cost=0.46
+                  Index Scan [company_name AS cn] cost=0.32
+            Index Only Scan [name AS n] cost=0.45
+
+
+17 th query
+q16d,2068.5 (baseline)
+Execution time: 2068.482
+---------------------------------------
+SimpleAggregate cost=3171.3
+  Nested Loop cost=189716.55
+    Nested Loop cost=189716.1
+      Gather cost=189715.79
+        Hash Join cost=188715.69
+          Seq Scan [movie_companies AS mc] cost=13092.55
+          Hash cost=172466.91
+            Nested Loop cost=172466.91
+              Hash Join cost=172366.15
+                Seq Scan [cast_info AS ci] cost=123293.24
+                Hash cost=26419.33
+                  Hash Join cost=26419.33
+                    Seq Scan [movie_keyword AS mk] cost=20674.32
+                    Hash cost=1914.12
+                      Seq Scan [keyword AS k] cost=1914.12
+              Index Scan [name AS n] cost=0.45
+      Index Only Scan [company_name AS cn] cost=0.31
+    Index Only Scan [title AS t] cost=0.45
+
+
+18 th query
+q17b,3171.3 (baseline)
+Execution time: 3171.3
+---------------------------------------
+SimpleAggregate cost=2541.273
+  Nested Loop cost=189716.55
+    Nested Loop cost=189716.1
+      Gather cost=189715.79
+        Hash Join cost=188715.69
+          Seq Scan [movie_companies AS mc] cost=13092.55
+          Hash cost=172466.91
+            Nested Loop cost=172466.91
+              Hash Join cost=172366.15
+                Seq Scan [cast_info AS ci] cost=123293.24
+                Hash cost=26419.33
+                  Hash Join cost=26419.33
+                    Seq Scan [movie_keyword AS mk] cost=20674.32
+                    Hash cost=1914.12
+                      Seq Scan [keyword AS k] cost=1914.12
+              Index Scan [name AS n] cost=0.45
+      Index Only Scan [company_name AS cn] cost=0.31
+    Index Only Scan [title AS t] cost=0.45
+
+
+19 th query
+q17c,2541.3 (baseline)
+Execution time: 2541.273
+---------------------------------------
+SimpleAggregate cost=2536.785
+  Nested Loop cost=189716.55
+    Nested Loop cost=189716.1
+      Gather cost=189715.79
+        Hash Join cost=188715.69
+          Seq Scan [movie_companies AS mc] cost=13092.55
+          Hash cost=172466.91
+            Nested Loop cost=172466.91
+              Hash Join cost=172366.15
+                Seq Scan [cast_info AS ci] cost=123293.24
+                Hash cost=26419.33
+                  Hash Join cost=26419.33
+                    Seq Scan [movie_keyword AS mk] cost=20674.32
+                    Hash cost=1914.12
+                      Seq Scan [keyword AS k] cost=1914.12
+              Index Scan [name AS n] cost=0.45
+      Index Only Scan [company_name AS cn] cost=0.31
+    Index Only Scan [title AS t] cost=0.45
+
+
+20 th query
+q17d,2536.8 (baseline)
+Execution time: 2536.785
+---------------------------------------
+FinalizeAggregate cost=2574.075
+  Gather cost=189742.88
+    PartialAggregate cost=188742.28
+      Nested Loop cost=188741.7
+        Hash Join cost=188638.35
+          Seq Scan [cast_info AS ci] cost=123293.24
+          Hash cost=42691.63
+            Nested Loop cost=42691.63
+              Hash Join cost=42673.28
+                Seq Scan [movie_companies AS mc] cost=13092.55
+                Hash cost=26424.36
+                  Nested Loop cost=26424.36
+                    Hash Join cost=26419.33
+                      Seq Scan [movie_keyword AS mk] cost=20674.32
+                      Hash cost=1914.12
+                        Seq Scan [keyword AS k] cost=1914.12
+                    Index Only Scan [title AS t] cost=0.46
+              Index Scan [company_name AS cn] cost=0.32
+        Index Scan [name AS n] cost=0.45
+
+
+21 th query
+q17e,2574.1 (baseline)
+Execution time: 2574.075
+---------------------------------------
+FinalizeAggregate cost=3155.936
+  Gather cost=189760.24
+    PartialAggregate cost=188759.94
+      Nested Loop cost=188759.62
+        Hash Join cost=188720.69
+          Seq Scan [movie_companies AS mc] cost=13092.55
+          Hash cost=172471.47
+            Nested Loop cost=172471.47
+              Hash Join cost=172370.71
+                Seq Scan [cast_info AS ci] cost=123293.24
+                Hash cost=26424.36
+                  Nested Loop cost=26424.36
+                    Hash Join cost=26419.33
+                      Seq Scan [movie_keyword AS mk] cost=20674.32
+                      Hash cost=1914.12
+                        Seq Scan [keyword AS k] cost=1914.12
+                    Index Only Scan [title AS t] cost=0.46
+              Index Scan [name AS n] cost=0.45
+        Index Only Scan [company_name AS cn] cost=0.31
+
+
+22 th query
+q17f,3155.9 (baseline)
+Execution time: 3155.936
+---------------------------------------
+FinalizeAggregate cost=903.418
+  Gather cost=249589.71
+    PartialAggregate cost=248589.11
+      Nested Loop cost=248589.09
+        Nested Loop cost=248588.59
+          Hash Join cost=248588.09
+            Seq Scan [cast_info AS ci] cost=161047.77
+            Hash cost=86761.8
+              Hash Join cost=86761.8
+                Hash Join cost=77536.33
+                  Seq Scan [movie_info AS mi] cost=77502.17
+                  Hash cost=2.41
+                    Seq Scan [info_type AS it1] cost=2.41
+                Hash cost=9222.7
+                  Hash Join cost=9222.7
+                    Seq Scan [movie_info_idx AS mi_idx] cost=9161.68
+                    Hash cost=2.41
+                      Seq Scan [info_type AS it2] cost=2.41
+          Index Scan [name AS n] cost=0.5
+        Index Scan [title AS t] cost=0.49
+
+
+23 th query
+q18b,903.4 (baseline)
+Execution time: 903.418
+---------------------------------------
+FinalizeAggregate cost=1134.859
+  Gather cost=264624.17
+    PartialAggregate cost=263623.57
+      Nested Loop cost=263623.53
+        Nested Loop cost=263621.56
+          Hash Join cost=263616.53
+            Seq Scan [cast_info AS ci] cost=161047.77
+            Hash cost=101790.13
+              Hash Join cost=101790.13
+                Hash Join cost=92432.67
+                  Seq Scan [movie_info AS mi] cost=92331.44
+                  Hash cost=2.41
+                    Seq Scan [info_type AS it1] cost=2.41
+                Hash cost=9292.6
+                  Hash Join cost=9292.6
+                    Seq Scan [movie_info_idx AS mi_idx] cost=7724.15
+                    Hash cost=2.41
+                      Seq Scan [info_type AS it2] cost=2.41
+          Index Scan [name AS n] cost=0.5
+        Index Scan [title AS t] cost=0.48
+
+
+24 th query
+q18c,1134.9 (baseline)
+Execution time: 1134.859
+---------------------------------------
+FinalizeAggregate cost=1412.807
+  Gather cost=251130.59
+    PartialAggregate cost=250130.29
+      Nested Loop cost=250130.28
+        Nested Loop cost=250130.1
+          Nested Loop cost=250129.56
+            Hash Join cost=250129.21
+              Seq Scan [movie_companies AS mc] cost=19404.95
+              Hash cost=230615.34
+                Nested Loop cost=230615.34
+                  Hash Join cost=230614.83
+                    Seq Scan [aka_name AS an] cost=5739.55
+                    Hash cost=223784.92
+                      Hash Join cost=223784.92
+                        Seq Scan [cast_info AS ci] cost=138395.05
+                        Hash cost=84941.32
+                          Nested Loop cost=84941.32
+                            Hash Join cost=84920.07
+                              Seq Scan [movie_info AS mi] cost=84916.8
+                              Hash cost=2.41
+                                Seq Scan [info_type AS it] cost=2.41
+                            Index Scan [title AS t] cost=6.9
+                  Index Only Scan [char_name AS chn] cost=0.51
+            Index Scan [company_name AS cn] cost=0.36
+          Index Scan [name AS n] cost=0.53
+        Index Scan [role_type AS rt] cost=0.16
+
+
+25 th query
+q19b,1412.8 (baseline)
+Execution time: 1412.807
+---------------------------------------
+FinalizeAggregate cost=1883.246
+  Gather cost=263359.58
+    PartialAggregate cost=262359.28
+      Nested Loop cost=262359.27
+        Hash Join cost=262358.79
+          Seq Scan [aka_name AS an] cost=5739.55
+          Hash cost=255528.88
+            Nested Loop cost=255528.88
+              Hash Join cost=255528.56
+                Seq Scan [movie_companies AS mc] cost=13092.55
+                Hash cost=239279.78
+                  Nested Loop cost=239279.78
+                    Nested Loop cost=239279.28
+                      Hash Join cost=239256.01
+                        Hash Join cost=85088.02
+                          Seq Scan [movie_info AS mi] cost=84916.8
+                          Hash cost=2.41
+                            Seq Scan [info_type AS it] cost=2.41
+                        Hash cost=154014.42
+                          Hash Join cost=154014.42
+                            Seq Scan [cast_info AS ci] cost=153496.86
+                            Hash cost=1.15
+                              Seq Scan [role_type AS rt] cost=1.15
+                      Index Scan [name AS n] cost=0.53
+                    Index Only Scan [char_name AS chn] cost=0.5
+              Index Scan [company_name AS cn] cost=0.32
+        Index Scan [title AS t] cost=0.47
+
+
+26 th query
+q19c,1883.2 (baseline)
+Execution time: 1883.246
+---------------------------------------
+FinalizeAggregate cost=4439.515
+  Gather cost=258323.77
+    PartialAggregate cost=257323.47
+      Hash Join cost=257318.66
+        Seq Scan [aka_name AS an] cost=5739.55
+        Hash cost=250483.47
+          Nested Loop cost=250483.47
+            Hash Join cost=250133.54
+              Seq Scan [movie_companies AS mc] cost=13092.55
+              Hash cost=233882.75
+                Nested Loop cost=233882.75
+                  Nested Loop cost=233774.51
+                    Nested Loop cost=233532.58
+                      Hash Join cost=232435.08
+                        Hash Join cost=78167.31
+                          Seq Scan [movie_info AS mi] cost=70087.54
+                          Hash cost=2.41
+                            Seq Scan [info_type AS it] cost=2.41
+                        Hash cost=154014.42
+                          Hash Join cost=154014.42
+                            Seq Scan [cast_info AS ci] cost=153496.86
+                            Hash cost=1.15
+                              Seq Scan [role_type AS rt] cost=1.15
+                      Index Scan [name AS n] cost=0.53
+                    Index Only Scan [char_name AS chn] cost=0.5
+                  Index Scan [title AS t] cost=0.45
+            Index Scan [company_name AS cn] cost=0.32
+
+
+27 th query
+q19d,4439.5 (baseline)
+Execution time: 4439.515
+---------------------------------------
+FinalizeAggregate cost=170.011
+  Gather cost=28549.93
+    PartialAggregate cost=27549.63
+      Nested Loop cost=27544.05
+        Hash Join cost=26257.66
+          Hash Join cost=26199.21
+            Seq Scan [movie_companies AS mc] cost=15196.68
+            Hash cost=9292.6
+              Hash Join cost=9292.6
+                Seq Scan [movie_info_idx AS mi_idx] cost=7724.15
+                Hash cost=2.41
+                  Seq Scan [info_type AS it] cost=2.41
+          Hash cost=1.05
+            Seq Scan [company_type AS ct] cost=1.05
+        Index Scan [title AS t] cost=0.48
+
+
+28 th query
+q1b,170.0 (baseline)
+Execution time: 170.011
+---------------------------------------
+FinalizeAggregate cost=196.919
+  Gather cost=27647.93
+    PartialAggregate cost=26647.73
+      Nested Loop cost=26647.7
+        Hash Join cost=26636.84
+          Hash Join cost=9292.6
+            Seq Scan [movie_info_idx AS mi_idx] cost=7724.15
+            Hash cost=2.41
+              Seq Scan [info_type AS it] cost=2.41
+          Hash cost=17316.59
+            Hash Join cost=17316.59
+              Seq Scan [movie_companies AS mc] cost=17300.82
+              Hash cost=1.05
+                Seq Scan [company_type AS ct] cost=1.05
+        Index Scan [title AS t] cost=0.48
+
+
+29 th query
+q1c,196.9 (baseline)
+Execution time: 196.919
+---------------------------------------
+FinalizeAggregate cost=153.225
+  Gather cost=28548.47
+    PartialAggregate cost=27548.17
+      Nested Loop cost=27537.41
+        Hash Join cost=26257.66
+          Hash Join cost=26199.21
+            Seq Scan [movie_companies AS mc] cost=15196.68
+            Hash cost=9292.6
+              Hash Join cost=9292.6
+                Seq Scan [movie_info_idx AS mi_idx] cost=7724.15
+                Hash cost=2.41
+                  Seq Scan [info_type AS it] cost=2.41
+          Hash cost=1.05
+            Seq Scan [company_type AS ct] cost=1.05
+        Index Scan [title AS t] cost=0.48
+
+
+30 th query
+q1d,153.2 (baseline)
+Execution time: 153.225
+---------------------------------------
+FinalizeAggregate cost=1061.727
+  Gather cost=176930.85
+    PartialAggregate cost=175930.25
+      Nested Loop cost=175930.24
+        Nested Loop cost=175929.78
+          Hash Join cost=175929.33
+            Seq Scan [cast_info AS ci] cost=123293.24
+            Hash cost=29983.34
+              Nested Loop cost=29983.34
+                Nested Loop cost=29982.72
+                  Hash Join cost=29979.5
+                    Hash Join cost=27425.69
+                      Seq Scan [movie_keyword AS mk] cost=20674.32
+                      Hash cost=2920.4
+                        Seq Scan [keyword AS k] cost=2920.4
+                    Hash cost=2447.88
+                      Hash Join cost=2447.88
+                        Hash Join cost=2264.24
+                          Seq Scan [complete_cast AS cc] cost=1532.86
+                          Hash cost=1.05
+                            Seq Scan [comp_cast_type AS cct1] cost=1.05
+                        Hash cost=1.05
+                          Seq Scan [comp_cast_type AS cct2] cost=1.05
+                  Index Scan [title AS t] cost=0.46
+                Index Scan [kind_type AS kt] cost=0.15
+          Index Scan [char_name AS chn] cost=0.46
+        Index Scan [name AS n] cost=0.45
+
+
+31 th query
+q20b,1061.7 (baseline)
+Execution time: 1061.727
+---------------------------------------
+SimpleAggregate cost=1049.8
+  Nested Loop cost=177267.41
+    Gather cost=177266.96
+      Nested Loop cost=176266.86
+        Hash Join cost=176265.95
+          Seq Scan [cast_info AS ci] cost=123293.24
+          Hash cost=30319.96
+            Nested Loop cost=30319.96
+              Nested Loop cost=30319.19
+                Hash Join cost=30315.06
+                  Hash Join cost=27761.14
+                    Seq Scan [movie_keyword AS mk] cost=20674.32
+                    Hash cost=3255.82
+                      Seq Scan [keyword AS k] cost=3255.82
+                  Hash cost=2447.88
+                    Hash Join cost=2447.88
+                      Hash Join cost=2264.24
+                        Seq Scan [complete_cast AS cc] cost=1532.86
+                        Hash cost=1.05
+                          Seq Scan [comp_cast_type AS cct1] cost=1.05
+                      Hash cost=1.05
+                        Seq Scan [comp_cast_type AS cct2] cost=1.05
+                Index Scan [title AS t] cost=0.46
+              Index Scan [kind_type AS kt] cost=0.15
+        Index Scan [char_name AS chn] cost=0.45
+    Index Scan [name AS n] cost=0.45
+
+
+32 th query
+q20c,1049.8 (baseline)
+Execution time: 1049.8
+---------------------------------------
+SimpleAggregate cost=744.24
+  Nested Loop cost=120109.89
+    Nested Loop cost=120109.72
+      Gather cost=120109.4
+        Hash Join cost=119109.3
+          Hash Join cost=118648.86
+            Seq Scan [movie_companies AS mc] cost=13092.55
+            Hash cost=104002.28
+              Nested Loop cost=104002.28
+                Hash Join cost=104001.35
+                  Seq Scan [movie_info AS mi] cost=77502.17
+                  Hash cost=26419.33
+                    Hash Join cost=26419.33
+                      Seq Scan [movie_keyword AS mk] cost=20674.32
+                      Hash cost=1914.12
+                        Seq Scan [keyword AS k] cost=1914.12
+                Index Scan [title AS t] cost=0.46
+          Hash cost=439.48
+            Hash Join cost=439.48
+              Seq Scan [movie_link AS ml] cost=340.97
+              Hash cost=1.23
+                Seq Scan [link_type AS lt] cost=1.23
+      Index Scan [company_name AS cn] cost=0.32
+    Index Scan [company_type AS ct] cost=0.15
+
+
+33 th query
+q21b,744.2 (baseline)
+Execution time: 744.24
+---------------------------------------
+SimpleAggregate cost=2082.784
+  Gather cost=146666.3
+    Nested Loop cost=145666.2
+      Nested Loop cost=145205.9
+        Hash Join cost=145205.43
+          Seq Scan [movie_info AS mi] cost=103453.39
+          Hash cost=41069.59
+            Nested Loop cost=41069.59
+              Hash Join cost=41067.33
+                Hash Join cost=41066.11
+                  Seq Scan [movie_companies AS mc] cost=13092.55
+                  Hash cost=26419.33
+                    Hash Join cost=26419.33
+                      Seq Scan [movie_keyword AS mk] cost=20674.32
+                      Hash cost=1914.12
+                        Seq Scan [keyword AS k] cost=1914.12
+                Hash cost=1.05
+                  Seq Scan [company_type AS ct] cost=1.05
+              Index Scan [company_name AS cn] cost=0.32
+        Index Scan [title AS t] cost=0.46
+      Hash Join cost=439.48
+        Seq Scan [movie_link AS ml] cost=340.97
+        Hash cost=1.23
+          Seq Scan [link_type AS lt] cost=1.23
+
+
+34 th query
+q21c,2082.8 (baseline)
+Execution time: 2082.784
+---------------------------------------
+SimpleAggregate cost=985.516
+  Gather cost=140479.62
+    Nested Loop cost=139479.52
+      Hash Join cost=139478.24
+        Seq Scan [movie_keyword AS mk] cost=20674.32
+        Hash cost=113331.4
+          Nested Loop cost=113331.4
+            Nested Loop cost=113331.24
+              Nested Loop cost=113330.9
+                Nested Loop cost=113330.43
+                  Hash Join cost=113323.94
+                    Seq Scan [movie_companies AS mc] cost=17300.82
+                    Hash cost=95854.96
+                      Hash Join cost=95854.96
+                        Hash Join cost=85300.15
+                          Seq Scan [movie_info AS mi] cost=84916.8
+                          Hash cost=2.41
+                            Seq Scan [info_type AS it1] cost=2.41
+                        Hash cost=10495.95
+                          Hash Join cost=10495.95
+                            Seq Scan [movie_info_idx AS mi_idx] cost=9161.68
+                            Hash cost=2.41
+                              Seq Scan [info_type AS it2] cost=2.41
+                  Index Scan [title AS t] cost=0.49
+                Index Scan [kind_type AS kt] cost=0.15
+              Index Scan [company_name AS cn] cost=0.34
+            Index Only Scan [company_type AS ct] cost=0.15
+      Index Scan [keyword AS k] cost=0.32
+
+
+35 th query
+q22b,985.5 (baseline)
+Execution time: 985.516
+---------------------------------------
+SimpleAggregate cost=2685.472
+  Gather cost=162937.8
+    Nested Loop cost=161937.7
+      Hash Join cost=161934.83
+        Seq Scan [movie_keyword AS mk] cost=20674.32
+        Hash cost=135787.99
+          Nested Loop cost=135787.99
+            Nested Loop cost=135787.83
+              Nested Loop cost=135787.15
+                Nested Loop cost=135786.24
+                  Hash Join cost=135778.82
+                    Seq Scan [movie_companies AS mc] cost=17300.82
+                    Hash cost=118309.78
+                      Hash Join cost=118309.78
+                        Hash Join cost=107553.41
+                          Seq Scan [movie_info AS mi] cost=107160.71
+                          Hash cost=2.41
+                            Seq Scan [info_type AS it1] cost=2.41
+                        Hash cost=10689.52
+                          Hash Join cost=10689.52
+                            Seq Scan [movie_info_idx AS mi_idx] cost=9161.68
+                            Hash cost=2.41
+                              Seq Scan [info_type AS it2] cost=2.41
+                  Index Scan [title AS t] cost=0.48
+                Index Scan [kind_type AS kt] cost=0.15
+              Index Scan [company_name AS cn] cost=0.34
+            Index Only Scan [company_type AS ct] cost=0.15
+      Index Scan [keyword AS k] cost=0.32
+
+
+36 th query
+q22c,2685.5 (baseline)
+Execution time: 2685.472
+---------------------------------------
+SimpleAggregate cost=1935.965
+  Gather cost=161742.57
+    Nested Loop cost=160742.47
+      Nested Loop cost=160742.31
+        Hash Join cost=160742.0
+          Seq Scan [movie_companies AS mc] cost=13092.55
+          Hash cost=144493.22
+            Nested Loop cost=144493.22
+              Hash Join cost=144474.14
+                Seq Scan [movie_keyword AS mk] cost=20674.32
+                Hash cost=118327.26
+                  Hash Join cost=118327.26
+                    Nested Loop cost=118326.09
+                      Hash Join cost=118309.78
+                        Hash Join cost=107553.41
+                          Seq Scan [movie_info AS mi] cost=107160.71
+                          Hash cost=2.41
+                            Seq Scan [info_type AS it1] cost=2.41
+                        Hash cost=10689.52
+                          Hash Join cost=10689.52
+                            Seq Scan [movie_info_idx AS mi_idx] cost=9161.68
+                            Hash cost=2.41
+                              Seq Scan [info_type AS it2] cost=2.41
+                      Index Scan [title AS t] cost=0.48
+                    Hash cost=1.09
+                      Seq Scan [kind_type AS kt] cost=1.09
+              Index Scan [keyword AS k] cost=0.32
+        Index Scan [company_name AS cn] cost=0.32
+      Index Only Scan [company_type AS ct] cost=0.15
+
+
+37 th query
+q22d,1936.0 (baseline)
+Execution time: 1935.965
+---------------------------------------
+SimpleAggregate cost=592.204
+  Gather cost=131001.07
+    Nested Loop cost=130000.97
+      Hash Join cost=130000.64
+        Seq Scan [movie_keyword AS mk] cost=20674.32
+        Hash cost=103853.8
+          Nested Loop cost=103853.8
+            Nested Loop cost=103853.63
+              Nested Loop cost=103853.15
+                Nested Loop cost=103853.0
+                  Hash Join cost=103852.68
+                    Seq Scan [movie_companies AS mc] cost=13092.55
+                    Hash cost=87603.9
+                      Nested Loop cost=87603.9
+                        Hash Join cost=87603.33
+                          Seq Scan [movie_info AS mi] cost=84916.8
+                          Hash cost=2264.24
+                            Hash Join cost=2264.24
+                              Seq Scan [complete_cast AS cc] cost=1532.86
+                              Hash cost=1.05
+                                Seq Scan [comp_cast_type AS cct1] cost=1.05
+                        Index Scan [info_type AS it1] cost=0.24
+                  Index Scan [company_name AS cn] cost=0.32
+                Index Only Scan [company_type AS ct] cost=0.15
+              Index Scan [title AS t] cost=0.47
+            Index Scan [kind_type AS kt] cost=0.15
+      Index Scan [keyword AS k] cost=0.32
+
+
+38 th query
+q23b,592.2 (baseline)
+Execution time: 592.204
+---------------------------------------
+FinalizeAggregate cost=610.454
+  Gather cost=138415.9
+    PartialAggregate cost=137415.6
+      Nested Loop cost=137415.58
+        Hash Join cost=137415.27
+          Seq Scan [movie_keyword AS mk] cost=20674.32
+          Hash cost=111268.43
+            Nested Loop cost=111268.43
+              Nested Loop cost=111268.27
+                Nested Loop cost=111267.79
+                  Nested Loop cost=111267.63
+                    Hash Join cost=111267.32
+                      Seq Scan [movie_companies AS mc] cost=13092.55
+                      Hash cost=95018.53
+                        Nested Loop cost=95018.53
+                          Hash Join cost=95017.97
+                            Seq Scan [movie_info AS mi] cost=92331.44
+                            Hash cost=2264.24
+                              Hash Join cost=2264.24
+                                Seq Scan [complete_cast AS cc] cost=1532.86
+                                Hash cost=1.05
+                                  Seq Scan [comp_cast_type AS cct1] cost=1.05
+                          Index Scan [info_type AS it1] cost=0.24
+                    Index Scan [company_name AS cn] cost=0.32
+                  Index Only Scan [company_type AS ct] cost=0.15
+                Index Scan [title AS t] cost=0.47
+              Index Scan [kind_type AS kt] cost=0.16
+        Index Only Scan [keyword AS k] cost=0.31
+
+
+39 th query
+q23c,610.5 (baseline)
+Execution time: 610.454
+---------------------------------------
+SimpleAggregate cost=1890.636
+  Nested Loop cost=289889.27
+    Gather cost=289888.93
+      Hash Join cost=288888.83
+        Seq Scan [movie_companies AS mc] cost=13092.55
+        Hash cost=272640.05
+          Nested Loop cost=272640.05
+            Nested Loop cost=272639.52
+              Hash Join cost=272639.2
+                Seq Scan [movie_keyword AS mk] cost=20674.32
+                Hash cost=246492.36
+                  Hash Join cost=246492.36
+                    Seq Scan [aka_name AS an] cost=5739.55
+                    Hash cost=239662.45
+                      Nested Loop cost=239662.45
+                        Nested Loop cost=239662.27
+                          Hash Join cost=239661.77
+                            Seq Scan [cast_info AS ci] cost=153496.86
+                            Hash cost=85619.72
+                              Nested Loop cost=85619.72
+                                Hash Join cost=85172.32
+                                  Seq Scan [movie_info AS mi] cost=84916.8
+                                  Hash cost=2.41
+                                    Seq Scan [info_type AS it] cost=2.41
+                                Index Scan [title AS t] cost=0.54
+                          Index Scan [char_name AS chn] cost=0.5
+                        Index Scan [role_type AS rt] cost=0.16
+              Index Scan [keyword AS k] cost=0.32
+            Index Scan [name AS n] cost=0.53
+    Index Scan [company_name AS cn] cost=0.32
+
+
+40 th query
+q24b,1890.6 (baseline)
+Execution time: 1890.636
+---------------------------------------
+SimpleAggregate cost=1585.254
+  Gather cost=275850.09
+    Nested Loop cost=274849.99
+      Nested Loop cost=274849.48
+        Hash Join cost=274849.16
+          Seq Scan [movie_keyword AS mk] cost=20674.32
+          Hash cost=248702.32
+            Hash Join cost=248702.32
+              Seq Scan [cast_info AS ci] cost=161047.77
+              Hash cost=86876.03
+                Nested Loop cost=86876.03
+                  Hash Join cost=86875.53
+                    Hash Join cost=77519.13
+                      Seq Scan [movie_info AS mi] cost=77502.17
+                      Hash cost=2.41
+                        Seq Scan [info_type AS it1] cost=2.41
+                    Hash cost=9292.6
+                      Hash Join cost=9292.6
+                        Seq Scan [movie_info_idx AS mi_idx] cost=7724.15
+                        Hash cost=2.41
+                          Seq Scan [info_type AS it2] cost=2.41
+                  Index Scan [title AS t] cost=0.48
+        Index Scan [keyword AS k] cost=0.32
+      Index Scan [name AS n] cost=0.5
+
+
+41 th query
+q25b,1585.3 (baseline)
+Execution time: 1585.254
+---------------------------------------
+FinalizeAggregate cost=2581.554
+  Gather cost=290794.76
+    PartialAggregate cost=289794.46
+      Nested Loop cost=289794.44
+        Nested Loop cost=289793.97
+          Hash Join cost=289768.56
+            Seq Scan [movie_keyword AS mk] cost=20674.32
+            Hash cost=263621.56
+              Nested Loop cost=263621.56
+                Hash Join cost=263616.53
+                  Seq Scan [cast_info AS ci] cost=161047.77
+                  Hash cost=101790.13
+                    Hash Join cost=101790.13
+                      Hash Join cost=92432.67
+                        Seq Scan [movie_info AS mi] cost=92331.44
+                        Hash cost=2.41
+                          Seq Scan [info_type AS it1] cost=2.41
+                      Hash cost=9292.6
+                        Hash Join cost=9292.6
+                          Seq Scan [movie_info_idx AS mi_idx] cost=7724.15
+                          Hash cost=2.41
+                            Seq Scan [info_type AS it2] cost=2.41
+                Index Scan [name AS n] cost=0.5
+          Index Scan [keyword AS k] cost=0.32
+        Index Scan [title AS t] cost=0.46
+
+
+42 th query
+q25c,2581.6 (baseline)
+Execution time: 2581.554
+---------------------------------------
+SimpleAggregate cost=840.172
+  Gather cost=184902.06
+    Nested Loop cost=183901.96
+      Nested Loop cost=183901.05
+        Hash Join cost=183900.15
+          Seq Scan [cast_info AS ci] cost=123293.24
+          Hash cost=37954.16
+            Nested Loop cost=37954.16
+              Nested Loop cost=37953.99
+                Hash Join cost=37953.34
+                  Seq Scan [movie_keyword AS mk] cost=20674.32
+                  Hash cost=11806.49
+                    Nested Loop cost=11806.49
+                      Hash Join cost=11803.43
+                        Hash Join cost=11799.88
+                          Seq Scan [movie_info_idx AS mi_idx] cost=9161.68
+                          Hash cost=2447.88
+                            Hash Join cost=2447.88
+                              Hash Join cost=2264.24
+                                Seq Scan [complete_cast AS cc] cost=1532.86
+                                Hash cost=1.05
+                                  Seq Scan [comp_cast_type AS cct2] cost=1.05
+                              Hash cost=1.05
+                                Seq Scan [comp_cast_type AS cct1] cost=1.05
+                        Hash cost=2.41
+                          Seq Scan [info_type AS it2] cost=2.41
+                      Index Scan [title AS t] cost=0.77
+                Index Scan [keyword AS k] cost=0.32
+              Index Scan [kind_type AS kt] cost=0.15
+        Index Only Scan [name AS n] cost=0.45
+      Index Scan [char_name AS chn] cost=0.45
+
+
+43 th query
+q26b,840.2 (baseline)
+Execution time: 840.172
+---------------------------------------
+SimpleAggregate cost=1242.688
+  Nested Loop cost=185714.45
+    Gather cost=185714.0
+      Nested Loop cost=184713.9
+        Hash Join cost=184712.99
+          Seq Scan [cast_info AS ci] cost=123293.24
+          Hash cost=38767.0
+            Nested Loop cost=38767.0
+              Hash Join cost=38763.74
+                Seq Scan [movie_keyword AS mk] cost=20674.32
+                Hash cost=12616.78
+                  Hash Join cost=12616.78
+                    Nested Loop cost=12615.46
+                      Hash Join cost=12567.6
+                        Hash Join cost=12564.44
+                          Hash Join cost=12554.99
+                            Hash Join cost=9292.6
+                              Seq Scan [movie_info_idx AS mi_idx] cost=7724.15
+                              Hash cost=2.41
+                                Seq Scan [info_type AS it2] cost=2.41
+                            Hash cost=1532.86
+                              Seq Scan [complete_cast AS cc] cost=1532.86
+                          Hash cost=1.05
+                            Seq Scan [comp_cast_type AS cct1] cost=1.05
+                        Hash cost=1.05
+                          Seq Scan [comp_cast_type AS cct2] cost=1.05
+                      Index Scan [title AS t] cost=0.48
+                    Hash cost=1.09
+                      Seq Scan [kind_type AS kt] cost=1.09
+              Index Scan [keyword AS k] cost=0.33
+        Index Scan [char_name AS chn] cost=0.45
+    Index Only Scan [name AS n] cost=0.45
+
+
+44 th query
+q26c,1242.7 (baseline)
+Execution time: 1242.688
+---------------------------------------
+SimpleAggregate cost=800.339
+  Nested Loop cost=130248.21
+    Gather cost=130247.88
+      Nested Loop cost=129247.78
+        Hash Join cost=129247.61
+          Seq Scan [movie_companies AS mc] cost=13092.55
+          Hash cost=114601.03
+            Nested Loop cost=114601.03
+              Hash Join cost=114596.28
+                Seq Scan [movie_keyword AS mk] cost=20674.32
+                Hash cost=88449.3
+                  Hash Join cost=88449.3
+                    Seq Scan [movie_info AS mi] cost=84916.8
+                    Hash cost=3452.15
+                      Nested Loop cost=3452.15
+                        Hash Join cost=3193.02
+                          Hash Join cost=3172.35
+                            Seq Scan [movie_link AS ml] cost=340.97
+                            Hash cost=2447.89
+                              Hash Join cost=2447.89
+                                Hash Join cost=2264.24
+                                  Seq Scan [complete_cast AS cc] cost=1532.86
+                                  Hash cost=1.05
+                                    Seq Scan [comp_cast_type AS cct2] cost=1.05
+                                Hash cost=1.05
+                                  Seq Scan [comp_cast_type AS cct1] cost=1.05
+                          Hash cost=1.23
+                            Seq Scan [link_type AS lt] cost=1.23
+                        Index Scan [title AS t] cost=0.77
+              Index Scan [keyword AS k] cost=0.32
+        Index Scan [company_type AS ct] cost=0.15
+    Index Scan [company_name AS cn] cost=0.32
+
+
+45 th query
+q27b,800.3 (baseline)
+Execution time: 800.339
+---------------------------------------
+SimpleAggregate cost=2898.398
+  Nested Loop cost=150143.55
+    Gather cost=150143.23
+      Nested Loop cost=149143.13
+        Hash Join cost=149142.96
+          Seq Scan [movie_companies AS mc] cost=13092.55
+          Hash cost=134496.38
+            Nested Loop cost=134496.38
+              Nested Loop cost=134496.2
+                Hash Join cost=133780.27
+                  Seq Scan [movie_info AS mi] cost=103453.39
+                  Hash cost=29644.42
+                    Nested Loop cost=29644.42
+                      Nested Loop cost=29643.96
+                        Hash Join cost=29642.12
+                          Hash Join cost=29640.97
+                            Hash Join cost=26419.33
+                              Seq Scan [movie_keyword AS mk] cost=20674.32
+                              Hash cost=1914.12
+                                Seq Scan [keyword AS k] cost=1914.12
+                            Hash cost=1532.86
+                              Seq Scan [complete_cast AS cc] cost=1532.86
+                          Hash cost=1.05
+                            Seq Scan [comp_cast_type AS cct2] cost=1.05
+                        Index Scan [title AS t] cost=0.46
+                      Index Scan [comp_cast_type AS cct1] cost=0.15
+                Seq Scan [movie_link AS ml] cost=340.97
+              Index Scan [link_type AS lt] cost=0.16
+        Index Scan [company_type AS ct] cost=0.15
+    Index Scan [company_name AS cn] cost=0.32
+
+
+46 th query
+q27c,2898.4 (baseline)
+Execution time: 2898.398
+---------------------------------------
+SimpleAggregate cost=860.935
+  Nested Loop cost=141955.04
+    Gather cost=141954.7
+      Nested Loop cost=140954.6
+        Hash Join cost=140954.28
+          Seq Scan [movie_keyword AS mk] cost=20674.32
+          Hash cost=114807.44
+            Nested Loop cost=114807.44
+              Nested Loop cost=114807.28
+                Nested Loop cost=114807.11
+                  Nested Loop cost=114806.51
+                    Hash Join cost=114805.67
+                      Seq Scan [movie_info_idx AS mi_idx] cost=9161.68
+                      Hash cost=105175.77
+                        Nested Loop cost=105175.77
+                          Hash Join cost=105174.9
+                            Seq Scan [movie_companies AS mc] cost=17300.82
+                            Hash cost=87706.11
+                              Hash Join cost=87706.11
+                                Hash Join cost=87699.36
+                                  Seq Scan [movie_info AS mi] cost=84916.8
+                                  Hash cost=2264.24
+                                    Hash Join cost=2264.24
+                                      Seq Scan [complete_cast AS cc] cost=1532.86
+                                      Hash cost=1.05
+                                        Seq Scan [comp_cast_type AS cct1] cost=1.05
+                                Hash cost=2.41
+                                  Seq Scan [info_type AS it1] cost=2.41
+                          Index Only Scan [company_type AS ct] cost=0.15
+                    Index Scan [info_type AS it2] cost=0.16
+                  Index Scan [title AS t] cost=0.59
+                Index Scan [kind_type AS kt] cost=0.15
+              Index Scan [comp_cast_type AS cct2] cost=0.15
+        Index Scan [keyword AS k] cost=0.32
+    Index Scan [company_name AS cn] cost=0.34
+
+
+47 th query
+q28b,860.9 (baseline)
+Execution time: 860.935
+---------------------------------------
+SimpleAggregate cost=2432.719
+  Nested Loop cost=166179.84
+    Gather cost=166179.66
+      Hash Join cost=165179.56
+        Seq Scan [movie_info_idx AS mi_idx] cost=9161.68
+        Hash cost=153917.48
+          Nested Loop cost=153917.48
+            Hash Join cost=153917.15
+              Seq Scan [movie_keyword AS mk] cost=20674.32
+              Hash cost=127770.31
+                Nested Loop cost=127770.31
+                  Nested Loop cost=127769.97
+                    Hash Join cost=127769.82
+                      Seq Scan [movie_companies AS mc] cost=17300.82
+                      Hash cost=110301.17
+                        Hash Join cost=110301.17
+                          Nested Loop cost=110300.02
+                            Hash Join cost=110287.79
+                              Hash Join cost=110278.12
+                                Seq Scan [movie_info AS mi] cost=107160.71
+                                Hash cost=2447.88
+                                  Hash Join cost=2447.88
+                                    Hash Join cost=2264.24
+                                      Seq Scan [complete_cast AS cc] cost=1532.86
+                                      Hash cost=1.05
+                                        Seq Scan [comp_cast_type AS cct1] cost=1.05
+                                    Hash cost=1.05
+                                      Seq Scan [comp_cast_type AS cct2] cost=1.05
+                              Hash cost=2.41
+                                Seq Scan [info_type AS it1] cost=2.41
+                            Index Scan [title AS t] cost=0.51
+                          Hash cost=1.09
+                            Seq Scan [kind_type AS kt] cost=1.09
+                    Index Only Scan [company_type AS ct] cost=0.15
+                  Index Scan [company_name AS cn] cost=0.34
+            Index Scan [keyword AS k] cost=0.32
+    Index Scan [info_type AS it2] cost=0.16
+
+
+48 th query
+q28c,2432.7 (baseline)
+Execution time: 2432.719
+---------------------------------------
+SimpleAggregate cost=2066.042
+  Nested Loop cost=301202.16
+    Nested Loop cost=301201.85
+      Gather cost=301201.37
+        Nested Loop cost=300201.27
+          Hash Join cost=300196.2
+            Seq Scan [movie_keyword AS mk] cost=20674.32
+            Hash cost=274049.3
+              Hash Join cost=274049.3
+                Seq Scan [movie_companies AS mc] cost=13092.55
+                Hash cost=257800.52
+                  Nested Loop cost=257800.52
+                    Nested Loop cost=257799.94
+                      Hash Join cost=257799.77
+                        Seq Scan [aka_name AS an] cost=5739.55
+                        Hash cost=250969.86
+                          Nested Loop cost=250969.86
+                            Hash Join cost=250968.88
+                              Hash Join cost=23609.44
+                                Seq Scan [person_info AS pi] cost=21589.16
+                                Hash cost=2.41
+                                  Seq Scan [info_type AS it3] cost=2.41
+                              Hash cost=227334.77
+                                Hash Join cost=227334.77
+                                  Seq Scan [cast_info AS ci] cost=145945.96
+                                  Hash cost=80859.39
+                                    Hash Join cost=80859.39
+                                      Hash Join cost=80858.16
+                                        Hash Join cost=80856.43
+                                          Hash Join cost=77631.7
+                                            Seq Scan [movie_info AS mi] cost=77502.17
+                                            Hash cost=2.41
+                                              Seq Scan [info_type AS it] cost=2.41
+                                          Hash cost=1532.86
+                                            Seq Scan [complete_cast AS cc] cost=1532.86
+                                        Hash cost=1.05
+                                          Seq Scan [comp_cast_type AS cct2] cost=1.05
+                                      Hash cost=1.05
+                                        Seq Scan [comp_cast_type AS cct1] cost=1.05
+                            Index Scan [name AS n] cost=0.47
+                      Index Scan [role_type AS rt] cost=0.16
+                    Index Scan [char_name AS chn] cost=0.5
+          Index Scan [keyword AS k] cost=0.32
+      Index Scan [title AS t] cost=0.46
+    Index Scan [company_name AS cn] cost=0.32
+
+
+49 th query
+q29b,2066.0 (baseline)
+Execution time: 2066.042
+---------------------------------------
+SimpleAggregate cost=8724.029
+  Nested Loop cost=316226.57
+    Nested Loop cost=316226.25
+      Gather cost=316225.78
+        Nested Loop cost=315225.68
+          Hash Join cost=315220.61
+            Seq Scan [movie_keyword AS mk] cost=20674.32
+            Hash cost=289073.71
+              Hash Join cost=289073.71
+                Seq Scan [movie_companies AS mc] cost=13092.55
+                Hash cost=272824.93
+                  Nested Loop cost=272824.93
+                    Nested Loop cost=272824.43
+                      Hash Join cost=272824.25
+                        Seq Scan [aka_name AS an] cost=5739.55
+                        Hash cost=265994.35
+                          Nested Loop cost=265994.35
+                            Hash Join cost=265993.37
+                              Hash Join cost=23609.44
+                                Seq Scan [person_info AS pi] cost=21589.16
+                                Hash cost=2.41
+                                  Seq Scan [info_type AS it3] cost=2.41
+                              Hash cost=242359.24
+                                Hash Join cost=242359.24
+                                  Seq Scan [cast_info AS ci] cost=153496.86
+                                  Hash cost=88317.06
+                                    Hash Join cost=88317.06
+                                      Hash Join cost=88315.77
+                                        Hash Join cost=88313.83
+                                          Hash Join cost=85088.02
+                                            Seq Scan [movie_info AS mi] cost=84916.8
+                                            Hash cost=2.41
+                                              Seq Scan [info_type AS it] cost=2.41
+                                          Hash cost=1532.86
+                                            Seq Scan [complete_cast AS cc] cost=1532.86
+                                        Hash cost=1.05
+                                          Seq Scan [comp_cast_type AS cct2] cost=1.05
+                                      Hash cost=1.05
+                                        Seq Scan [comp_cast_type AS cct1] cost=1.05
+                            Index Scan [name AS n] cost=0.47
+                      Index Scan [role_type AS rt] cost=0.16
+                    Index Scan [char_name AS chn] cost=0.5
+          Index Scan [keyword AS k] cost=0.32
+      Index Scan [title AS t] cost=0.46
+    Index Scan [company_name AS cn] cost=0.32
+
+
+50 th query
+q29c,8724.0 (baseline)
+Execution time: 8724.029
+---------------------------------------
+SimpleAggregate cost=375.217
+  Gather cost=43687.42
+    Nested Loop cost=42687.22
+      Nested Loop cost=42686.76
+        Hash Join cost=42668.41
+          Seq Scan [movie_companies AS mc] cost=13092.55
+          Hash cost=26419.33
+            Hash Join cost=26419.33
+              Seq Scan [movie_keyword AS mk] cost=20674.32
+              Hash cost=1914.12
+                Seq Scan [keyword AS k] cost=1914.12
+        Index Scan [company_name AS cn] cost=0.32
+      Index Scan [title AS t] cost=0.46
+
+
+51 th query
+q2b,375.2 (baseline)
+Execution time: 375.217
+---------------------------------------
+SimpleAggregate cost=358.486
+  Nested Loop cost=43687.32
+    Gather cost=43686.86
+      Nested Loop cost=42686.76
+        Hash Join cost=42668.41
+          Seq Scan [movie_companies AS mc] cost=13092.55
+          Hash cost=26419.33
+            Hash Join cost=26419.33
+              Seq Scan [movie_keyword AS mk] cost=20674.32
+              Hash cost=1914.12
+                Seq Scan [keyword AS k] cost=1914.12
+        Index Scan [company_name AS cn] cost=0.32
+    Index Scan [title AS t] cost=0.46
+
+
+52 th query
+q2c,358.5 (baseline)
+Execution time: 358.486
+---------------------------------------
+FinalizeAggregate cost=392.481
+  Gather cost=43692.0
+    PartialAggregate cost=42691.7
+      Nested Loop cost=42691.63
+        Hash Join cost=42673.28
+          Seq Scan [movie_companies AS mc] cost=13092.55
+          Hash cost=26424.36
+            Nested Loop cost=26424.36
+              Hash Join cost=26419.33
+                Seq Scan [movie_keyword AS mk] cost=20674.32
+                Hash cost=1914.12
+                  Seq Scan [keyword AS k] cost=1914.12
+              Index Scan [title AS t] cost=0.46
+        Index Scan [company_name AS cn] cost=0.32
+
+
+53 th query
+q2d,392.5 (baseline)
+Execution time: 392.481
+---------------------------------------
+SimpleAggregate cost=1015.808
+  Nested Loop cost=279075.43
+    Gather cost=279074.93
+      Hash Join cost=278074.83
+        Seq Scan [cast_info AS ci] cost=161047.77
+        Hash cost=116248.54
+          Nested Loop cost=116248.54
+            Hash Join cost=116248.21
+              Seq Scan [movie_keyword AS mk] cost=20674.32
+              Hash cost=90101.37
+                Nested Loop cost=90101.37
+                  Hash Join cost=90100.87
+                    Hash Join cost=90098.38
+                      Seq Scan [movie_info_idx AS mi_idx] cost=7724.15
+                      Hash cost=80217.82
+                        Hash Join cost=80217.82
+                          Hash Join cost=80214.1
+                            Seq Scan [movie_info AS mi] cost=77502.17
+                            Hash cost=2447.89
+                              Hash Join cost=2447.89
+                                Hash Join cost=2264.24
+                                  Seq Scan [complete_cast AS cc] cost=1532.86
+                                  Hash cost=1.05
+                                    Seq Scan [comp_cast_type AS cct2] cost=1.05
+                                Hash cost=1.05
+                                  Seq Scan [comp_cast_type AS cct1] cost=1.05
+                          Hash cost=2.41
+                            Seq Scan [info_type AS it1] cost=2.41
+                    Hash cost=2.41
+                      Seq Scan [info_type AS it2] cost=2.41
+                  Index Scan [title AS t] cost=0.49
+            Index Scan [keyword AS k] cost=0.32
+    Index Scan [name AS n] cost=0.5
+
+
+54 th query
+q30b,1015.8 (baseline)
+Execution time: 1015.808
+---------------------------------------
+SimpleAggregate cost=2166.991
+  Gather cost=293889.6
+    Nested Loop cost=292889.5
+      Hash Join cost=292889.17
+        Seq Scan [movie_keyword AS mk] cost=20674.32
+        Hash cost=266742.33
+          Nested Loop cost=266742.33
+            Hash Join cost=266741.82
+              Seq Scan [cast_info AS ci] cost=161047.77
+              Hash cost=104915.54
+                Nested Loop cost=104915.54
+                  Hash Join cost=104915.04
+                    Hash Join cost=104912.52
+                      Seq Scan [movie_info_idx AS mi_idx] cost=7724.15
+                      Hash cost=95031.91
+                        Hash Join cost=95031.91
+                          Hash Join cost=95027.65
+                            Seq Scan [movie_info AS mi] cost=92331.44
+                            Hash cost=2447.88
+                              Hash Join cost=2447.88
+                                Hash Join cost=2264.24
+                                  Seq Scan [complete_cast AS cc] cost=1532.86
+                                  Hash cost=1.05
+                                    Seq Scan [comp_cast_type AS cct2] cost=1.05
+                                Hash cost=1.05
+                                  Seq Scan [comp_cast_type AS cct1] cost=1.05
+                          Hash cost=2.41
+                            Seq Scan [info_type AS it1] cost=2.41
+                    Hash cost=2.41
+                      Seq Scan [info_type AS it2] cost=2.41
+                  Index Scan [title AS t] cost=0.48
+            Index Scan [name AS n] cost=0.5
+      Index Scan [keyword AS k] cost=0.32
+
+
+55 th query
+q30c,2167.0 (baseline)
+Execution time: 2166.991
+---------------------------------------
+SimpleAggregate cost=1776.361
+  Gather cost=291061.17
+    Nested Loop cost=290061.07
+      Nested Loop cost=290060.59
+        Hash Join cost=290060.26
+          Seq Scan [movie_keyword AS mk] cost=20674.32
+          Hash cost=263913.4
+            Nested Loop cost=263913.4
+              Nested Loop cost=263912.9
+                Hash Join cost=263912.16
+                  Seq Scan [cast_info AS ci] cost=161047.77
+                  Hash cost=102085.87
+                    Hash Join cost=102085.87
+                      Hash Join cost=9292.6
+                        Seq Scan [movie_info_idx AS mi_idx] cost=7724.15
+                        Hash cost=2.41
+                          Seq Scan [info_type AS it2] cost=2.41
+                      Hash cost=92774.15
+                        Hash Join cost=92774.15
+                          Hash Join cost=77539.6
+                            Seq Scan [movie_info AS mi] cost=77502.17
+                            Hash cost=2.41
+                              Seq Scan [info_type AS it1] cost=2.41
+                          Hash cost=15196.68
+                            Seq Scan [movie_companies AS mc] cost=15196.68
+                Index Scan [company_name AS cn] cost=0.71
+              Index Scan [name AS n] cost=0.5
+        Index Scan [keyword AS k] cost=0.32
+      Index Scan [title AS t] cost=0.47
+
+
+56 th query
+q31b,1776.4 (baseline)
+Execution time: 1776.361
+---------------------------------------
+SimpleAggregate cost=2293.107
+  Gather cost=307031.55
+    Nested Loop cost=306031.45
+      Nested Loop cost=306030.95
+        Hash Join cost=306029.98
+          Seq Scan [movie_keyword AS mk] cost=20674.32
+          Hash cost=279883.14
+            Nested Loop cost=279883.14
+              Nested Loop cost=279882.66
+                Hash Join cost=279865.57
+                  Seq Scan [movie_companies AS mc] cost=13092.55
+                  Hash cost=263616.53
+                    Hash Join cost=263616.53
+                      Seq Scan [cast_info AS ci] cost=161047.77
+                      Hash cost=101790.13
+                        Hash Join cost=101790.13
+                          Hash Join cost=92432.67
+                            Seq Scan [movie_info AS mi] cost=92331.44
+                            Hash cost=2.41
+                              Seq Scan [info_type AS it1] cost=2.41
+                          Hash cost=9292.6
+                            Hash Join cost=9292.6
+                              Seq Scan [movie_info_idx AS mi_idx] cost=7724.15
+                              Hash cost=2.41
+                                Seq Scan [info_type AS it2] cost=2.41
+                Index Scan [company_name AS cn] cost=0.32
+              Index Scan [title AS t] cost=0.46
+        Index Scan [keyword AS k] cost=0.32
+      Index Scan [name AS n] cost=0.5
+
+
+57 th query
+q31c,2293.1 (baseline)
+Execution time: 2293.107
+---------------------------------------
+FinalizeAggregate cost=189.123
+  Gather cost=28150.92
+    PartialAggregate cost=27150.62
+      Nested Loop cost=27150.59
+        Nested Loop cost=27144.98
+          Nested Loop cost=27143.61
+            Hash Join cost=27143.14
+              Hash Join cost=26419.33
+                Seq Scan [movie_keyword AS mk] cost=20674.32
+                Hash cost=1914.12
+                  Seq Scan [keyword AS k] cost=1914.12
+              Hash cost=340.97
+                Seq Scan [movie_link AS ml] cost=340.97
+            Index Scan [link_type AS lt] cost=0.16
+          Index Scan [title AS t1] cost=0.46
+        Index Scan [title AS t2] cost=1.87
+
+
+58 th query
+q32b,189.1 (baseline)
+Execution time: 189.123
+---------------------------------------
+SimpleAggregate cost=298.238
+  Nested Loop cost=55251.32
+    Nested Loop cost=55251.01
+      Gather cost=55250.82
+        Hash Join cost=54250.72
+          Seq Scan [movie_companies AS mc2] cost=13092.55
+          Hash cost=38001.95
+            Nested Loop cost=38001.95
+              Nested Loop cost=38001.63
+                Hash Join cost=38001.46
+                  Seq Scan [movie_info_idx AS mi_idx1] cost=7724.15
+                  Hash cost=28120.99
+                    Hash Join cost=28120.99
+                      Seq Scan [movie_companies AS mc1] cost=13092.55
+                      Hash cost=11872.21
+                        Nested Loop cost=11872.21
+                          Nested Loop cost=11872.03
+                            Hash Join cost=11870.17
+                              Hash Join cost=11151.4
+                                Nested Loop cost=11149.8
+                                  Hash Join cost=9906.71
+                                    Seq Scan [movie_info_idx AS mi_idx2] cost=9161.68
+                                    Hash cost=2.41
+                                      Seq Scan [info_type AS it2] cost=2.41
+                                  Index Scan [title AS t2] cost=0.52
+                                Hash cost=1.09
+                                  Seq Scan [kind_type AS kt2] cost=1.09
+                              Hash cost=340.97
+                                Seq Scan [movie_link AS ml] cost=340.97
+                            Index Scan [title AS t1] cost=1.87
+                          Index Scan [link_type AS lt] cost=0.16
+                Index Scan [kind_type AS kt1] cost=0.15
+              Index Scan [company_name AS cn1] cost=0.32
+      Index Scan [info_type AS it1] cost=0.16
+    Index Scan [company_name AS cn2] cost=0.31
+
+
+59 th query
+q33b,298.2 (baseline)
+Execution time: 298.238
+---------------------------------------
+SimpleAggregate cost=308.528
+  Nested Loop cost=55449.05
+    Nested Loop cost=55448.74
+      Gather cost=55448.56
+        Hash Join cost=54448.46
+          Seq Scan [movie_companies AS mc2] cost=13092.55
+          Hash cost=38199.68
+            Nested Loop cost=38199.68
+              Nested Loop cost=38199.37
+                Hash Join cost=38199.2
+                  Seq Scan [movie_info_idx AS mi_idx1] cost=7724.15
+                  Hash cost=28318.73
+                    Hash Join cost=28318.73
+                      Seq Scan [movie_companies AS mc1] cost=13092.55
+                      Hash cost=12069.95
+                        Nested Loop cost=12069.95
+                          Nested Loop cost=12069.31
+                            Hash Join cost=12061.83
+                              Hash Join cost=11295.82
+                                Nested Loop cost=11290.25
+                                  Hash Join cost=9961.0
+                                    Seq Scan [movie_info_idx AS mi_idx2] cost=9161.68
+                                    Hash cost=2.41
+                                      Seq Scan [info_type AS it2] cost=2.41
+                                  Index Scan [title AS t2] cost=0.51
+                                Hash cost=1.09
+                                  Seq Scan [kind_type AS kt2] cost=1.09
+                              Hash cost=340.97
+                                Seq Scan [movie_link AS ml] cost=340.97
+                            Index Scan [title AS t1] cost=1.87
+                          Index Scan [link_type AS lt] cost=0.16
+                Index Scan [kind_type AS kt1] cost=0.15
+              Index Scan [company_name AS cn1] cost=0.32
+      Index Scan [info_type AS it1] cost=0.16
+    Index Scan [company_name AS cn2] cost=0.31
+
+
+60 th query
+q33c,308.5 (baseline)
+Execution time: 308.528
+---------------------------------------
+SimpleAggregate cost=460.547
+  Nested Loop cost=104924.56
+    Gather cost=104924.08
+      Hash Join cost=103923.98
+        Seq Scan [movie_info AS mi] cost=77502.17
+        Hash cost=26419.48
+          Hash Join cost=26419.48
+            Seq Scan [movie_keyword AS mk] cost=20674.32
+            Hash cost=1914.12
+              Seq Scan [keyword AS k] cost=1914.12
+    Index Scan [title AS t] cost=0.46
+
+
+61 th query
+q3b,460.5 (baseline)
+Execution time: 460.547
+---------------------------------------
+FinalizeAggregate cost=817.035
+  Gather cost=135184.36
+    PartialAggregate cost=134183.86
+      Hash Join cost=134183.61
+        Seq Scan [movie_info AS mi] cost=107160.71
+        Hash cost=26484.26
+          Nested Loop cost=26484.26
+            Hash Join cost=26419.48
+              Seq Scan [movie_keyword AS mk] cost=20674.32
+              Hash cost=1914.12
+                Seq Scan [keyword AS k] cost=1914.12
+            Index Scan [title AS t] cost=0.46
+
+
+62 th query
+q3c,817.0 (baseline)
+Execution time: 817.035
+---------------------------------------
+SimpleAggregate cost=190.991
+  Nested Loop cost=36378.08
+    Gather cost=36377.61
+      Nested Loop cost=35377.51
+        Hash Join cost=35319.18
+          Seq Scan [movie_keyword AS mk] cost=20674.32
+          Hash cost=9171.31
+            Hash Join cost=9171.31
+              Seq Scan [movie_info_idx AS mi_idx] cost=9161.68
+              Hash cost=2.41
+                Seq Scan [info_type AS it] cost=2.41
+        Index Scan [keyword AS k] cost=0.32
+    Index Scan [title AS t] cost=0.46
+
+
+63 th query
+q4b,191.0 (baseline)
+Execution time: 190.991
+---------------------------------------
+FinalizeAggregate cost=373.549
+  Gather cost=37573.31
+    PartialAggregate cost=36573.11
+      Nested Loop cost=36573.09
+        Hash Join cost=36571.67
+          Hash Join cost=10138.55
+            Seq Scan [movie_info_idx AS mi_idx] cost=9161.68
+            Hash cost=2.41
+              Seq Scan [info_type AS it] cost=2.41
+          Hash cost=26419.48
+            Hash Join cost=26419.48
+              Seq Scan [movie_keyword AS mk] cost=20674.32
+              Hash cost=1914.12
+                Seq Scan [keyword AS k] cost=1914.12
+        Index Scan [title AS t] cost=0.46
+
+
+64 th query
+q4c,373.5 (baseline)
+Execution time: 373.549
+---------------------------------------
+SimpleAggregate cost=65.711
+  Gather cost=98354.47
+    Nested Loop cost=97354.27
+      Nested Loop cost=97354.11
+        Hash Join cost=97353.07
+          Seq Scan [movie_info AS mi] cost=77502.17
+          Hash cost=19406.07
+            Hash Join cost=19406.07
+              Seq Scan [movie_companies AS mc] cost=19404.95
+              Hash cost=1.05
+                Seq Scan [company_type AS ct] cost=1.05
+        Index Scan [title AS t] cost=0.52
+      Index Only Scan [info_type AS it] cost=0.16
+
+
+65 th query
+q5b,65.7 (baseline)
+Execution time: 65.711
+---------------------------------------
+FinalizeAggregate cost=686.623
+  Gather cost=133112.99
+    PartialAggregate cost=132112.49
+      Hash Join cost=132090.46
+        Nested Loop cost=132062.94
+          Hash Join cost=125525.85
+            Seq Scan [movie_info AS mi] cost=107160.71
+            Hash cost=17608.91
+              Hash Join cost=17608.91
+                Seq Scan [movie_companies AS mc] cost=17300.82
+                Hash cost=1.05
+                  Seq Scan [company_type AS ct] cost=1.05
+          Index Scan [title AS t] cost=0.51
+        Hash cost=2.13
+          Seq Scan [info_type AS it] cost=2.13
+
+
+66 th query
+q5c,686.6 (baseline)
+Execution time: 686.623
+---------------------------------------
+SimpleAggregate cost=804.56
+  Nested Loop cost=174412.2
+    Gather cost=174411.75
+      Hash Join cost=173411.65
+        Seq Scan [cast_info AS ci] cost=123293.24
+        Hash cost=27465.66
+          Nested Loop cost=27465.66
+            Hash Join cost=27425.69
+              Seq Scan [movie_keyword AS mk] cost=20674.32
+              Hash cost=2920.4
+                Seq Scan [keyword AS k] cost=2920.4
+            Index Scan [title AS t] cost=0.46
+    Index Scan [name AS n] cost=0.45
+
+
+67 th query
+q6b,804.6 (baseline)
+Execution time: 804.56
+---------------------------------------
+SimpleAggregate cost=791.734
+  Nested Loop cost=173370.92
+    Gather cost=173370.47
+      Hash Join cost=172370.37
+        Seq Scan [cast_info AS ci] cost=123293.24
+        Hash cost=26424.38
+          Nested Loop cost=26424.38
+            Hash Join cost=26419.33
+              Seq Scan [movie_keyword AS mk] cost=20674.32
+              Hash cost=1914.12
+                Seq Scan [keyword AS k] cost=1914.12
+            Index Scan [title AS t] cost=0.46
+    Index Scan [name AS n] cost=0.45
+
+
+68 th query
+q6c,791.7 (baseline)
+Execution time: 791.734
+---------------------------------------
+SimpleAggregate cost=1396.38
+  Gather cost=174848.09
+    Nested Loop cost=173847.99
+      Hash Join cost=173413.32
+        Seq Scan [cast_info AS ci] cost=123293.24
+        Hash cost=27465.66
+          Nested Loop cost=27465.66
+            Hash Join cost=27425.69
+              Seq Scan [movie_keyword AS mk] cost=20674.32
+              Hash cost=2920.4
+                Seq Scan [keyword AS k] cost=2920.4
+            Index Scan [title AS t] cost=0.46
+      Index Scan [name AS n] cost=0.45
+
+
+69 th query
+q6d,1396.4 (baseline)
+Execution time: 1396.38
+---------------------------------------
+SimpleAggregate cost=792.092
+  Gather cost=173424.87
+    Nested Loop cost=172424.77
+      Hash Join cost=172370.55
+        Seq Scan [cast_info AS ci] cost=123293.24
+        Hash cost=26424.38
+          Nested Loop cost=26424.38
+            Hash Join cost=26419.33
+              Seq Scan [movie_keyword AS mk] cost=20674.32
+              Hash cost=1914.12
+                Seq Scan [keyword AS k] cost=1914.12
+            Index Scan [title AS t] cost=0.46
+      Index Scan [name AS n] cost=0.45
+
+
+70 th query
+q6e,792.1 (baseline)
+Execution time: 792.092
+---------------------------------------
+FinalizeAggregate cost=1459.964
+  Gather cost=174853.41
+    PartialAggregate cost=173852.81
+      Nested Loop cost=173845.59
+        Hash Join cost=173413.32
+          Seq Scan [cast_info AS ci] cost=123293.24
+          Hash cost=27465.66
+            Nested Loop cost=27465.66
+              Hash Join cost=27425.69
+                Seq Scan [movie_keyword AS mk] cost=20674.32
+                Hash cost=2920.4
+                  Seq Scan [keyword AS k] cost=2920.4
+              Index Scan [title AS t] cost=0.46
+        Index Scan [name AS n] cost=0.45
+
+
+71 th query
+q6f,1460.0 (baseline)
+Execution time: 1459.964
+---------------------------------------
+SimpleAggregate cost=1914.291
+  Nested Loop cost=178075.69
+    Nested Loop cost=178075.24
+      Gather cost=177614.93
+        Hash Join cost=176614.83
+          Seq Scan [cast_info AS ci] cost=123293.24
+          Hash cost=30668.85
+            Nested Loop cost=30668.85
+              Hash Join cost=30668.29
+                Seq Scan [aka_name AS an] cost=6466.44
+                Hash cost=23443.89
+                  Hash Join cost=23443.89
+                    Seq Scan [person_info AS pi] cost=23441.45
+                    Hash cost=2.41
+                      Seq Scan [info_type AS it] cost=2.41
+              Index Scan [name AS n] cost=0.56
+      Hash Join cost=439.48
+        Seq Scan [movie_link AS ml] cost=340.97
+        Hash cost=1.23
+          Seq Scan [link_type AS lt] cost=1.23
+    Index Scan [title AS t] cost=0.45
+
+
+72 th query
+q7b,1914.3 (baseline)
+Execution time: 1914.291
+---------------------------------------
+FinalizeAggregate cost=2339.203
+  Gather cost=177370.17
+    PartialAggregate cost=176369.87
+      Hash Join cost=176369.85
+        Seq Scan [aka_name AS an] cost=7193.33
+        Hash cost=168405.12
+          Hash Join cost=168405.12
+            Nested Loop cost=167879.39
+              Hash Join cost=167824.95
+                Seq Scan [cast_info AS ci] cost=123293.24
+                Hash cost=21878.46
+                  Nested Loop cost=21878.46
+                    Hash Join cost=21647.74
+                      Seq Scan [person_info AS pi] cost=21589.16
+                      Hash cost=2.41
+                        Seq Scan [info_type AS it] cost=2.41
+                    Index Scan [name AS n] cost=1.27
+              Index Scan [title AS t] cost=0.45
+            Hash cost=439.57
+              Hash Join cost=439.57
+                Seq Scan [movie_link AS ml] cost=340.97
+                Hash cost=1.27
+                  Seq Scan [link_type AS lt] cost=1.27
+
+
+73 th query
+q7c,2339.2 (baseline)
+Execution time: 2339.203
+---------------------------------------
+SimpleAggregate cost=863.346
+  Nested Loop cost=167808.17
+    Nested Loop cost=167807.64
+      Gather cost=167803.41
+        Hash Join cost=166803.31
+          Seq Scan [aka_name AS an] cost=5739.55
+          Hash cost=159973.4
+            Nested Loop cost=159973.4
+              Hash Join cost=159972.49
+                Hash Join cost=138454.15
+                  Seq Scan [cast_info AS ci] cost=138395.05
+                  Hash cost=1.15
+                    Seq Scan [role_type AS rt] cost=1.15
+                Hash cost=21509.09
+                  Seq Scan [movie_companies AS mc] cost=21509.09
+              Index Scan [title AS t] cost=0.89
+      Index Scan [company_name AS cn] cost=4.23
+    Index Scan [name AS n] cost=0.53
+
+
+74 th query
+q8b,863.3 (baseline)
+Execution time: 863.346
+---------------------------------------
+FinalizeAggregate cost=1726.379
+  Gather cost=244047.52
+    PartialAggregate cost=243046.92
+      Hash Join cost=236816.23
+        Hash Join cost=190684.43
+          Hash Join cost=144751.56
+            Seq Scan [cast_info AS ci] cost=123293.24
+            Hash cost=1.15
+              Seq Scan [role_type AS rt] cost=1.15
+          Hash cost=40613.98
+            Hash Join cost=40613.98
+              Seq Scan [title AS t] cost=15259.78
+              Hash cost=18401.09
+                Hash Join cost=18401.09
+                  Seq Scan [movie_companies AS mc] cost=13092.55
+                  Hash cost=2471.92
+                    Seq Scan [company_name AS cn] cost=2471.92
+        Hash cost=38245.63
+          Hash Join cost=38245.63
+            Seq Scan [name AS n1] cost=24237.73
+            Hash cost=5739.55
+              Seq Scan [aka_name AS a1] cost=5739.55
+
+
+75 th query
+q8c,1726.4 (baseline)
+Execution time: 1726.379
+---------------------------------------
+FinalizeAggregate cost=1461.011
+  Gather cost=244047.52
+    PartialAggregate cost=243046.92
+      Hash Join cost=236816.23
+        Hash Join cost=190684.43
+          Hash Join cost=144751.56
+            Seq Scan [cast_info AS ci] cost=123293.24
+            Hash cost=1.15
+              Seq Scan [role_type AS rt] cost=1.15
+          Hash cost=40613.98
+            Hash Join cost=40613.98
+              Seq Scan [title AS t] cost=15259.78
+              Hash cost=18401.09
+                Hash Join cost=18401.09
+                  Seq Scan [movie_companies AS mc] cost=13092.55
+                  Hash cost=2471.92
+                    Seq Scan [company_name AS cn] cost=2471.92
+        Hash cost=38245.63
+          Hash Join cost=38245.63
+            Seq Scan [name AS n1] cost=24237.73
+            Hash cost=5739.55
+              Seq Scan [aka_name AS an1] cost=5739.55
+
+
+76 th query
+q8d,1461.0 (baseline)
+Execution time: 1461.011
+---------------------------------------
+SimpleAggregate cost=845.315
+  Gather cost=167331.03
+    Hash Join cost=166330.93
+      Seq Scan [aka_name AS an] cost=5739.55
+      Hash cost=159501.02
+        Nested Loop cost=159501.02
+          Nested Loop cost=159500.51
+            Nested Loop cost=159499.49
+              Nested Loop cost=159497.71
+                Hash Join cost=158462.66
+                  Seq Scan [movie_companies AS mc] cost=19404.95
+                  Hash cost=138821.06
+                    Hash Join cost=138821.06
+                      Seq Scan [cast_info AS ci] cost=138395.05
+                      Hash cost=1.15
+                        Seq Scan [role_type AS rt] cost=1.15
+                Index Scan [name AS n] cost=0.55
+              Index Scan [company_name AS cn] cost=0.36
+            Index Scan [char_name AS chn] cost=0.51
+          Index Scan [title AS t] cost=0.51
+
+
+77 th query
+q9b,845.3 (baseline)
+Execution time: 845.315
+---------------------------------------
+FinalizeAggregate cost=1358.741
+  Gather cost=184641.77
+    PartialAggregate cost=183641.47
+      Hash Join cost=183639.44
+        Seq Scan [aka_name AS an] cost=5739.55
+        Hash cost=176808.43
+          Nested Loop cost=176808.43
+            Hash Join cost=176734.71
+              Seq Scan [movie_companies AS mc] cost=13092.55
+              Hash cost=160485.04
+                Nested Loop cost=160485.04
+                  Nested Loop cost=160464.19
+                    Nested Loop cost=160421.79
+                      Hash Join cost=154014.42
+                        Seq Scan [cast_info AS ci] cost=153496.86
+                        Hash cost=1.15
+                          Seq Scan [role_type AS rt] cost=1.15
+                      Index Scan [name AS n] cost=0.53
+                    Index Scan [char_name AS chn] cost=0.5
+                  Index Scan [title AS t] cost=0.5
+            Index Scan [company_name AS cn] cost=0.32
+
+
+78 th query
+q9c,1358.7 (baseline)
+Execution time: 1358.741
+---------------------------------------
+FinalizeAggregate cost=1884.725
+  Gather cost=189127.31
+    PartialAggregate cost=188127.01
+      Hash Join cost=188060.39
+        Seq Scan [aka_name AS an] cost=5739.55
+        Hash cost=181193.75
+          Nested Loop cost=181193.75
+            Hash Join cost=178766.1
+              Seq Scan [movie_companies AS mc] cost=13092.55
+              Hash cost=162487.18
+                Nested Loop cost=162487.18
+                  Nested Loop cost=161797.2
+                    Nested Loop cost=160391.51
+                      Hash Join cost=154014.42
+                        Seq Scan [cast_info AS ci] cost=153496.86
+                        Hash cost=1.15
+                          Seq Scan [role_type AS rt] cost=1.15
+                      Index Scan [name AS n] cost=0.53
+                    Index Scan [char_name AS chn] cost=0.5
+                  Index Scan [title AS t] cost=0.5
+            Index Scan [company_name AS cn] cost=0.32
+
+
+79 th query
+q9d,1884.7 (baseline)
+Execution time: 1884.725
+---------------------------------------
+FinalizeAggregate cost=1111.209
+  Gather cost=171352.59
+    PartialAggregate cost=170352.29
+      Nested Loop cost=170352.27
+        Nested Loop cost=170351.96
+          Nested Loop cost=170342.55
+            Nested Loop cost=170337.89
+              Hash Join cost=169767.76
+                Seq Scan [movie_companies AS mc] cost=13092.55
+                Hash cost=153511.93
+                  Hash Join cost=153511.93
+                    Seq Scan [cast_info AS ci] cost=153496.86
+                    Hash cost=1.15
+                      Seq Scan [role_type AS rt] cost=1.15
+              Index Scan [company_name AS cn] cost=0.32
+            Index Scan [title AS t] cost=0.47
+          Index Scan [char_name AS chn] cost=2.35
+        Index Only Scan [company_type AS ct] cost=0.15
+
+
+80 th query
+q10a,1111.2 (baseline)
+Execution time: 1111.209
+---------------------------------------
+SimpleAggregate cost=4796.626
+  Nested Loop cost=42530.46
+    Gather cost=42070.15
+      Nested Loop cost=41070.05
+        Nested Loop cost=41069.59
+          Hash Join cost=41067.33
+            Hash Join cost=41066.11
+              Seq Scan [movie_companies AS mc] cost=13092.55
+              Hash cost=26419.33
+                Hash Join cost=26419.33
+                  Seq Scan [movie_keyword AS mk] cost=20674.32
+                  Hash cost=1914.12
+                    Seq Scan [keyword AS k] cost=1914.12
+            Hash cost=1.05
+              Seq Scan [company_type AS ct] cost=1.05
+          Index Scan [company_name AS cn] cost=0.32
+        Index Scan [title AS t] cost=0.46
+    Hash Join cost=439.48
+      Seq Scan [movie_link AS ml] cost=340.97
+      Hash cost=1.23
+        Seq Scan [link_type AS lt] cost=1.23
+
+
+81 th query
+q11a,4796.6 (baseline)
+Execution time: 4796.626
+---------------------------------------
+FinalizeAggregate cost=660.88
+  Gather cost=104123.49
+    PartialAggregate cost=103123.19
+      Nested Loop cost=103123.18
+        Nested Loop cost=103123.01
+          Hash Join cost=103122.69
+            Seq Scan [movie_companies AS mc] cost=13092.55
+            Hash cost=86873.92
+              Nested Loop cost=86873.92
+                Hash Join cost=86873.3
+                  Hash Join cost=77646.49
+                    Seq Scan [movie_info AS mi] cost=77502.17
+                    Hash cost=2.41
+                      Seq Scan [info_type AS it1] cost=2.41
+                  Hash cost=9222.7
+                    Hash Join cost=9222.7
+                      Seq Scan [movie_info_idx AS mi_idx] cost=9161.68
+                      Hash cost=2.41
+                        Seq Scan [info_type AS it2] cost=2.41
+                Index Scan [title AS t] cost=0.62
+          Index Scan [company_name AS cn] cost=0.32
+        Index Scan [company_type AS ct] cost=0.15
+
+
+82 th query
+q12a,660.9 (baseline)
+Execution time: 660.88
+---------------------------------------
+FinalizeAggregate cost=3004.888
+  Gather cost=105271.99
+    PartialAggregate cost=104271.69
+      Nested Loop cost=104271.61
+        Hash Join cost=104203.59
+          Hash Join cost=104198.22
+            Seq Scan [movie_companies AS mc] cost=13092.55
+            Hash cost=87946.48
+              Hash Join cost=87946.48
+                Nested Loop cost=87942.4
+                  Hash Join cost=87624.89
+                    Hash Join cost=78167.31
+                      Seq Scan [movie_info AS mi] cost=70087.54
+                      Hash cost=2.41
+                        Seq Scan [info_type AS it2] cost=2.41
+                    Hash cost=9292.6
+                      Hash Join cost=9292.6
+                        Seq Scan [movie_info_idx AS miidx] cost=7724.15
+                        Hash cost=2.41
+                          Seq Scan [info_type AS it] cost=2.41
+                  Index Scan [title AS t] cost=0.45
+                Hash cost=1.09
+                  Seq Scan [kind_type AS kt] cost=1.09
+          Hash cost=1.05
+            Seq Scan [company_type AS ct] cost=1.05
+        Index Scan [company_name AS cn] cost=0.32
+
+
+83 th query
+q13a,3004.9 (baseline)
+Execution time: 3004.888
+---------------------------------------
+SimpleAggregate cost=1445.605
+  Gather cost=145477.62
+    Nested Loop cost=144477.52
+      Hash Join cost=144473.7
+        Seq Scan [movie_keyword AS mk] cost=20674.32
+        Hash cost=118326.86
+          Nested Loop cost=118326.86
+            Nested Loop cost=118326.09
+              Hash Join cost=118309.78
+                Hash Join cost=107553.41
+                  Seq Scan [movie_info AS mi] cost=107160.71
+                  Hash cost=2.41
+                    Seq Scan [info_type AS it1] cost=2.41
+                Hash cost=10689.52
+                  Hash Join cost=10689.52
+                    Seq Scan [movie_info_idx AS mi_idx] cost=9161.68
+                    Hash cost=2.41
+                      Seq Scan [info_type AS it2] cost=2.41
+              Index Scan [title AS t] cost=0.48
+            Index Scan [kind_type AS kt] cost=0.15
+      Index Scan [keyword AS k] cost=0.32
+
+
+84 th query
+q14a,1445.6 (baseline)
+Execution time: 1445.605
+---------------------------------------
+FinalizeAggregate cost=1152.002
+  Gather cost=132993.63
+    PartialAggregate cost=131993.43
+      Hash Join cost=131993.39
+        Seq Scan [aka_title AS at] cost=3043.13
+        Hash cost=128385.42
+          Nested Loop cost=128385.42
+            Nested Loop cost=128384.79
+              Hash Join cost=128383.38
+                Seq Scan [movie_keyword AS mk] cost=20674.32
+                Hash cost=102236.52
+                  Nested Loop cost=102236.52
+                    Nested Loop cost=102236.36
+                      Hash Join cost=102235.77
+                        Seq Scan [movie_companies AS mc] cost=17300.82
+                        Hash cost=84919.32
+                          Hash Join cost=84919.32
+                            Seq Scan [movie_info AS mi] cost=84916.8
+                            Hash cost=2.41
+                              Seq Scan [info_type AS it1] cost=2.41
+                      Index Scan [company_name AS cn] cost=0.6
+                    Index Only Scan [company_type AS ct] cost=0.15
+              Index Scan [title AS t] cost=0.46
+            Index Only Scan [keyword AS k] cost=0.31
+
+
+85 th query
+q15a,1152.0 (baseline)
+Execution time: 1152.002
+---------------------------------------
+FinalizeAggregate cost=1502.466
+  Gather cost=196452.93
+    PartialAggregate cost=195452.63
+      Hash Join cost=195452.47
+        Seq Scan [aka_name AS an] cost=5739.55
+        Hash cost=188622.5
+          Nested Loop cost=188622.5
+            Hash Join cost=188619.8
+              Seq Scan [cast_info AS ci] cost=123293.24
+              Hash cost=42673.82
+                Nested Loop cost=42673.82
+                  Hash Join cost=42673.18
+                    Seq Scan [movie_companies AS mc] cost=13092.55
+                    Hash cost=26424.41
+                      Nested Loop cost=26424.41
+                        Hash Join cost=26419.33
+                          Seq Scan [movie_keyword AS mk] cost=20674.32
+                          Hash cost=1914.12
+                            Seq Scan [keyword AS k] cost=1914.12
+                        Index Scan [title AS t] cost=0.46
+                  Index Scan [company_name AS cn] cost=0.32
+            Index Only Scan [name AS n] cost=0.45
+
+
+86 th query
+q16a,1502.5 (baseline)
+Execution time: 1502.466
+---------------------------------------
+FinalizeAggregate cost=2531.421
+  Gather cost=189742.93
+    PartialAggregate cost=188742.33
+      Nested Loop cost=188742.27
+        Hash Join cost=188638.35
+          Seq Scan [cast_info AS ci] cost=123293.24
+          Hash cost=42691.63
+            Nested Loop cost=42691.63
+              Hash Join cost=42673.28
+                Seq Scan [movie_companies AS mc] cost=13092.55
+                Hash cost=26424.36
+                  Nested Loop cost=26424.36
+                    Hash Join cost=26419.33
+                      Seq Scan [movie_keyword AS mk] cost=20674.32
+                      Hash cost=1914.12
+                        Seq Scan [keyword AS k] cost=1914.12
+                    Index Only Scan [title AS t] cost=0.46
+              Index Scan [company_name AS cn] cost=0.32
+        Index Scan [name AS n] cost=0.45
+
+
+87 th query
+q17a,2531.4 (baseline)
+Execution time: 2531.421
+---------------------------------------
+SimpleAggregate cost=984.82
+  Nested Loop cost=229228.53
+    Gather cost=229228.08
+      Nested Loop cost=228227.98
+        Hash Join cost=227501.93
+          Seq Scan [cast_info AS ci] cost=138395.05
+          Hash cost=87624.89
+            Hash Join cost=87624.89
+              Hash Join cost=78167.31
+                Seq Scan [movie_info AS mi] cost=70087.54
+                Hash cost=2.41
+                  Seq Scan [info_type AS it1] cost=2.41
+              Hash cost=9292.6
+                Hash Join cost=9292.6
+                  Seq Scan [movie_info_idx AS mi_idx] cost=7724.15
+                  Hash cost=2.41
+                    Seq Scan [info_type AS it2] cost=2.41
+        Index Scan [name AS n] cost=0.48
+    Index Scan [title AS t] cost=0.45
+
+
+88 th query
+q18a,984.8 (baseline)
+Execution time: 984.82
+---------------------------------------
+FinalizeAggregate cost=1745.856
+  Gather cost=264745.29
+    PartialAggregate cost=263744.99
+      Nested Loop cost=263744.98
+        Nested Loop cost=263744.46
+          Hash Join cost=263743.96
+            Seq Scan [aka_name AS an] cost=5739.55
+            Hash cost=256914.06
+              Nested Loop cost=256914.06
+                Nested Loop cost=256906.12
+                  Hash Join cost=256893.0
+                    Seq Scan [movie_companies AS mc] cost=17300.82
+                    Hash cost=239256.01
+                      Hash Join cost=239256.01
+                        Hash Join cost=85088.02
+                          Seq Scan [movie_info AS mi] cost=84916.8
+                          Hash cost=2.41
+                            Seq Scan [info_type AS it] cost=2.41
+                        Hash cost=154014.42
+                          Hash Join cost=154014.42
+                            Seq Scan [cast_info AS ci] cost=153496.86
+                            Hash cost=1.15
+                              Seq Scan [role_type AS rt] cost=1.15
+                  Index Scan [company_name AS cn] cost=0.33
+                Index Scan [name AS n] cost=0.53
+          Index Only Scan [char_name AS chn] cost=0.5
+        Index Scan [title AS t] cost=0.5
+
+
+89 th query
+q19a,1745.9 (baseline)
+Execution time: 1745.856
+---------------------------------------
+FinalizeAggregate cost=265.604
+  Gather cost=29766.7
+    PartialAggregate cost=28766.5
+      Nested Loop cost=28766.26
+        Hash Join cost=28751.04
+          Hash Join cost=9292.6
+            Seq Scan [movie_info_idx AS mi_idx] cost=7724.15
+            Hash cost=2.41
+              Seq Scan [info_type AS it] cost=2.41
+          Hash cost=19427.08
+            Hash Join cost=19427.08
+              Seq Scan [movie_companies AS mc] cost=19404.95
+              Hash cost=1.05
+                Seq Scan [company_type AS ct] cost=1.05
+        Index Scan [title AS t] cost=0.48
+
+
+90 th query
+q1a,265.6 (baseline)
+Execution time: 265.604
+---------------------------------------
+FinalizeAggregate cost=1204.656
+  Gather cost=176931.76
+    PartialAggregate cost=175931.16
+      Nested Loop cost=175931.15
+        Nested Loop cost=175930.7
+          Hash Join cost=175929.79
+            Seq Scan [cast_info AS ci] cost=123293.24
+            Hash cost=29983.8
+              Nested Loop cost=29983.8
+                Nested Loop cost=29982.72
+                  Hash Join cost=29979.5
+                    Hash Join cost=27425.69
+                      Seq Scan [movie_keyword AS mk] cost=20674.32
+                      Hash cost=2920.4
+                        Seq Scan [keyword AS k] cost=2920.4
+                    Hash cost=2447.88
+                      Hash Join cost=2447.88
+                        Hash Join cost=2264.24
+                          Seq Scan [complete_cast AS cc] cost=1532.86
+                          Hash cost=1.05
+                            Seq Scan [comp_cast_type AS cct1] cost=1.05
+                        Hash cost=1.05
+                          Seq Scan [comp_cast_type AS cct2] cost=1.05
+                  Index Scan [title AS t] cost=0.46
+                Index Scan [kind_type AS kt] cost=0.15
+          Index Scan [char_name AS chn] cost=0.46
+        Index Only Scan [name AS n] cost=0.45
+
+
+91 th query
+q20a,1204.7 (baseline)
+Execution time: 1204.656
+---------------------------------------
+SimpleAggregate cost=1015.913
+  Nested Loop cost=142366.69
+    Nested Loop cost=142366.52
+      Gather cost=142366.2
+        Hash Join cost=141366.1
+          Hash Join cost=140905.65
+            Seq Scan [movie_companies AS mc] cost=13092.55
+            Hash cost=126259.07
+              Nested Loop cost=126259.07
+                Hash Join cost=126258.15
+                  Seq Scan [movie_info AS mi] cost=99746.07
+                  Hash cost=26419.33
+                    Hash Join cost=26419.33
+                      Seq Scan [movie_keyword AS mk] cost=20674.32
+                      Hash cost=1914.12
+                        Seq Scan [keyword AS k] cost=1914.12
+                Index Scan [title AS t] cost=0.46
+          Hash cost=439.48
+            Hash Join cost=439.48
+              Seq Scan [movie_link AS ml] cost=340.97
+              Hash cost=1.23
+                Seq Scan [link_type AS lt] cost=1.23
+      Index Scan [company_name AS cn] cost=0.32
+    Index Scan [company_type AS ct] cost=0.15
+
+
+92 th query
+q21a,1015.9 (baseline)
+Execution time: 1015.913
+---------------------------------------
+SimpleAggregate cost=1096.622
+  Gather cost=140479.93
+    Nested Loop cost=139479.83
+      Hash Join cost=139478.24
+        Seq Scan [movie_keyword AS mk] cost=20674.32
+        Hash cost=113331.4
+          Nested Loop cost=113331.4
+            Nested Loop cost=113331.24
+              Nested Loop cost=113330.9
+                Nested Loop cost=113330.43
+                  Hash Join cost=113323.94
+                    Seq Scan [movie_companies AS mc] cost=17300.82
+                    Hash cost=95854.96
+                      Hash Join cost=95854.96
+                        Hash Join cost=85300.15
+                          Seq Scan [movie_info AS mi] cost=84916.8
+                          Hash cost=2.41
+                            Seq Scan [info_type AS it1] cost=2.41
+                        Hash cost=10495.95
+                          Hash Join cost=10495.95
+                            Seq Scan [movie_info_idx AS mi_idx] cost=9161.68
+                            Hash cost=2.41
+                              Seq Scan [info_type AS it2] cost=2.41
+                  Index Scan [title AS t] cost=0.49
+                Index Scan [kind_type AS kt] cost=0.15
+              Index Scan [company_name AS cn] cost=0.34
+            Index Only Scan [company_type AS ct] cost=0.15
+      Index Scan [keyword AS k] cost=0.32
+
+
+93 th query
+q22a,1096.6 (baseline)
+Execution time: 1096.622
+---------------------------------------
+FinalizeAggregate cost=587.517
+  Gather cost=138415.91
+    PartialAggregate cost=137415.61
+      Nested Loop cost=137415.59
+        Hash Join cost=137415.28
+          Seq Scan [movie_keyword AS mk] cost=20674.32
+          Hash cost=111268.44
+            Nested Loop cost=111268.44
+              Nested Loop cost=111268.27
+                Nested Loop cost=111267.79
+                  Nested Loop cost=111267.63
+                    Hash Join cost=111267.32
+                      Seq Scan [movie_companies AS mc] cost=13092.55
+                      Hash cost=95018.53
+                        Nested Loop cost=95018.53
+                          Hash Join cost=95017.97
+                            Seq Scan [movie_info AS mi] cost=92331.44
+                            Hash cost=2264.24
+                              Hash Join cost=2264.24
+                                Seq Scan [complete_cast AS cc] cost=1532.86
+                                Hash cost=1.05
+                                  Seq Scan [comp_cast_type AS cct1] cost=1.05
+                          Index Scan [info_type AS it1] cost=0.24
+                    Index Scan [company_name AS cn] cost=0.32
+                  Index Only Scan [company_type AS ct] cost=0.15
+                Index Scan [title AS t] cost=0.47
+              Index Scan [kind_type AS kt] cost=0.15
+        Index Only Scan [keyword AS k] cost=0.31
+
+
+94 th query
+q23a,587.5 (baseline)
+Execution time: 587.517
+---------------------------------------
+SimpleAggregate cost=2136.572
+  Nested Loop cost=289911.26
+    Gather cost=289910.94
+      Hash Join cost=288910.84
+        Seq Scan [movie_companies AS mc] cost=13092.55
+        Hash cost=272662.07
+          Nested Loop cost=272662.07
+            Nested Loop cost=272661.54
+              Hash Join cost=272657.41
+                Seq Scan [movie_keyword AS mk] cost=20674.32
+                Hash cost=246510.47
+                  Hash Join cost=246510.47
+                    Seq Scan [aka_name AS an] cost=5739.55
+                    Hash cost=239680.54
+                      Hash Join cost=239680.54
+                        Nested Loop cost=239679.31
+                          Hash Join cost=239661.35
+                            Seq Scan [cast_info AS ci] cost=153496.86
+                            Hash cost=85617.66
+                              Nested Loop cost=85617.66
+                                Hash Join cost=85172.32
+                                  Seq Scan [movie_info AS mi] cost=84916.8
+                                  Hash cost=2.41
+                                    Seq Scan [info_type AS it] cost=2.41
+                                Index Scan [title AS t] cost=0.54
+                          Index Scan [char_name AS chn] cost=0.5
+                        Hash cost=1.15
+                          Seq Scan [role_type AS rt] cost=1.15
+              Index Scan [keyword AS k] cost=0.32
+            Index Scan [name AS n] cost=0.53
+    Index Scan [company_name AS cn] cost=0.32
+
+
+95 th query
+q24a,2136.6 (baseline)
+Execution time: 2136.572
+---------------------------------------
+SimpleAggregate cost=1724.252
+  Gather cost=275854.09
+    Nested Loop cost=274853.99
+      Nested Loop cost=274853.52
+        Hash Join cost=274849.69
+          Seq Scan [movie_keyword AS mk] cost=20674.32
+          Hash cost=248702.83
+            Nested Loop cost=248702.83
+              Hash Join cost=248701.82
+                Seq Scan [cast_info AS ci] cost=161047.77
+                Hash cost=86875.53
+                  Hash Join cost=86875.53
+                    Hash Join cost=77519.13
+                      Seq Scan [movie_info AS mi] cost=77502.17
+                      Hash cost=2.41
+                        Seq Scan [info_type AS it1] cost=2.41
+                    Hash cost=9292.6
+                      Hash Join cost=9292.6
+                        Seq Scan [movie_info_idx AS mi_idx] cost=7724.15
+                        Hash cost=2.41
+                          Seq Scan [info_type AS it2] cost=2.41
+              Index Scan [name AS n] cost=0.5
+        Index Scan [keyword AS k] cost=0.32
+      Index Scan [title AS t] cost=0.46
+
+
+96 th query
+q25a,1724.3 (baseline)
+Execution time: 1724.252
+---------------------------------------
+SimpleAggregate cost=2947.359
+  Nested Loop cost=185259.13
+    Nested Loop cost=185258.96
+      Nested Loop cost=185258.5
+        Gather cost=185258.05
+          Nested Loop cost=184257.95
+            Hash Join cost=184225.74
+              Seq Scan [movie_keyword AS mk] cost=20674.32
+              Hash cost=158078.63
+                Nested Loop cost=158078.63
+                  Hash Join cost=157982.9
+                    Seq Scan [cast_info AS ci] cost=123293.24
+                    Hash cost=12035.92
+                      Hash Join cost=12035.92
+                        Hash Join cost=12029.36
+                          Seq Scan [movie_info_idx AS mi_idx] cost=9161.68
+                          Hash cost=2447.88
+                            Hash Join cost=2447.88
+                              Hash Join cost=2264.24
+                                Seq Scan [complete_cast AS cc] cost=1532.86
+                                Hash cost=1.05
+                                  Seq Scan [comp_cast_type AS cct1] cost=1.05
+                              Hash cost=1.05
+                                Seq Scan [comp_cast_type AS cct2] cost=1.05
+                        Hash cost=2.41
+                          Seq Scan [info_type AS it2] cost=2.41
+                  Index Scan [char_name AS chn] cost=0.45
+            Index Scan [keyword AS k] cost=0.33
+        Index Scan [name AS n] cost=0.45
+      Index Scan [title AS t] cost=0.46
+    Index Scan [kind_type AS kt] cost=0.15
+
+
+97 th query
+q26a,2947.4 (baseline)
+Execution time: 2947.359
+---------------------------------------
+SimpleAggregate cost=1023.169
+  Gather cost=130876.45
+    Nested Loop cost=129876.35
+      Hash Join cost=129871.6
+        Seq Scan [movie_keyword AS mk] cost=20674.32
+        Hash cost=103724.62
+          Nested Loop cost=103724.62
+            Hash Join cost=103724.44
+              Nested Loop cost=103002.07
+                Hash Join cost=102982.7
+                  Hash Join cost=102980.35
+                    Seq Scan [movie_companies AS mc] cost=13092.55
+                    Hash cost=88329.67
+                      Nested Loop cost=88329.67
+                        Hash Join cost=87709.03
+                          Hash Join cost=87699.36
+                            Seq Scan [movie_info AS mi] cost=84916.8
+                            Hash cost=2264.24
+                              Hash Join cost=2264.24
+                                Seq Scan [complete_cast AS cc] cost=1532.86
+                                Hash cost=1.05
+                                  Seq Scan [comp_cast_type AS cct2] cost=1.05
+                          Hash cost=1.05
+                            Seq Scan [comp_cast_type AS cct1] cost=1.05
+                        Index Scan [title AS t] cost=0.77
+                  Hash cost=1.05
+                    Seq Scan [company_type AS ct] cost=1.05
+                Index Scan [company_name AS cn] cost=0.32
+              Hash cost=340.97
+                Seq Scan [movie_link AS ml] cost=340.97
+            Index Scan [link_type AS lt] cost=0.16
+      Index Scan [keyword AS k] cost=0.32
+
+
+98 th query
+q27a,1023.2 (baseline)
+Execution time: 1023.169
+---------------------------------------
+SimpleAggregate cost=4050.968
+  Nested Loop cost=166298.47
+    Nested Loop cost=166298.3
+      Gather cost=166298.14
+        Nested Loop cost=165298.04
+          Hash Join cost=165297.71
+            Seq Scan [movie_keyword AS mk] cost=20674.32
+            Hash cost=139150.87
+              Nested Loop cost=139150.87
+                Nested Loop cost=139150.53
+                  Nested Loop cost=139150.06
+                    Nested Loop cost=139147.59
+                      Hash Join cost=139146.85
+                        Seq Scan [movie_companies AS mc] cost=17300.82
+                        Hash cost=121678.12
+                          Hash Join cost=121678.12
+                            Hash Join cost=121672.58
+                              Seq Scan [movie_info AS mi] cost=107160.71
+                              Hash cost=13950.85
+                                Hash Join cost=13950.85
+                                  Hash Join cost=10689.52
+                                    Seq Scan [movie_info_idx AS mi_idx] cost=9161.68
+                                    Hash cost=2.41
+                                      Seq Scan [info_type AS it2] cost=2.41
+                                  Hash cost=1532.86
+                                    Seq Scan [complete_cast AS cc] cost=1532.86
+                            Hash cost=2.41
+                              Seq Scan [info_type AS it1] cost=2.41
+                      Index Only Scan [company_type AS ct] cost=0.15
+                    Index Scan [title AS t] cost=0.48
+                  Index Scan [kind_type AS kt] cost=0.15
+                Index Scan [company_name AS cn] cost=0.34
+          Index Scan [keyword AS k] cost=0.32
+      Index Scan [comp_cast_type AS cct2] cost=0.15
+    Index Scan [comp_cast_type AS cct1] cost=0.15
+
+
+99 th query
+q28a,4051.0 (baseline)
+Execution time: 4050.968
+---------------------------------------
+SimpleAggregate cost=3604.06
+  Nested Loop cost=308657.1
+    Nested Loop cost=308656.93
+      Gather cost=308656.59
+        Nested Loop cost=307656.49
+          Hash Join cost=307656.17
+            Seq Scan [movie_companies AS mc] cost=13092.55
+            Hash cost=291407.4
+              Hash Join cost=291407.4
+                Seq Scan [movie_keyword AS mk] cost=20674.32
+                Hash cost=265260.56
+                  Nested Loop cost=265260.56
+                    Nested Loop cost=265260.04
+                      Nested Loop cost=265259.47
+                        Hash Join cost=265256.54
+                          Seq Scan [aka_name AS an] cost=5739.55
+                          Hash cost=258426.61
+                            Hash Join cost=258426.61
+                              Hash Join cost=23609.44
+                                Seq Scan [person_info AS pi] cost=21589.16
+                                Hash cost=2.41
+                                  Seq Scan [info_type AS it3] cost=2.41
+                              Hash cost=234792.48
+                                Hash Join cost=234792.48
+                                  Seq Scan [cast_info AS ci] cost=145945.96
+                                  Hash cost=88317.06
+                                    Hash Join cost=88317.06
+                                      Hash Join cost=88315.77
+                                        Hash Join cost=88313.83
+                                          Hash Join cost=85088.02
+                                            Seq Scan [movie_info AS mi] cost=84916.8
+                                            Hash cost=2.41
+                                              Seq Scan [info_type AS it] cost=2.41
+                                          Hash cost=1532.86
+                                            Seq Scan [complete_cast AS cc] cost=1532.86
+                                        Hash cost=1.05
+                                          Seq Scan [comp_cast_type AS cct2] cost=1.05
+                                      Hash cost=1.05
+                                        Seq Scan [comp_cast_type AS cct1] cost=1.05
+                        Index Scan [name AS n] cost=0.47
+                      Index Scan [char_name AS chn] cost=0.5
+                    Index Scan [title AS t] cost=0.51
+          Index Scan [company_name AS cn] cost=0.32
+      Index Scan [keyword AS k] cost=0.32
+    Index Scan [role_type AS rt] cost=0.16
+
+
+100 th query
+q29a,3604.1 (baseline)
+Execution time: 3604.06
+---------------------------------------
+FinalizeAggregate cost=376.954
+  Gather cost=43688.0
+    PartialAggregate cost=42687.7
+      Nested Loop cost=42687.69
+        Nested Loop cost=42686.76
+          Hash Join cost=42668.41
+            Seq Scan [movie_companies AS mc] cost=13092.55
+            Hash cost=26419.33
+              Hash Join cost=26419.33
+                Seq Scan [movie_keyword AS mk] cost=20674.32
+                Hash cost=1914.12
+                  Seq Scan [keyword AS k] cost=1914.12
+          Index Scan [company_name AS cn] cost=0.32
+        Index Scan [title AS t] cost=0.46
+
+
+101 th query
+q2a,377.0 (baseline)
+Execution time: 376.954
+---------------------------------------
+SimpleAggregate cost=2052.705
+  Nested Loop cost=279075.66
+    Gather cost=279075.48
+      Hash Join cost=278075.38
+        Seq Scan [movie_info_idx AS mi_idx] cost=7724.15
+        Hash cost=268194.91
+          Nested Loop cost=268194.91
+            Hash Join cost=268194.58
+              Seq Scan [movie_keyword AS mk] cost=20674.32
+              Hash cost=242047.74
+                Nested Loop cost=242047.74
+                  Hash Join cost=242047.24
+                    Seq Scan [cast_info AS ci] cost=161047.77
+                    Hash cost=80220.94
+                      Nested Loop cost=80220.94
+                        Hash Join cost=80217.82
+                          Hash Join cost=80214.1
+                            Seq Scan [movie_info AS mi] cost=77502.17
+                            Hash cost=2447.89
+                              Hash Join cost=2447.89
+                                Hash Join cost=2264.24
+                                  Seq Scan [complete_cast AS cc] cost=1532.86
+                                  Hash cost=1.05
+                                    Seq Scan [comp_cast_type AS cct2] cost=1.05
+                                Hash cost=1.05
+                                  Seq Scan [comp_cast_type AS cct1] cost=1.05
+                          Hash cost=2.41
+                            Seq Scan [info_type AS it1] cost=2.41
+                        Index Scan [title AS t] cost=0.77
+                  Index Scan [name AS n] cost=0.5
+            Index Scan [keyword AS k] cost=0.32
+    Index Scan [info_type AS it2] cost=0.16
+
+
+102 th query
+q30a,2052.7 (baseline)
+Execution time: 2052.705
+---------------------------------------
+SimpleAggregate cost=1842.497
+  Gather cost=292123.66
+    Nested Loop cost=291123.56
+      Hash Join cost=291123.23
+        Seq Scan [movie_keyword AS mk] cost=20674.32
+        Hash cost=264976.39
+          Nested Loop cost=264976.39
+            Nested Loop cost=264975.92
+              Hash Join cost=264973.38
+                Seq Scan [movie_companies AS mc] cost=13092.55
+                Hash cost=248724.58
+                  Nested Loop cost=248724.58
+                    Hash Join cost=248722.56
+                      Seq Scan [cast_info AS ci] cost=161047.77
+                      Hash cost=86896.25
+                        Hash Join cost=86896.25
+                          Hash Join cost=77539.6
+                            Seq Scan [movie_info AS mi] cost=77502.17
+                            Hash cost=2.41
+                              Seq Scan [info_type AS it1] cost=2.41
+                          Hash cost=9292.6
+                            Hash Join cost=9292.6
+                              Seq Scan [movie_info_idx AS mi_idx] cost=7724.15
+                              Hash cost=2.41
+                                Seq Scan [info_type AS it2] cost=2.41
+                    Index Scan [name AS n] cost=0.5
+              Index Scan [company_name AS cn] cost=0.32
+            Index Scan [title AS t] cost=0.46
+      Index Scan [keyword AS k] cost=0.32
+
+
+103 th query
+q31a,1842.5 (baseline)
+Execution time: 1842.497
+---------------------------------------
+FinalizeAggregate cost=156.635
+  Gather cost=28150.92
+    PartialAggregate cost=27150.62
+      Nested Loop cost=27150.59
+        Nested Loop cost=27144.98
+          Nested Loop cost=27143.61
+            Hash Join cost=27143.14
+              Hash Join cost=26419.33
+                Seq Scan [movie_keyword AS mk] cost=20674.32
+                Hash cost=1914.12
+                  Seq Scan [keyword AS k] cost=1914.12
+              Hash cost=340.97
+                Seq Scan [movie_link AS ml] cost=340.97
+            Index Scan [link_type AS lt] cost=0.16
+          Index Scan [title AS t1] cost=0.46
+        Index Scan [title AS t2] cost=1.87
+
+
+104 th query
+q32a,156.6 (baseline)
+Execution time: 156.635
+---------------------------------------
+SimpleAggregate cost=266.091
+  Nested Loop cost=54501.33
+    Gather cost=54501.02
+      Hash Join cost=53500.92
+        Seq Scan [movie_companies AS mc2] cost=13092.55
+        Hash cost=37252.15
+          Nested Loop cost=37252.15
+            Nested Loop cost=37251.96
+              Hash Join cost=37251.79
+                Seq Scan [movie_info_idx AS mi_idx1] cost=7724.15
+                Hash cost=27371.32
+                  Nested Loop cost=27371.32
+                    Nested Loop cost=27368.44
+                      Hash Join cost=27363.07
+                        Seq Scan [movie_companies AS mc1] cost=13092.55
+                        Hash cost=11114.19
+                          Hash Join cost=11114.19
+                            Nested Loop cost=11111.85
+                              Hash Join cost=11025.43
+                                Hash Join cost=9906.71
+                                  Seq Scan [movie_info_idx AS mi_idx2] cost=9161.68
+                                  Hash cost=2.41
+                                    Seq Scan [info_type AS it2] cost=2.41
+                                Hash cost=340.97
+                                  Seq Scan [movie_link AS ml] cost=340.97
+                              Index Scan [title AS t2] cost=0.52
+                            Hash cost=2.18
+                              Nested Loop cost=2.18
+                                Seq Scan [kind_type AS kt2] cost=1.09
+                                Seq Scan [kind_type AS kt1] cost=1.09
+                      Index Scan [company_name AS cn1] cost=0.32
+                    Index Scan [title AS t1] cost=0.46
+              Index Scan [link_type AS lt] cost=0.16
+            Index Scan [info_type AS it1] cost=0.16
+    Index Scan [company_name AS cn2] cost=0.31
+
+
+105 th query
+q33a,266.1 (baseline)
+Execution time: 266.091
+---------------------------------------
+FinalizeAggregate cost=621.78
+  Gather cost=127324.17
+    PartialAggregate cost=126323.67
+      Hash Join cost=126323.64
+        Seq Scan [movie_info AS mi] cost=99746.07
+        Hash cost=26484.26
+          Nested Loop cost=26484.26
+            Hash Join cost=26419.48
+              Seq Scan [movie_keyword AS mk] cost=20674.32
+              Hash cost=1914.12
+                Seq Scan [keyword AS k] cost=1914.12
+            Index Scan [title AS t] cost=0.46
+
+
+106 th query
+q3a,621.8 (baseline)
+Execution time: 621.78
+---------------------------------------
+SimpleAggregate cost=343.033
+  Gather cost=37186.27
+    Nested Loop cost=36186.07
+      Hash Join cost=36185.12
+        Hash Join cost=9756.65
+          Seq Scan [movie_info_idx AS mi_idx] cost=9161.68
+          Hash cost=2.41
+            Seq Scan [info_type AS it] cost=2.41
+        Hash cost=26419.48
+          Hash Join cost=26419.48
+            Seq Scan [movie_keyword AS mk] cost=20674.32
+            Hash cost=1914.12
+              Seq Scan [keyword AS k] cost=1914.12
+      Index Scan [title AS t] cost=0.46
+
+
+107 th query
+q4a,343.0 (baseline)
+Execution time: 343.033
+---------------------------------------
+FinalizeAggregate cost=60.959
+  Gather cost=118168.03
+    PartialAggregate cost=117167.53
+      Nested Loop cost=117167.49
+        Nested Loop cost=117165.89
+          Hash Join cost=117146.0
+            Seq Scan [movie_info AS mi] cost=99746.07
+            Hash cost=17305.29
+              Hash Join cost=17305.29
+                Seq Scan [movie_companies AS mc] cost=17300.82
+                Hash cost=1.05
+                  Seq Scan [company_type AS ct] cost=1.05
+          Index Scan [title AS t] cost=0.8
+        Index Only Scan [info_type AS it] cost=0.16
+
+
+108 th query
+q5a,61.0 (baseline)
+Execution time: 60.959
+---------------------------------------
+SimpleAggregate cost=764.173
+  Gather cost=173385.88
+    Nested Loop cost=172385.78
+      Hash Join cost=172370.41
+        Seq Scan [cast_info AS ci] cost=123293.24
+        Hash cost=26424.38
+          Nested Loop cost=26424.38
+            Hash Join cost=26419.33
+              Seq Scan [movie_keyword AS mk] cost=20674.32
+              Hash cost=1914.12
+                Seq Scan [keyword AS k] cost=1914.12
+            Index Scan [title AS t] cost=0.46
+      Index Scan [name AS n] cost=0.45
+
+
+109 th query
+q6a,764.2 (baseline)
+Execution time: 764.173
+---------------------------------------
+SimpleAggregate cost=12614.312
+  Nested Loop cost=178075.7
+    Nested Loop cost=178075.24
+      Gather cost=177614.93
+        Hash Join cost=176614.83
+          Seq Scan [cast_info AS ci] cost=123293.24
+          Hash cost=30668.86
+            Nested Loop cost=30668.86
+              Hash Join cost=30668.29
+                Seq Scan [aka_name AS an] cost=6466.44
+                Hash cost=23443.89
+                  Hash Join cost=23443.89
+                    Seq Scan [person_info AS pi] cost=23441.45
+                    Hash cost=2.41
+                      Seq Scan [info_type AS it] cost=2.41
+              Index Scan [name AS n] cost=0.57
+      Hash Join cost=439.48
+        Seq Scan [movie_link AS ml] cost=340.97
+        Hash cost=1.23
+          Seq Scan [link_type AS lt] cost=1.23
+    Index Scan [title AS t] cost=0.45
+
+
+110 th query
+q7a,12614.3 (baseline)
+Execution time: 12614.312
+---------------------------------------
+SimpleAggregate cost=830.704
+  Nested Loop cost=163644.65
+    Gather cost=163643.76
+      Hash Join cost=162643.66
+        Seq Scan [aka_name AS an1] cost=5739.55
+        Hash cost=155813.75
+          Nested Loop cost=155813.75
+            Nested Loop cost=155812.62
+              Hash Join cost=155789.31
+                Seq Scan [movie_companies AS mc] cost=17300.82
+                Hash cost=138454.15
+                  Hash Join cost=138454.15
+                    Seq Scan [cast_info AS ci] cost=138395.05
+                    Hash cost=1.15
+                      Seq Scan [role_type AS rt] cost=1.15
+              Index Scan [company_name AS cn] cost=0.57
+            Index Scan [name AS n1] cost=1.13
+    Index Scan [title AS t] cost=0.88
+
+
+111 th query
+q8a,830.7 (baseline)
+Execution time: 830.704
+---------------------------------------
+FinalizeAggregate cost=1176.539
+  Gather cost=183346.06
+    PartialAggregate cost=182345.76
+      Hash Join cost=182345.73
+        Seq Scan [aka_name AS an] cost=5739.55
+        Hash cost=175515.82
+          Nested Loop cost=175515.82
+            Nested Loop cost=175514.32
+              Nested Loop cost=175511.32
+                Nested Loop cost=174146.29
+                  Hash Join cost=171814.07
+                    Seq Scan [movie_companies AS mc] cost=17300.82
+                    Hash cost=154014.42
+                      Hash Join cost=154014.42
+                        Seq Scan [cast_info AS ci] cost=153496.86
+                        Hash cost=1.15
+                          Seq Scan [role_type AS rt] cost=1.15
+                  Index Scan [company_name AS cn] cost=0.33
+                Index Scan [name AS n] cost=0.53
+              Index Scan [char_name AS chn] cost=0.5
+            Index Scan [title AS t] cost=0.5
+
+
+112 th query
+q9a,1176.5 (baseline)
+Execution time: 1176.539
+Saving
+latency_expert/workload (seconds): 132.22 (80 queries)
+Number of joins [3, 16], avg 7.5
+whole trianning time: 0.05579814129405551 h
