@@ -8,6 +8,8 @@ venv
 *egg-info
 save
 runs
+checkpoints/
+data/
 
 results/*.pkl
 wandb
