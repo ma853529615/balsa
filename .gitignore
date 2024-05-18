@@ -10,7 +10,7 @@ save
 runs
 checkpoints/
 data/
-
+tensorboard_logs
 results/*.pkl
 wandb
 data/iter-*.pkl

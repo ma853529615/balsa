@@ -166,7 +166,7 @@ def ExecuteSql(query_name,
     """
     # Unused args.
     # curr_timeout_ms = curr_timeout_ms if curr_timeout_ms < 100000 else 100000
-    curr_timeout_ms = 100 if curr_timeout_ms is None else curr_timeout_ms
+    curr_timeout_ms = 100000 if curr_timeout_ms is None else curr_timeout_ms
     del query_name, hinted_plan, query_node, predicted_latency, found_plans,\
         predicted_costs, silent, is_test, plan_physical
     
