@@ -167,6 +167,7 @@ def ExecuteSql(query_name,
     # Unused args.
     # curr_timeout_ms = curr_timeout_ms if curr_timeout_ms < 100000 else 100000
     curr_timeout_ms = 100000 if curr_timeout_ms is None else curr_timeout_ms
+    # curr_timeout_ms = 1
     del query_name, hinted_plan, query_node, predicted_latency, found_plans,\
         predicted_costs, silent, is_test, plan_physical
     
@@ -1769,7 +1770,8 @@ class BalsaAgent(object):
                           to_execute_test,
                           execution_results,
                           tag='latency_test', train=False):
-        assert len(self.test_nodes) == len(execution_results)
+        nodes = self.training_nodes if train else self.test_nodes
+        assert len(nodes) == len(execution_results)
         iter_total_latency = 0
         rows = []
         data = []
@@ -1778,7 +1780,7 @@ class BalsaAgent(object):
         # expert plans for test queries).
         agent_plans_diffs = []
         expert_plans_diffs = []
-        for node, to_execute, result_tup in zip(self.test_nodes,
+        for node, to_execute, result_tup in zip(nodes,
                                                 to_execute_test,
                                                 execution_results):
             _, real_cost, _ = result_tup
@@ -2091,7 +2093,7 @@ class BalsaAgent(object):
             model, planner, is_test=True, train_test=True)
 
         self.LogTestExperience(
-            to_execute_test, execution_results_test, tag=tag)
+            to_execute_test, execution_results_test, tag=tag, train=True)
 
     def LogTimings(self):
         """Logs timing statistics."""
